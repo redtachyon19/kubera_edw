@@ -1,92 +1,139 @@
 # Kubera coverage universe.
 #
-# Phase 0 (Scope lock): start with this 8-company / 5-country subset, prove the pipeline
-# end-to-end, THEN scale out to the full ~40-name universe (see docs/project_spec.md §6).
+# Phase 0 (Scope lock): this 8-company / 4-country subset (USA, GBR, JPN, TWN) is the proving
+# ground; once the pipeline runs end-to-end, scale out to the full ~40-name universe (§6).
 #
-# IMPORTANT: filer status (10-K vs 20-F), tickers, and CIKs change (delistings, M&A,
-# re-domestications). Re-verify each on SEC EDGAR before wiring extraction:
-#   https://www.sec.gov/cgi-bin/browse-edgar
-# CIK is left null until confirmed — the SEC client resolves ticker → CIK and should
-# fail loudly rather than guess.
+# SCOPE-LOCK PROVENANCE: verified 2026-07-24 against SEC EDGAR
+#   (User-Agent "Kubera EDW ishanvemireddy@icloud.com") — company_tickers.json for CIKs,
+#   submissions API for filer type + fiscal year end, companyfacts XBRL units for reporting
+#   currency + taxonomy. Re-verify before scale-out; filer status/CIKs change (M&A, reorg).
+#
+# FIELD SEMANTICS:
+#   cik                 zero-padded 10-digit SEC CIK (quoted so YAML keeps leading zeros).
+#   currency            DOMESTIC currency of the country — drives dim_currency + macro/FX narrative.
+#   reporting_currency  currency the company PRESENTS its SEC financials in (from XBRL units)
+#                       — drives fact_financials measures + FX normalization. NOTE: AZN and SHEL
+#                       report in USD, so FX normalization is a no-op for them (not GBP!).
+#   xbrl_taxonomy       us-gaap (domestic 10-K filers) vs ifrs-full (the 20-F filers) — the SEC
+#                       concept mapping must try both namespaces (see sec_edgar_client CONCEPT_TAG_MAP).
+#   fiscal_year_end     MM-DD; cadence is mixed (10-Q quarterly for US, 20-F annual-only for foreign).
+#
+# KNOWN COVERAGE GAPS for this locked scope (design around, don't ignore — §11):
+#   - Taiwan (TWN) has NO World Bank data -> fact_macro_indicators will be empty for TWN.
+#   - TWD is NOT in Frankfurter's currency set -> TSM's TWD->USD rate needs an alternate FX source.
+#   - The four 20-F filers use ifrs-full tags, not us-gaap -> revenue/operating_income need
+#     ifrs-full fallback tags added in Phase 1/2.
+#   - Mixed fiscal-year-ends (Apple Sep, Microsoft Jun, Toyota Mar, rest Dec).
+#   DECISION: keep TSM/Taiwan (best portfolio narrative) and accept the documented macro+FX gap.
 
 benchmarks:
   # Benchmark tickers used for relative-performance KPIs (not held positions).
+  # ETFs — routed through prices_client only; no SEC CIK / companyfacts.
   sector_or_index:
     - SPY   # S&P 500 proxy
     - ACWI  # MSCI ACWI (global) proxy
 
 companies:
-  # --- North America (domestic 10-K/10-Q filers) ---
+  # --- North America (domestic 10-K/10-Q filers, us-gaap, USD) ---
   - ticker: AAPL
-    cik: null
+    cik: "0000320193"
     legal_name: Apple Inc.
     country: United States
     country_iso3: USA
     currency: USD
+    reporting_currency: USD
     sector: Technology
     filer_type: 10-K
+    fiscal_year_end: "09-26"
+    xbrl_taxonomy: us-gaap
 
   - ticker: MSFT
-    cik: null
+    cik: "0000789019"
     legal_name: Microsoft Corporation
     country: United States
     country_iso3: USA
     currency: USD
+    reporting_currency: USD
     sector: Technology
     filer_type: 10-K
+    fiscal_year_end: "06-30"
+    xbrl_taxonomy: us-gaap
 
   - ticker: JPM
-    cik: null
+    cik: "0000019617"
     legal_name: JPMorgan Chase & Co.
     country: United States
     country_iso3: USA
     currency: USD
+    reporting_currency: USD
     sector: Financials
     filer_type: 10-K
+    fiscal_year_end: "12-31"
+    xbrl_taxonomy: us-gaap
 
   - ticker: XOM
-    cik: null
+    # Ticker XOM now resolves in company_tickers.json to CIK 0002115436
+    # ("ExxonMobil Holdings Corp") — a reorg successor with only 8-K/S-8 and NO 10-K/XBRL
+    # history. Pinned to the operating entity 0000034088 ("EXXON MOBIL CORP", latest 10-K
+    # 2026-02-18) which carries the us-gaap fundamentals. SEC client must prefer this pinned
+    # cik and only fall back to resolve_cik(ticker) when cik is null.
+    cik: "0000034088"
     legal_name: Exxon Mobil Corporation
     country: United States
     country_iso3: USA
     currency: USD
+    reporting_currency: USD
     sector: Energy
     filer_type: 10-K
+    fiscal_year_end: "12-31"
+    xbrl_taxonomy: us-gaap
 
-  # --- Europe (foreign private issuers, 20-F) ---
+  # --- Europe (foreign private issuers, 20-F, ifrs-full; present financials in USD) ---
   - ticker: AZN
-    cik: null
-    legal_name: AstraZeneca plc
+    cik: "0000901832"
+    legal_name: AstraZeneca PLC
     country: United Kingdom
     country_iso3: GBR
     currency: GBP
+    reporting_currency: USD   # AstraZeneca presents SEC financials in USD, not GBP
     sector: Healthcare
     filer_type: 20-F
+    fiscal_year_end: "12-31"
+    xbrl_taxonomy: ifrs-full
 
   - ticker: SHEL
-    cik: null
+    cik: "0001306965"
     legal_name: Shell plc
-    country: United Kingdom   # Netherlands/UK; domiciled UK since 2022 — verify
+    country: United Kingdom   # Re-domiciled from Netherlands to the UK in 2022 -> GBR
     country_iso3: GBR
     currency: GBP
+    reporting_currency: USD   # Shell presents SEC financials in USD, not GBP
     sector: Energy
     filer_type: 20-F
+    fiscal_year_end: "12-31"
+    xbrl_taxonomy: ifrs-full
 
-  # --- Asia-Pacific (foreign private issuers, 20-F) ---
+  # --- Asia-Pacific (foreign private issuers, 20-F, ifrs-full) ---
   - ticker: TM
-    cik: null
+    cik: "0001094517"
     legal_name: Toyota Motor Corporation
     country: Japan
     country_iso3: JPN
     currency: JPY
+    reporting_currency: JPY
     sector: Consumer Discretionary
     filer_type: 20-F
+    fiscal_year_end: "03-31"
+    xbrl_taxonomy: ifrs-full
 
   - ticker: TSM
-    cik: null
+    cik: "0001046179"
     legal_name: Taiwan Semiconductor Manufacturing Company Ltd.
     country: Taiwan
     country_iso3: TWN
     currency: TWD
+    reporting_currency: TWD
     sector: Technology
     filer_type: 20-F
+    fiscal_year_end: "12-31"
+    xbrl_taxonomy: ifrs-full

@@ -28,7 +28,7 @@ jobs:
         # Fast: no warehouse required — ingestion clients are tested against mocked responses.
         run: pytest tests/ -v
 
-  dbt-build:
+  dbt-compile:
     runs-on: ubuntu-latest
     needs: lint-and-test
     steps:
@@ -44,10 +44,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install dbt-core dbt-duckdb
 
-      - name: dbt deps + build (DuckDB, seeded sample)
-        # Runs staging→marts against a local DuckDB with committed seed/sample data,
-        # then executes dbt-native tests (not_null, unique, relationships, reconciliation).
+      - name: dbt compile (validate the project parses & compiles)
+        # Scaffold stage: no landed/seeded data yet, so we validate structure only —
+        # this catches bad refs/sources, Jinja errors, and SQL that won't compile.
+        # Full `dbt build` (execute models + run dbt tests) returns in Phase 2/5 once
+        # seed/sample data is committed.
         working-directory: dbt
-        run: |
-          dbt deps
-          dbt build --target ci
+        run: dbt compile --target ci --profiles-dir .

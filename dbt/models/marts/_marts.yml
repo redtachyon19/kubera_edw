@@ -2,6 +2,7 @@ version: 2
 
 # dbt-native tests on the warehouse (Phase 5). not_null / unique on keys, and relationships
 # (referential integrity) from every fact FK back to its conformed dimension.
+# Generic-test arguments are nested under `arguments:` per dbt 1.10+ conventions.
 models:
   - name: dim_company
     description: One row per company version (SCD Type 2 on classification changes).
@@ -13,7 +14,9 @@ models:
         tests: [not_null]
       - name: is_current
         tests:
-          - accepted_values: {values: [true, false]}
+          - accepted_values:
+              arguments:
+                values: [true, false]
 
   - name: dim_country
     columns:
@@ -36,21 +39,30 @@ models:
       - name: company_key
         tests:
           - not_null
-          - relationships: {to: ref('dim_company'), field: company_key}
+          - relationships:
+              arguments:
+                to: ref('dim_company')
+                field: company_key
 
   - name: fact_market_prices
     columns:
       - name: company_key
         tests:
           - not_null
-          - relationships: {to: ref('dim_company'), field: company_key}
+          - relationships:
+              arguments:
+                to: ref('dim_company')
+                field: company_key
 
   - name: fact_macro_indicators
     columns:
       - name: country_key
         tests:
           - not_null
-          - relationships: {to: ref('dim_country'), field: country_key}
+          - relationships:
+              arguments:
+                to: ref('dim_country')
+                field: country_key
 
   - name: fact_gold_price
     description: Single global daily USD series; joined only on dim_date.
@@ -58,4 +70,7 @@ models:
       - name: date_key
         tests:
           - not_null
-          - relationships: {to: ref('dim_date'), field: date_key}
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key

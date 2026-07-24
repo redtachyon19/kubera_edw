@@ -5,7 +5,7 @@
 -- TODO (Phase 3): build surrogate key, implement SCD2 (snapshot or dbt snapshot-based).
 
 select
-    -- {{ dbt_utils.generate_surrogate_key(['ticker', 'effective_from']) }} as company_key,
+    -- company_key: surrogate key over (ticker, effective_from) via dbt_utils (Phase 3)
     -- ticker,
     -- cik,
     -- legal_name,
