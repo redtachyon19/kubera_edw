@@ -28,7 +28,7 @@ jobs:
         # Fast: no warehouse required — ingestion clients are tested against mocked responses.
         run: pytest tests/ -v
 
-  dbt-compile:
+  dbt-build:
     runs-on: ubuntu-latest
     needs: lint-and-test
     steps:
@@ -42,12 +42,23 @@ jobs:
       - name: Install dbt (DuckDB adapter)
         run: |
           python -m pip install --upgrade pip
-          pip install dbt-core dbt-duckdb
+          pip install dbt-core dbt-duckdb dbt_utils || pip install dbt-core dbt-duckdb
 
-      - name: dbt compile (validate the project parses & compiles)
-        # Scaffold stage: no landed/seeded data yet, so we validate structure only —
-        # this catches bad refs/sources, Jinja errors, and SQL that won't compile.
-        # Full `dbt build` (execute models + run dbt tests) returns in Phase 2/5 once
-        # seed/sample data is committed.
+      - name: dbt deps
+        working-directory: dbt
+        run: dbt deps
+
+      - name: dbt compile (whole project parses & compiles)
+        # Structural check across every model, including those whose sources need landed data.
         working-directory: dbt
         run: dbt compile --target ci --profiles-dir .
+
+      - name: dbt build — dimension slice (executes for real, from committed seeds)
+        # The conformed dimensions build with NO extraction and NO database state: seeds ->
+        # snapshot -> dims -> tests, all from files in the repo. indirect-selection=cautious
+        # keeps fact-table tests (which need landed data) out of the selection.
+        working-directory: dbt
+        run: |
+          dbt build --target ci --profiles-dir . --indirect-selection=cautious \
+            --select seed_companies country_regions currency_names company_snapshot \
+                     dim_company dim_country dim_currency dim_date

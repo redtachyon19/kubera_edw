@@ -5,39 +5,68 @@ version: 2
 # Generic-test arguments are nested under `arguments:` per dbt 1.10+ conventions.
 models:
   - name: dim_company
-    description: One row per company version (SCD Type 2 on classification changes).
+    description: One row per company VERSION (SCD Type 2 on classification changes).
     columns:
       - name: company_key
-        description: Surrogate key (unique per company version).
+        description: Surrogate key over (ticker, effective_from) — unique per version.
         tests: [not_null, unique]
-      # These columns arrive in Phase 3 when dim_company becomes a real SCD Type 2 dimension.
-      # The tests are written now and enabled then — a stub has only company_key, so running
-      # them today errors on a missing column rather than testing anything.
       - name: ticker
-        tests:
-          - not_null:
-              config: {enabled: false}   # TODO(phase-3): enable with the SCD2 build
+        description: Not unique here by design — one ticker has one row per version.
+        tests: [not_null]
+      - name: cik
+        tests: [not_null]
       - name: is_current
         tests:
+          - not_null
           - accepted_values:
               arguments:
                 values: [true, false]
-              config: {enabled: false}   # TODO(phase-3): enable with the SCD2 build
+      - name: effective_from
+        tests: [not_null]
+      - name: filer_type
+        tests:
+          - accepted_values:
+              arguments:
+                values: ["10-K", "20-F"]
+      - name: xbrl_taxonomy
+        description: Verified per company; BABA files 20-F yet tags under us-gaap.
+        tests:
+          - accepted_values:
+              arguments:
+                values: [us-gaap, ifrs-full]
+      - name: reporting_currency
+        tests: [not_null]
 
   - name: dim_country
     columns:
       - name: country_key
         tests: [not_null, unique]
+      - name: iso3_code
+        tests: [not_null, unique]
+      - name: region
+        description: Sourced from the country_regions seed; null would mean an unseeded country.
+        tests: [not_null]
 
   - name: dim_date
     columns:
       - name: date_key
         tests: [not_null, unique]
+      - name: full_date
+        tests: [not_null, unique]
+      - name: calendar_quarter
+        tests:
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4]
 
   - name: dim_currency
     columns:
       - name: currency_key
         tests: [not_null, unique]
+      - name: iso_code
+        tests: [not_null, unique]
+      - name: currency_name
+        tests: [not_null]
 
   - name: fact_financials
     description: One row per company per fiscal filing period (mixed quarterly/annual).

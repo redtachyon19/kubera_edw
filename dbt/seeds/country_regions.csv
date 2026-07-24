@@ -1,0 +1,16 @@
+country_iso3,country_name,region,sub_region
+USA,United States,North America,Northern America
+GBR,United Kingdom,Europe,Northern Europe
+JPN,Japan,Asia-Pacific,Eastern Asia
+IND,India,Asia-Pacific,Southern Asia
+CHN,China,Asia-Pacific,Eastern Asia
+DEU,Germany,Europe,Western Europe
+FRA,France,Europe,Western Europe
+CHE,Switzerland,Europe,Western Europe
+NLD,Netherlands,Europe,Western Europe
+KOR,South Korea,Asia-Pacific,Eastern Asia
+TWN,Taiwan,Asia-Pacific,Eastern Asia
+AUS,Australia,Asia-Pacific,Oceania
+BRA,Brazil,Latin America,South America
+MEX,Mexico,Latin America,Central America
+CAN,Canada,North America,Northern America

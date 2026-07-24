@@ -1,0 +1,15 @@
+currency_iso,currency_name,minor_unit_digits
+USD,US Dollar,2
+GBP,British Pound Sterling,2
+JPY,Japanese Yen,0
+INR,Indian Rupee,2
+CNY,Chinese Yuan Renminbi,2
+EUR,Euro,2
+CHF,Swiss Franc,2
+KRW,South Korean Won,0
+TWD,New Taiwan Dollar,2
+AUD,Australian Dollar,2
+BRL,Brazilian Real,2
+MXN,Mexican Peso,2
+CAD,Canadian Dollar,2
+HKD,Hong Kong Dollar,2

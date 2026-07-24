@@ -77,6 +77,34 @@ def parse_sec_facts() -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def parse_companies() -> pd.DataFrame:
+    """The coverage universe itself, as a warehouse table.
+
+    companies.yml stays the single source of truth; loading it here (rather than duplicating
+    it into a dbt seed) is what lets the SCD Type 2 snapshot detect classification changes —
+    a sector reclassification or a filer-type change edits the YAML, and the next snapshot
+    run closes the old row and opens a new one.
+    """
+    return pd.DataFrame(
+        [
+            {
+                "ticker": c["ticker"],
+                "cik": c["cik"],
+                "legal_name": c["legal_name"],
+                "country": c["country"],
+                "country_iso3": c["country_iso3"],
+                "currency": c["currency"],
+                "reporting_currency": c["reporting_currency"],
+                "sector": c["sector"],
+                "filer_type": c["filer_type"],
+                "fiscal_year_end": c["fiscal_year_end"],
+                "xbrl_taxonomy": c["xbrl_taxonomy"],
+            }
+            for c in load_companies()
+        ]
+    )
+
+
 def parse_world_bank() -> pd.DataFrame:
     """Flatten World Bank envelopes, carrying the load stamp for revision auditing."""
     rows: list[dict[str, Any]] = []
@@ -236,6 +264,7 @@ def load_all(target: str | None = None) -> dict[str, int]:
     """Parse every landed source and write it to the warehouse's raw schema."""
     target = target or os.environ.get("LOAD_TARGET", "duckdb")
     tables = {
+        "companies": parse_companies(),
         "sec_edgar_facts": parse_sec_facts(),
         "world_bank_macro": parse_world_bank(),
         "fx_rates": parse_fx(),

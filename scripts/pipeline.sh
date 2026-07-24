@@ -40,7 +40,8 @@ else
   done
 fi
 
-step "2/4  Load raw -> ${LOAD_TARGET}"
+step "2/4  Regenerate dbt seeds from companies.yml, then load raw -> ${LOAD_TARGET}"
+"$PY" -m ingestion.generate_seeds
 "$PY" -m ingestion.load_raw
 
 step "3/4  Transform (dbt build --target ${TARGET})"

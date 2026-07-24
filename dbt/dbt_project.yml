@@ -8,6 +8,23 @@ model-paths: ["models"]
 test-paths: ["tests"]
 seed-paths: ["seeds"]
 macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+vars:
+  # dim_date spine bounds. Covers the earliest landed filing period (AstraZeneca, 2003)
+  # through a comfortable forward horizon; widen here rather than editing the model.
+  date_spine_start: "2000-01-01"
+  date_spine_end: "2031-01-01"
+
+seeds:
+  kubera_edw:
+    seed_companies:
+      +column_types:
+        # Forced explicitly: cik must not lose its leading zeros to numeric inference, and
+        # industry is entirely blank today, which would otherwise infer as a null-typed column.
+        cik: varchar
+        industry: varchar
+        valid_from: date
 
 target-path: "target"
 clean-targets:
