@@ -65,6 +65,9 @@ cd dbt && dbt build
 export DAGSTER_HOME=$PWD/dagster_home
 dagster dev -f orchestration/dagster_pipeline.py
 
+# BI: dashboards at localhost:8501
+streamlit run dashboards/streamlit_app/app.py
+
 # Re-check the environment any time
 bash scripts/verify.sh
 ```

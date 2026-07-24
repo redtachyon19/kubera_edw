@@ -1,0 +1,18 @@
+# Pin the theme rather than inheriting the OS setting: the chart palette is validated against a
+# SPECIFIC surface, so letting the surface change underneath it invalidates the contrast and
+# CVD results. Dark is chosen because the dark palette steps clear every check including 3:1
+# contrast, which the light steps do not.
+# Surfaces match the validated values in dashboards/streamlit_app/theme.py.
+
+[theme]
+base = "dark"
+backgroundColor = "#0d0d0d"          # page plane
+secondaryBackgroundColor = "#1a1a19" # chart surface / sidebar
+textColor = "#ffffff"
+font = "sans serif"
+
+[server]
+headless = true
+
+[browser]
+gatherUsageStats = false
