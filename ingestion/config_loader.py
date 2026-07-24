@@ -95,3 +95,25 @@ def env(name: str, *, required: bool = False) -> str | None:
     if required and not value:
         raise RuntimeError(f"{name} is required. Set it in .env (see .env.example).")
     return value
+
+
+#: Substrings marking a value copied from .env.example but never filled in.
+_PLACEHOLDER_MARKERS = ("your_", "_here", "change_me", "changeme", "xxx")
+
+
+def api_key(name: str) -> str | None:
+    """Return a usable API key, or None if it is absent OR still a placeholder.
+
+    `.env` ships from `.env.example` with values like `your_fred_key_here`, which are truthy.
+    A naive `if not os.environ.get(...)` check therefore passes them straight through to the
+    API, which answers 400/401 — an error that looks like an outage rather than the real cause
+    (nobody filled the key in). Treating a placeholder as absent turns that into a clean,
+    self-explanatory skip.
+    """
+    value = (os.environ.get(name) or "").strip()
+    if not value:
+        return None
+    lowered = value.lower()
+    if any(marker in lowered for marker in _PLACEHOLDER_MARKERS):
+        return None
+    return value

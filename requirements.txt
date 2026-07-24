@@ -14,13 +14,16 @@ duckdb>=1.0            # local dev warehouse
 psycopg2-binary>=2.9   # Postgres (containerized)
 
 # --- Transformation / modeling ---
-dbt-core>=1.8
+# Upper bound on dbt-core is dictated by dagster-dbt, which pins a compatible range;
+# installing dagster-dbt against an unpinned dbt-core silently downgrades it.
+dbt-core>=1.11,<1.12
 dbt-duckdb>=1.8        # dev adapter
 dbt-postgres>=1.8      # containerized adapter
 
 # --- Orchestration ---
-dagster>=1.7
-dagster-webserver>=1.7
+dagster>=1.13
+dagster-webserver>=1.13
+dagster-dbt>=0.29        # @dbt_assets: models become first-class Dagster assets
 
 # --- BI ---
 streamlit>=1.36

@@ -61,6 +61,10 @@ python -m ingestion.sec_edgar_client
 # Model (build the warehouse)
 cd dbt && dbt build
 
+# Orchestrate: Dagster UI at localhost:3000 (no Docker needed)
+export DAGSTER_HOME=$PWD/dagster_home
+dagster dev -f orchestration/dagster_pipeline.py
+
 # Re-check the environment any time
 bash scripts/verify.sh
 ```

@@ -24,6 +24,7 @@ import logging
 import os
 
 from .base_client import BaseClient
+from .config_loader import api_key as get_api_key
 from .config_loader import bootstrap, price_tickers
 
 log = logging.getLogger(__name__)
@@ -77,9 +78,12 @@ class PricesClient(BaseClient):
         ``adjusted=True`` requests TIME_SERIES_DAILY_ADJUSTED, which is a premium endpoint —
         it will raise on a free key.
         """
-        api_key = os.environ.get("ALPHA_VANTAGE_API_KEY")
+        api_key = get_api_key("ALPHA_VANTAGE_API_KEY")
         if not api_key:
-            raise RuntimeError("ALPHA_VANTAGE_API_KEY is required for the Alpha Vantage backend.")
+            raise RuntimeError(
+                "ALPHA_VANTAGE_API_KEY is not set (or is still the .env.example placeholder). "
+                "Set a real key in .env to enable price extraction."
+            )
 
         cache = self._land_path(f"av_{ticker.upper()}", "json")
         if not force and self._is_fresh(cache, CACHE_MAX_AGE_DAYS):
@@ -120,6 +124,16 @@ def main() -> None:
     bootstrap()
     tickers = price_tickers()
     backend = os.environ.get("PRICES_BACKEND", DEFAULT_BACKEND)
+
+    # Check the credential ONCE up front. Without this the per-ticker loop below would log ten
+    # identical "missing key" errors and then report a misleading 0/10 partial success, rather
+    # than one clear "this source is not configured".
+    if backend == "alpha_vantage" and not get_api_key("ALPHA_VANTAGE_API_KEY"):
+        raise RuntimeError(
+            "ALPHA_VANTAGE_API_KEY is not set (or is still the .env.example placeholder). "
+            "Set a real key in .env to enable price extraction."
+        )
+
     log.info("prices backend: %s (%d tickers)", backend, len(tickers))
 
     ok, failed = 0, []

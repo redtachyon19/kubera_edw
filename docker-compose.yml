@@ -21,6 +21,9 @@ services:
       retries: 5
 
   # --- Orchestration (Dagster webserver + daemon) ---
+  # OPTIONAL: Dagster is a plain Python package and runs natively without Docker —
+  #   dagster dev -f orchestration/dagster_pipeline.py
+  # This service exists so a reviewer with Docker can bring the whole stack up in one command.
   orchestrator:
     build:
       context: .
@@ -28,6 +31,15 @@ services:
     container_name: kubera_orchestrator
     command: dagster dev -h 0.0.0.0 -p 3000 -f orchestration/dagster_pipeline.py
     env_file: .env
+    environment:
+      # Target the containerized Postgres rather than the local DuckDB file.
+      DBT_TARGET: prod
+      POSTGRES_HOST: warehouse
+      POSTGRES_PORT: 5432
+      # Keep the landing path identical inside and outside the container so cached raw data
+      # is shared rather than re-fetched against rate-limited APIs.
+      RAW_DATA_DIR: /app/data/raw
+      DAGSTER_HOME: /app/dagster_home
     depends_on:
       warehouse:
         condition: service_healthy
