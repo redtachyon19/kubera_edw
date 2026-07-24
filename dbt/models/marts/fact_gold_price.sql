@@ -1,16 +1,42 @@
--- fact_gold_price — one row per trading day. Intentionally company-less and country-less:
---   a single global USD series, joined only on dim_date (§9). Cross-cutting hedge/benchmark.
--- Measures (§9): gold_price_usd_per_oz (LBMA fixing), daily_change_pct.
--- TODO (Phase 4): from stg_gold__prices; compute daily_change_pct via window lag.
+-- fact_gold_price — one row per trading day.
+--
+-- Intentionally company-less and country-less: a single global USD series joined only on
+-- dim_date (§9). It functions as a cross-cutting hedge/benchmark that any dashboard can
+-- overlay against portfolio returns or inflation, rather than being scoped to a holding.
+--
+-- FRED marks non-observation days with "." (already nulled in staging); those rows are dropped
+-- here so daily_change_pct is computed over consecutive OBSERVED fixings rather than treating
+-- a missing day as a zero-price crash.
+--
+-- Currently empty pending a FRED_API_KEY.
 
 with gold as (
-    select * from {{ ref('stg_gold__prices') }}
+
+    select *
+    from {{ ref('stg_gold__prices') }}
+    where gold_price_usd_per_oz is not null
+
+),
+
+with_change as (
+
+    select
+        *,
+        lag(gold_price_usd_per_oz) over (order by price_date) as prev_price
+    from gold
+
 )
 
 select
-    -- date_key,
-    -- gold_price_usd_per_oz,
-    -- daily_change_pct
-    cast(null as int) as date_key
-from gold
-where false
+    cast(
+        extract(year  from price_date) * 10000
+      + extract(month from price_date) * 100
+      + extract(day   from price_date)
+    as {{ dbt.type_int() }})                                as date_key,
+
+    price_date,
+    series_id,
+    gold_price_usd_per_oz,
+    (gold_price_usd_per_oz / nullif(prev_price, 0)) - 1     as daily_change_pct
+
+from with_change

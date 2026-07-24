@@ -69,7 +69,13 @@ models:
         tests: [not_null]
 
   - name: fact_financials
-    description: One row per company per fiscal filing period (mixed quarterly/annual).
+    description: >
+      One row per company per fiscal filing period. Cadence is deliberately mixed: US domestic
+      filers contribute FY and Q rows, foreign private issuers largely FY only.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [ticker, period_end_date, period_type]
     columns:
       - name: company_key
         tests:
@@ -78,8 +84,35 @@ models:
               arguments:
                 to: ref('dim_company')
                 field: company_key
+      - name: date_key
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+      - name: period_type
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [FY, Q]
+      - name: reporting_currency
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_currency')
+                field: iso_code
+      - name: rate_per_usd
+        description: >
+          USD reporters sit at exactly 1.0; only TM (JPY) and BABA (CNY) truly convert.
+          Deliberately NOT not_null: TM and BABA have filing history from 2008/2013, while the
+          FX pull starts 2014-12-31, so those early periods have no rate and are honestly left
+          unconverted rather than given a fabricated one. See assert_usd_reporters_rate_is_one.
 
   - name: fact_market_prices
+    description: One row per company per trading day. Empty pending ALPHA_VANTAGE_API_KEY.
     columns:
       - name: company_key
         tests:
@@ -88,8 +121,20 @@ models:
               arguments:
                 to: ref('dim_company')
                 field: company_key
+      - name: date_key
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
 
   - name: fact_macro_indicators
+    description: One row per country per year, anchored to the Dec 31 date_key.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [country_iso3, calendar_year]
     columns:
       - name: country_key
         tests:
@@ -98,6 +143,15 @@ models:
               arguments:
                 to: ref('dim_country')
                 field: country_key
+      - name: date_key
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+      - name: calendar_year
+        tests: [not_null]
 
   - name: fact_gold_price
     description: Single global daily USD series; joined only on dim_date.

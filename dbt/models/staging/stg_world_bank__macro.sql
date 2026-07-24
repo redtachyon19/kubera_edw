@@ -16,7 +16,7 @@ renamed as (
         indicator,                                              -- gdp, cpi_inflation_pct, ...
         indicator_code,                                         -- NY.GDP.MKTP.CD, ...
         cast(year as {{ dbt.type_int() }})      as calendar_year,
-        cast(value as {{ dbt.type_float() }})   as indicator_value,
+        cast(value as {{ type_money() }})   as indicator_value,
         cast(loaded_at as {{ dbt.type_string() }}) as loaded_at,
         source_file
 

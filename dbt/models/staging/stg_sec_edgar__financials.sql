@@ -23,7 +23,7 @@ renamed as (
         unit,                                                       -- USD, JPY, CNY, shares...
         cast(period_start as date)                  as period_start_date,
         cast(period_end   as date)                  as period_end_date,
-        cast(value as {{ dbt.type_float() }})       as value_reported,
+        cast(value as {{ type_money() }})       as value_reported,
         cast(fiscal_year as {{ dbt.type_int() }})   as fiscal_year,
         fiscal_period,                                              -- FY | Q1..Q4
         form,                                                       -- 10-K, 10-Q, 20-F, 6-K

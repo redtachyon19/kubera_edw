@@ -14,7 +14,7 @@ renamed as (
         country_iso3,
         indicator_code,                                         -- NGDP_RPCH, PCPIPCH
         cast(year as {{ dbt.type_int() }})      as calendar_year,
-        cast(value as {{ dbt.type_float() }})   as indicator_value,
+        cast(value as {{ type_money() }})   as indicator_value,
         source_file
 
     from source

@@ -146,11 +146,21 @@ def parse_fx() -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def _empty(columns: list[str]) -> pd.DataFrame:
+    """An empty frame with every column explicitly typed as string.
+
+    Without explicit dtypes an empty frame lands with numeric-inferred columns, and a later
+    join against a varchar dimension key fails with a type-conversion error. Sources blocked
+    on an API key must still produce a *correctly shaped* empty table.
+    """
+    return pd.DataFrame({c: pd.Series(dtype="object") for c in columns})
+
+
 def parse_gold() -> pd.DataFrame:
     """FRED observations. Values stay as text — '.' missing markers are cleaned in staging."""
     path = raw_root() / "gold_price" / "gold_lbma_fixing.json"
     if not path.exists():
-        return pd.DataFrame(columns=["price_date", "value_raw", "series_id"])
+        return _empty(["price_date", "value_raw", "series_id"])
     payload = json.loads(path.read_text())
     return pd.DataFrame(
         [
@@ -163,11 +173,12 @@ def parse_gold() -> pd.DataFrame:
 def parse_prices() -> pd.DataFrame:
     """Daily OHLCV from either backend (Stooq CSV or Alpha Vantage JSON)."""
     rows: list[dict[str, Any]] = []
+    price_columns = [
+        "ticker", "trade_date", "open", "high", "low", "close", "volume", "source",
+    ]
     prices_dir = raw_root() / "prices"
     if not prices_dir.exists():
-        return pd.DataFrame(
-            columns=["ticker", "trade_date", "open", "high", "low", "close", "volume"]
-        )
+        return _empty(price_columns)
 
     for path in sorted(prices_dir.glob("*.csv")):  # Stooq
         for r in csv.DictReader(io.StringIO(path.read_text())):
@@ -199,7 +210,7 @@ def parse_prices() -> pd.DataFrame:
                     "source": "alpha_vantage",
                 }
             )
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows) if rows else _empty(price_columns)
 
 
 def parse_imf() -> pd.DataFrame:

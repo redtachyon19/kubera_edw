@@ -16,7 +16,7 @@ renamed as (
         cast(rate_date as date)                     as rate_date,
         base_currency,                                          -- always USD for this pull
         currency                                    as currency_iso,
-        cast(rate_per_base as {{ dbt.type_float() }}) as rate_per_usd
+        cast(rate_per_base as {{ type_money() }}) as rate_per_usd
 
     from source
     where rate_per_base is not null

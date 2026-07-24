@@ -15,14 +15,18 @@ with source as (
 renamed as (
 
     select
-        ticker,
+        -- Explicit string casts, not just renames: when a source is landed empty (prices are
+        -- blocked on an API key), the warehouse infers INTEGER for its columns, and joining
+        -- that against a varchar dimension key fails outright. Staging is where types get
+        -- pinned, so an empty source still produces a correctly TYPED empty table.
+        cast(ticker as {{ dbt.type_string() }}) as ticker,
         cast(trade_date as date)                as trade_date,
-        cast(open   as {{ dbt.type_float() }})  as open_price,
-        cast(high   as {{ dbt.type_float() }})  as high_price,
-        cast(low    as {{ dbt.type_float() }})  as low_price,
-        cast(close  as {{ dbt.type_float() }})  as close_price,
-        cast(volume as {{ dbt.type_float() }})  as volume,
-        source                                  as price_source
+        cast(open   as {{ type_money() }})  as open_price,
+        cast(high   as {{ type_money() }})  as high_price,
+        cast(low    as {{ type_money() }})  as low_price,
+        cast(close  as {{ type_money() }})  as close_price,
+        cast(volume as {{ type_money() }})  as volume,
+        cast(source as {{ dbt.type_string() }}) as price_source
 
     from source
     where trade_date is not null

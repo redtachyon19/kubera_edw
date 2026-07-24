@@ -1,0 +1,91 @@
+version: 2
+
+# dbt unit tests: exercise the SQL math against fixed inputs, with no warehouse data required.
+# These catch the two errors that would be most expensive to discover downstream — inverting an
+# FX rate, and computing a return across the wrong partition.
+unit_tests:
+
+  - name: test_fx_conversion_divides_by_rate
+    description: >
+      Frankfurter quotes are "foreign units per 1 USD", so converting INTO USD must DIVIDE.
+      Inverting this is silent and catastrophic: Toyota's revenue would come out ~22,000x too
+      large and still look like a plausible number in a chart.
+    model: fact_financials
+    given:
+      - input: ref('int_financials_cleaned')
+        rows:
+          - {cik: "0001094517", ticker: "TM", period_end_date: "2025-03-31", period_type: "FY",
+             fiscal_year: 2025, revenue: 48036704000000, cost_of_revenue: 0,
+             operating_income: 4795586000000, net_income: 4765840000000,
+             depreciation_amortization: 2270000000000, cash_and_equivalents: 0,
+             total_debt: 0, ebitda: 7065586000000, gross_profit: 0, net_debt: 0}
+      - input: ref('dim_company')
+        rows:
+          - {ticker: "TM", company_key: "tm-v1", reporting_currency: "JPY",
+             country_iso3: "JPN", effective_from: "2024-01-01", effective_to: null}
+      - input: ref('int_fx_daily')
+        rows:
+          - {currency_iso: "JPY", rate_date: "2025-03-31", rate_per_usd: 150.0,
+             is_carried_forward: false}
+    expect:
+      rows:
+        # 48,036,704,000,000 JPY / 150 = 320,244,693,333.33 USD
+        - {ticker: "TM", period_type: "FY", revenue_usd: 320244693333.3333}
+
+  - name: test_usd_reporter_conversion_is_identity
+    description: >
+      A USD-reporting company must pass through untouched at rate 1.0 — AZN, SHEL and INFY are
+      foreign issuers that file in USD, so "foreign domicile" must never trigger a conversion.
+    model: fact_financials
+    given:
+      - input: ref('int_financials_cleaned')
+        rows:
+          - {cik: "0000901832", ticker: "AZN", period_end_date: "2024-12-31", period_type: "FY",
+             fiscal_year: 2024, revenue: 54073000000, cost_of_revenue: 0,
+             operating_income: 8000000000, net_income: 7000000000,
+             depreciation_amortization: 1000000000, cash_and_equivalents: 0,
+             total_debt: 0, ebitda: 9000000000, gross_profit: 0, net_debt: 0}
+      - input: ref('dim_company')
+        rows:
+          - {ticker: "AZN", company_key: "azn-v1", reporting_currency: "USD",
+             country_iso3: "GBR", effective_from: "2024-01-01", effective_to: null}
+      - input: ref('int_fx_daily')
+        rows:
+          - {currency_iso: "USD", rate_date: "2024-12-31", rate_per_usd: 1.0,
+             is_carried_forward: false}
+    expect:
+      rows:
+        - {ticker: "AZN", period_type: "FY", revenue_usd: 54073000000.0}
+
+  - name: test_daily_return_partitions_by_ticker
+    description: >
+      daily_return must lag within a ticker. Without the partition, the first row of one ticker
+      would divide by the last price of the previous ticker and fabricate a huge return — the
+      classic window-function bug, and one that looks like a real market move in a chart.
+    model: fact_market_prices
+    given:
+      - input: ref('int_prices_usd_normalized')
+        rows:
+          - {ticker: "AAPL", trade_date: "2024-01-02", close_price_local: 100.0,
+             close_price_usd: 100.0, volume: 1000, quote_currency: "USD", rate_per_usd: 1.0,
+             is_held_position: true, fx_rate_carried_forward: false,
+             open_price: 0, high_price: 0, low_price: 0, price_source: "test"}
+          - {ticker: "AAPL", trade_date: "2024-01-03", close_price_local: 125.0,
+             close_price_usd: 125.0, volume: 1000, quote_currency: "USD", rate_per_usd: 1.0,
+             is_held_position: true, fx_rate_carried_forward: false,
+             open_price: 0, high_price: 0, low_price: 0, price_source: "test"}
+          # Different ticker at a very different price level — its first row must be null,
+          # NOT (500/125 - 1) = 300%.
+          - {ticker: "MSFT", trade_date: "2024-01-03", close_price_local: 500.0,
+             close_price_usd: 500.0, volume: 1000, quote_currency: "USD", rate_per_usd: 1.0,
+             is_held_position: true, fx_rate_carried_forward: false,
+             open_price: 0, high_price: 0, low_price: 0, price_source: "test"}
+      - input: ref('dim_company')
+        rows:
+          - {ticker: "AAPL", company_key: "aapl-v1", effective_from: "2024-01-01", effective_to: null}
+          - {ticker: "MSFT", company_key: "msft-v1", effective_from: "2024-01-01", effective_to: null}
+    expect:
+      rows:
+        - {ticker: "AAPL", trade_date: "2024-01-02", daily_return: null}
+        - {ticker: "AAPL", trade_date: "2024-01-03", daily_return: 0.25}
+        - {ticker: "MSFT", trade_date: "2024-01-03", daily_return: null}

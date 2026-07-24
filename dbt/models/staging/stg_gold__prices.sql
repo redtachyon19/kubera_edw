@@ -14,10 +14,10 @@ cleaned as (
 
     select
         cast(price_date as date) as price_date,
-        series_id,
+        cast(series_id as {{ dbt.type_string() }}) as series_id,
         case
             when value_raw = '.' then null
-            else cast(value_raw as {{ dbt.type_float() }})
+            else cast(value_raw as {{ type_money() }})
         end as gold_price_usd_per_oz
 
     from source
