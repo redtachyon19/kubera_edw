@@ -1,7 +1,15 @@
 # Kubera coverage universe.
 #
-# Phase 0 (Scope lock): this 8-company / 4-country subset (USA, GBR, JPN, TWN) is the proving
-# ground; once the pipeline runs end-to-end, scale out to the full ~40-name universe (§6).
+# Phase 0 (Scope lock): this 9-company / 5-country subset (USA, GBR, JPN, IND, CHN) is the
+# proving ground; once the pipeline runs end-to-end, scale out to the full ~40-name universe (§6).
+#
+# SCOPE REVISION 2026-07-24 (Phase 1): TSM/Taiwan was DROPPED and replaced by INFY (India) and
+#   BABA (China). Rationale: TSM reports in TWD, and TWD is absent from Frankfurter's 30-currency
+#   set, so its financials could not be USD-normalized at all — breaking the core FX-contribution
+#   KPI (§10), not merely leaving a macro hole. Taiwan also had no World Bank coverage. Both
+#   replacements have full World Bank + Frankfurter coverage. BABA additionally restores a second
+#   reporting currency (CNY) that genuinely exercises FX normalization; without it, Toyota's JPY
+#   would be the only company converting at all.
 #
 # SCOPE-LOCK PROVENANCE: verified 2026-07-24 against SEC EDGAR
 #   (User-Agent "Kubera EDW ishanvemireddy@icloud.com") — company_tickers.json for CIKs,
@@ -14,16 +22,26 @@
 #   reporting_currency  currency the company PRESENTS its SEC financials in (from XBRL units)
 #                       — drives fact_financials measures + FX normalization. NOTE: AZN and SHEL
 #                       report in USD, so FX normalization is a no-op for them (not GBP!).
-#   xbrl_taxonomy       us-gaap (domestic 10-K filers) vs ifrs-full (the 20-F filers) — the SEC
-#                       concept mapping must try both namespaces (see sec_edgar_client CONCEPT_TAG_MAP).
+#   xbrl_taxonomy       taxonomy the company's facts actually appear under, verified from
+#                       companyfacts — NOT inferable from filer_type: BABA files a 20-F but tags
+#                       under us-gaap, and TM carries BOTH ifrs-full and us-gaap. This is exactly
+#                       why sec_edgar_client walks both namespaces (see CONCEPT_TAG_MAP).
 #   fiscal_year_end     MM-DD; cadence is mixed (10-Q quarterly for US, 20-F annual-only for foreign).
 #
-# KNOWN COVERAGE GAPS for this locked scope (design around, don't ignore — §11):
-#   - Taiwan (TWN) has NO World Bank data -> fact_macro_indicators will be empty for TWN.
-#   - TWD is NOT in Frankfurter's currency set -> TSM's TWD->USD rate needs an alternate FX source.
-#   - The four 20-F filers use ifrs-full tags, not us-gaap -> revenue/operating_income need
-#     ifrs-full fallback tags added in Phase 1/2.
-#   - Mixed fiscal-year-ends (Apple Sep, Microsoft Jun, Toyota Mar, rest Dec).
+# FX NORMALIZATION SCOPE (drives Phase 4): only TM (JPY) and BABA (CNY) report in a non-USD
+#   currency. AZN, SHEL and INFY are foreign issuers that nonetheless present their SEC
+#   financials in USD, so conversion is a deliberate no-op for them — not a missing rate.
+#
+# KNOWN COVERAGE GAPS for this locked scope (design around, don't ignore — §11).
+# Status below re-confirmed empirically against landed data during Phase 1 (2026-07-24):
+#   - RESOLVED: the Taiwan World Bank gap and the TWD FX gap disappeared with the TSM swap.
+#     Every remaining country (USA, GBR, JPN, IND, CHN) has World Bank coverage, and every
+#     remaining currency (USD, GBP, JPY, INR, CNY) is served by Frankfurter — all verified live.
+#   - Mixed fiscal-year-ends (Apple Sep, Microsoft Jun, Toyota/Infosys/Alibaba Mar, rest Dec).
+#   - PRICES: stooq.com now gates its CSV endpoint behind a JavaScript proof-of-work bot
+#     check (confirmed 2026-07-24), so it is no longer a usable keyless source. Alpha Vantage
+#     (free key, ~25 req/day) is the price backend; note TIME_SERIES_DAILY_ADJUSTED is premium,
+#     so the free TIME_SERIES_DAILY endpoint is used.
 #   DECISION: keep TSM/Taiwan (best portfolio narrative) and accept the documented macro+FX gap.
 
 benchmarks:
@@ -126,14 +144,28 @@ companies:
     fiscal_year_end: "03-31"
     xbrl_taxonomy: ifrs-full
 
-  - ticker: TSM
-    cik: "0001046179"
-    legal_name: Taiwan Semiconductor Manufacturing Company Ltd.
-    country: Taiwan
-    country_iso3: TWN
-    currency: TWD
-    reporting_currency: TWD
+  - ticker: INFY
+    cik: "0001067491"
+    legal_name: Infosys Ltd
+    country: India
+    country_iso3: IND
+    currency: INR
+    reporting_currency: USD   # Infosys presents its SEC financials in USD, not INR
     sector: Technology
     filer_type: 20-F
-    fiscal_year_end: "12-31"
+    fiscal_year_end: "03-31"
     xbrl_taxonomy: ifrs-full
+
+  - ticker: BABA
+    cik: "0001577552"
+    legal_name: Alibaba Group Holding Ltd
+    country: China
+    country_iso3: CHN
+    currency: CNY
+    reporting_currency: CNY   # reports in CNY — one of only two names needing FX conversion
+    sector: Technology
+    filer_type: 20-F
+    # NOTE: files a 20-F but tags under us-gaap, not ifrs-full — the counterexample proving
+    # taxonomy cannot be inferred from filer type.
+    xbrl_taxonomy: us-gaap
+    fiscal_year_end: "03-31"
