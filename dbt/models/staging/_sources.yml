@@ -1,0 +1,19 @@
+version: 2
+
+# Raw landed data (from ingestion/ clients) registered as dbt sources.
+# During dev these are loaded into a `raw` schema; staging models read from here.
+sources:
+  - name: raw
+    description: Raw responses landed as-is by the ingestion clients (no transformation).
+    schema: raw
+    tables:
+      - name: sec_edgar_facts
+        description: Company XBRL facts from SEC EDGAR (10-K/10-Q, 20-F/6-K).
+      - name: world_bank_macro
+        description: World Bank country-year macro indicators.
+      - name: fx_rates
+        description: Daily FX rates (base USD) from Frankfurter / exchangerate.host.
+      - name: gold_prices
+        description: LBMA daily gold fixing (USD/oz) from FRED GOLDAMGBD228NLBM.
+      - name: market_prices
+        description: Daily OHLCV from Stooq / Alpha Vantage.

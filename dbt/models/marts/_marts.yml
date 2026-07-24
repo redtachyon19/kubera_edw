@@ -1,0 +1,61 @@
+version: 2
+
+# dbt-native tests on the warehouse (Phase 5). not_null / unique on keys, and relationships
+# (referential integrity) from every fact FK back to its conformed dimension.
+models:
+  - name: dim_company
+    description: One row per company version (SCD Type 2 on classification changes).
+    columns:
+      - name: company_key
+        description: Surrogate key (unique per company version).
+        tests: [not_null, unique]
+      - name: ticker
+        tests: [not_null]
+      - name: is_current
+        tests:
+          - accepted_values: {values: [true, false]}
+
+  - name: dim_country
+    columns:
+      - name: country_key
+        tests: [not_null, unique]
+
+  - name: dim_date
+    columns:
+      - name: date_key
+        tests: [not_null, unique]
+
+  - name: dim_currency
+    columns:
+      - name: currency_key
+        tests: [not_null, unique]
+
+  - name: fact_financials
+    description: One row per company per fiscal filing period (mixed quarterly/annual).
+    columns:
+      - name: company_key
+        tests:
+          - not_null
+          - relationships: {to: ref('dim_company'), field: company_key}
+
+  - name: fact_market_prices
+    columns:
+      - name: company_key
+        tests:
+          - not_null
+          - relationships: {to: ref('dim_company'), field: company_key}
+
+  - name: fact_macro_indicators
+    columns:
+      - name: country_key
+        tests:
+          - not_null
+          - relationships: {to: ref('dim_country'), field: country_key}
+
+  - name: fact_gold_price
+    description: Single global daily USD series; joined only on dim_date.
+    columns:
+      - name: date_key
+        tests:
+          - not_null
+          - relationships: {to: ref('dim_date'), field: date_key}

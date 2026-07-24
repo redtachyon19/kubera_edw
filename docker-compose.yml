@@ -1,0 +1,50 @@
+# Kubera_EDW — local, reproducible stack. One command: `docker compose up`.
+# Secrets come from .env (gitignored); see .env.example for required vars.
+
+services:
+  # --- Warehouse (containerized Postgres target) ---
+  warehouse:
+    image: postgres:16
+    container_name: kubera_warehouse
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - warehouse_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # --- Orchestration (Dagster webserver + daemon) ---
+  orchestrator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kubera_orchestrator
+    command: dagster dev -h 0.0.0.0 -p 3000 -f orchestration/dagster_pipeline.py
+    env_file: .env
+    depends_on:
+      warehouse:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/app
+
+  # --- BI layer (Metabase). Swap for the Streamlit app if preferred. ---
+  bi:
+    image: metabase/metabase:latest
+    container_name: kubera_bi
+    depends_on:
+      warehouse:
+        condition: service_healthy
+    ports:
+      - "3001:3000"
+
+volumes:
+  warehouse_data:

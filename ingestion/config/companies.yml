@@ -1,0 +1,92 @@
+# Kubera coverage universe.
+#
+# Phase 0 (Scope lock): start with this 8-company / 5-country subset, prove the pipeline
+# end-to-end, THEN scale out to the full ~40-name universe (see docs/project_spec.md §6).
+#
+# IMPORTANT: filer status (10-K vs 20-F), tickers, and CIKs change (delistings, M&A,
+# re-domestications). Re-verify each on SEC EDGAR before wiring extraction:
+#   https://www.sec.gov/cgi-bin/browse-edgar
+# CIK is left null until confirmed — the SEC client resolves ticker → CIK and should
+# fail loudly rather than guess.
+
+benchmarks:
+  # Benchmark tickers used for relative-performance KPIs (not held positions).
+  sector_or_index:
+    - SPY   # S&P 500 proxy
+    - ACWI  # MSCI ACWI (global) proxy
+
+companies:
+  # --- North America (domestic 10-K/10-Q filers) ---
+  - ticker: AAPL
+    cik: null
+    legal_name: Apple Inc.
+    country: United States
+    country_iso3: USA
+    currency: USD
+    sector: Technology
+    filer_type: 10-K
+
+  - ticker: MSFT
+    cik: null
+    legal_name: Microsoft Corporation
+    country: United States
+    country_iso3: USA
+    currency: USD
+    sector: Technology
+    filer_type: 10-K
+
+  - ticker: JPM
+    cik: null
+    legal_name: JPMorgan Chase & Co.
+    country: United States
+    country_iso3: USA
+    currency: USD
+    sector: Financials
+    filer_type: 10-K
+
+  - ticker: XOM
+    cik: null
+    legal_name: Exxon Mobil Corporation
+    country: United States
+    country_iso3: USA
+    currency: USD
+    sector: Energy
+    filer_type: 10-K
+
+  # --- Europe (foreign private issuers, 20-F) ---
+  - ticker: AZN
+    cik: null
+    legal_name: AstraZeneca plc
+    country: United Kingdom
+    country_iso3: GBR
+    currency: GBP
+    sector: Healthcare
+    filer_type: 20-F
+
+  - ticker: SHEL
+    cik: null
+    legal_name: Shell plc
+    country: United Kingdom   # Netherlands/UK; domiciled UK since 2022 — verify
+    country_iso3: GBR
+    currency: GBP
+    sector: Energy
+    filer_type: 20-F
+
+  # --- Asia-Pacific (foreign private issuers, 20-F) ---
+  - ticker: TM
+    cik: null
+    legal_name: Toyota Motor Corporation
+    country: Japan
+    country_iso3: JPN
+    currency: JPY
+    sector: Consumer Discretionary
+    filer_type: 20-F
+
+  - ticker: TSM
+    cik: null
+    legal_name: Taiwan Semiconductor Manufacturing Company Ltd.
+    country: Taiwan
+    country_iso3: TWN
+    currency: TWD
+    sector: Technology
+    filer_type: 20-F

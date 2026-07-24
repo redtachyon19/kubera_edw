@@ -1,0 +1,16 @@
+[project]
+name = "kubera-edw"
+version = "0.1.0"
+description = "Global Asset Management — Enterprise Data Warehouse & BI portfolio project"
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]  # pycodestyle, pyflakes, isort, pyupgrade, bugbear
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
