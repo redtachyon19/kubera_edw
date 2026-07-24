@@ -1,19 +1,23 @@
 version: 2
 
-# Raw landed data (from ingestion/ clients) registered as dbt sources.
-# During dev these are loaded into a `raw` schema; staging models read from here.
+# Raw landed data, loaded by `python -m ingestion.load_raw` (the EL step dbt does not do).
+# The loader targets DuckDB or Postgres/Neon identically, so these models are portable.
 sources:
   - name: raw
-    description: Raw responses landed as-is by the ingestion clients (no transformation).
+    description: Raw responses parsed from data/raw/ into tidy tables — no business logic.
     schema: raw
     tables:
       - name: sec_edgar_facts
-        description: Company XBRL facts from SEC EDGAR (10-K/10-Q, 20-F/6-K).
+        description: >
+          Flattened company XBRL facts (10-K/10-Q, 20-F/6-K). One row per company per
+          taxonomy/concept per unit per reported period. Both us-gaap and ifrs-full appear.
       - name: world_bank_macro
-        description: World Bank country-year macro indicators.
+        description: Country-year macro indicators, carrying loaded_at for revision auditing.
       - name: fx_rates
-        description: Daily FX rates (base USD) from Frankfurter / exchangerate.host.
+        description: Daily FX rates unpivoted to (rate_date, currency, rate_per_base), base USD.
       - name: gold_prices
-        description: LBMA daily gold fixing (USD/oz) from FRED GOLDAMGBD228NLBM.
+        description: LBMA daily gold fixing from FRED; value_raw keeps "." missing markers.
       - name: market_prices
-        description: Daily OHLCV from Stooq / Alpha Vantage.
+        description: Daily OHLCV from the Stooq or Alpha Vantage backend.
+      - name: imf_macro
+        description: IMF DataMapper cross-check indicators, scoped to universe countries.

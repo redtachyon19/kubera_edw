@@ -10,8 +10,9 @@ TODO: flesh out assets once the ingestion clients and dbt models are implemented
 below shows the intended asset graph and a daily schedule.
 """
 
-from __future__ import annotations
-
+# NOTE: deliberately no `from __future__ import annotations` here. Dagster resolves the
+# `context` parameter's annotation at runtime; PEP 563 would turn it into a string and the
+# @asset decorator would reject it.
 from dagster import (
     AssetExecutionContext,
     Definitions,

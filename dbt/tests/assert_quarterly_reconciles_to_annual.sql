@@ -6,7 +6,9 @@
 -- TODO (Phase 5): implement against fact_financials once populated. Tolerance accounts for
 --   restatements and rounding; foreign issuers that only file annually are excluded (no quarters).
 
-{{ config(severity='warn') }}
+-- Disabled until Phase 4 populates fact_financials with revenue / fiscal_year / period_type.
+-- TODO(phase-4): flip enabled=true once those columns exist.
+{{ config(severity='warn', enabled=false) }}
 
 with reconciliation as (
     select
