@@ -1,0 +1,4 @@
+ticker,trade_date,open,high,low,close,volume,source
+AAPL,2024-03-26,170.00,171.42,169.58,169.71,57388400,ci_fixture
+AAPL,2024-03-27,170.41,173.60,170.11,173.31,60273300,ci_fixture
+AAPL,2024-03-28,171.75,172.23,170.51,171.48,65672700,ci_fixture

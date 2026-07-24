@@ -16,6 +16,11 @@ vars:
   date_spine_start: "2000-01-01"
   date_spine_end: "2031-01-01"
 
+  # How many days an FX rate may be carried past the last published quote. Covers weekends and
+  # holiday closures (a fiscal period ending Sunday still converts) without extrapolating a
+  # stale rate indefinitely. Rows using a carried rate are flagged is_carried_forward.
+  fx_max_carry_forward_days: 7
+
 seeds:
   kubera_edw:
     seed_companies:
@@ -25,6 +30,30 @@ seeds:
         cik: varchar
         industry: varchar
         valid_from: date
+
+    # Committed fixtures standing in for landed data, so the FULL DAG (staging -> intermediate
+    # -> marts -> tests) builds offline in CI with no API keys and no extraction run.
+    #
+    # ENABLED ONLY ON THE ci TARGET. On dev/prod the raw schema is written by
+    # `python -m ingestion.load_raw` with real data; if these seeds ran there they would
+    # overwrite 172k real facts with a handful of fixtures.
+    ci_raw:
+      +schema: raw
+      +enabled: "{{ target.name == 'ci' }}"
+      sec_edgar_facts:
+        +column_types:
+          cik: varchar
+          period_start: date
+          period_end: date
+          filed_date: date
+          value: double precision
+      gold_prices:
+        +column_types:
+          value_raw: varchar      # keeps FRED's "." marker intact for staging to null out
+      market_prices:
+        +column_types:
+          ticker: varchar
+          trade_date: date
 
 target-path: "target"
 clean-targets:

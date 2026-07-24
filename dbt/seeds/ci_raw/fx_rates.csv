@@ -1,0 +1,9 @@
+rate_date,base_currency,currency,rate_per_base,source_file
+2024-03-26,USD,JPY,151.55,ci_fixture
+2024-03-27,USD,JPY,151.32,ci_fixture
+2024-03-28,USD,JPY,151.35,ci_fixture
+2024-03-26,USD,GBP,0.7912,ci_fixture
+2024-03-27,USD,GBP,0.7925,ci_fixture
+2024-03-28,USD,GBP,0.7918,ci_fixture
+2023-12-29,USD,JPY,141.04,ci_fixture
+2023-12-29,USD,GBP,0.7846,ci_fixture

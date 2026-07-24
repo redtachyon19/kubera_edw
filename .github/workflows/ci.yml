@@ -48,17 +48,16 @@ jobs:
         working-directory: dbt
         run: dbt deps
 
-      - name: dbt compile (whole project parses & compiles)
-        # Structural check across every model, including those whose sources need landed data.
+      - name: dbt seed (load committed CI fixtures into the raw schema)
+        # Seeds run as their own step, not via `dbt build`: dbt has no DAG edge from a
+        # source() to the seed that populates it, so in a single build it would schedule the
+        # staging models in parallel with the seeds and hit a missing table.
         working-directory: dbt
-        run: dbt compile --target ci --profiles-dir .
+        run: dbt seed --target ci --profiles-dir .
 
-      - name: dbt build — dimension slice (executes for real, from committed seeds)
-        # The conformed dimensions build with NO extraction and NO database state: seeds ->
-        # snapshot -> dims -> tests, all from files in the repo. indirect-selection=cautious
-        # keeps fact-table tests (which need landed data) out of the selection.
+      - name: dbt build — full DAG offline
+        # seeds -> staging -> intermediate -> marts -> snapshots -> every test, with NO API
+        # keys, NO network and NO extraction run. The reconciliation test is severity=warn and
+        # is EXPECTED to fire on the deliberately-broken filer in the fixtures.
         working-directory: dbt
-        run: |
-          dbt build --target ci --profiles-dir . --indirect-selection=cautious \
-            --select seed_companies country_regions currency_names company_snapshot \
-                     dim_company dim_country dim_currency dim_date
+        run: dbt build --target ci --profiles-dir .

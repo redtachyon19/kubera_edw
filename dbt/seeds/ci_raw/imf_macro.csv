@@ -1,0 +1,4 @@
+indicator_code,country_iso3,year,value,source_file
+NGDP_RPCH,USA,2023,2.9,ci_fixture
+NGDP_RPCH,JPN,2023,1.9,ci_fixture
+PCPIPCH,USA,2023,4.1,ci_fixture

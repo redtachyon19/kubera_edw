@@ -27,6 +27,12 @@ bounds as (
 ),
 
 -- Every (date, currency) pair we could ever be asked to convert on.
+--
+-- The window extends fx_max_carry_forward_days PAST the last published quote. Without that,
+-- a period ending just after the final quote gets no rate at all — Toyota's fiscal year closes
+-- Sunday 2024-03-31 while the last ECB quote is Thursday, so its revenue would silently fail
+-- to convert. The window is deliberately bounded rather than open-ended: carrying a rate
+-- forward across a weekend is sound, carrying it forward for months is fabrication.
 scaffold as (
 
     select
@@ -35,7 +41,8 @@ scaffold as (
     from {{ ref('dim_date') }} d
     cross join currencies c
     cross join bounds b
-    where d.full_date between b.first_rate_date and b.last_rate_date
+    where d.full_date >= b.first_rate_date
+      and d.full_date <= b.last_rate_date + {{ var('fx_max_carry_forward_days') }}
 
 ),
 

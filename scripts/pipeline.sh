@@ -45,7 +45,9 @@ step "2/4  Regenerate dbt seeds from companies.yml, then load raw -> ${LOAD_TARG
 "$PY" -m ingestion.load_raw
 
 step "3/4  Transform (dbt build --target ${TARGET})"
-( cd dbt && DBT_PROFILES_DIR=. "$DBT" build --target "$TARGET" )
+# Seeds run first: dbt has no DAG edge from a source() to the seed that fills it, so a
+# single build could schedule staging models before the seeds finish.
+( cd dbt && DBT_PROFILES_DIR=. "$DBT" deps -q && DBT_PROFILES_DIR=. "$DBT" seed --target "$TARGET"   && DBT_PROFILES_DIR=. "$DBT" build --target "$TARGET" )
 
 step "4/4  Done"
 echo "    Warehouse target: ${TARGET} (${LOAD_TARGET})"

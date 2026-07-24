@@ -7,10 +7,6 @@ sources:
     description: Raw responses parsed from data/raw/ into tidy tables — no business logic.
     schema: raw
     tables:
-      - name: companies
-        description: >
-          The coverage universe from ingestion/config/companies.yml. Feeds the SCD Type 2
-          company snapshot, so edits to the YAML become new dimension versions.
       - name: sec_edgar_facts
         description: >
           Flattened company XBRL facts (10-K/10-Q, 20-F/6-K). One row per company per

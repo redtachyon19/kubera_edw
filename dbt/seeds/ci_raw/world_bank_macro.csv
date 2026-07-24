@@ -1,0 +1,9 @@
+indicator,indicator_code,country_iso3,country_name,year,value,loaded_at,source_file
+gdp,NY.GDP.MKTP.CD,USA,United States,2023,27360935000000,2026-07-24T00:00:00+00:00,ci_fixture
+gdp_growth_pct,NY.GDP.MKTP.KD.ZG,USA,United States,2023,2.89,2026-07-24T00:00:00+00:00,ci_fixture
+cpi_inflation_pct,FP.CPI.TOTL.ZG,USA,United States,2023,4.12,2026-07-24T00:00:00+00:00,ci_fixture
+unemployment_pct,SL.UEM.TOTL.ZS,USA,United States,2023,3.63,2026-07-24T00:00:00+00:00,ci_fixture
+gdp,NY.GDP.MKTP.CD,JPN,Japan,2023,4212945000000,2026-07-24T00:00:00+00:00,ci_fixture
+gdp_growth_pct,NY.GDP.MKTP.KD.ZG,JPN,Japan,2023,1.91,2026-07-24T00:00:00+00:00,ci_fixture
+gdp,NY.GDP.MKTP.CD,GBR,United Kingdom,2023,3340032000000,2026-07-24T00:00:00+00:00,ci_fixture
+gdp_growth_pct,NY.GDP.MKTP.KD.ZG,GBR,United Kingdom,2023,0.34,2026-07-24T00:00:00+00:00,ci_fixture
