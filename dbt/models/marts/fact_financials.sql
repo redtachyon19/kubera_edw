@@ -1,14 +1,3 @@
--- fact_financials — one row per company per fiscal filing period (mixed quarterly/annual).
---
--- Cadence is deliberately NOT uniform: US domestic filers contribute both FY and Q rows
--- (10-K/10-Q), while foreign private issuers contribute FY rows only (20-F). period_type
--- distinguishes them so an analyst never silently sums a quarter beside a year (§11).
---
--- CURRENCY NORMALIZATION. Measures are carried twice: as reported, and converted to USD.
--- Only Toyota (JPY) and Alibaba (CNY) actually convert — AZN, SHEL and INFY are foreign
--- issuers that nonetheless present their SEC financials in USD, so conversion is an
--- intentional no-op for them, not a missing rate. Frankfurter quotes are "foreign units per
--- 1 USD", so converting to USD DIVIDES by the rate (see stg_fx__rates).
 
 with financials as (
 
@@ -22,9 +11,6 @@ company as (
 
 ),
 
--- As-of join: attach each period to the company version that was effective when the period
--- closed, so a later reclassification never rewrites historical rows. Periods predating
--- coverage inception fall back to the earliest known version.
 matched as (
 
     select
@@ -77,10 +63,9 @@ select
     country_iso3,
     period_end_date,
     fiscal_year,
-    period_type,                                -- FY | Q
+    period_type,
     reporting_currency,
 
-    -- As reported, in the company's own reporting currency.
     revenue,
     cost_of_revenue,
     gross_profit,
@@ -92,8 +77,6 @@ select
     total_debt,
     net_debt,
 
-    -- USD-normalized. Null (not zero) where no rate exists — TM/BABA history predates the
-    -- FX pull window, and a fabricated zero would read as a real reported figure.
     rate_per_usd,
     fx_rate_carried_forward,
     revenue          / rate_per_usd             as revenue_usd,
@@ -103,7 +86,6 @@ select
     total_debt       / rate_per_usd             as total_debt_usd,
     net_debt         / rate_per_usd             as net_debt_usd,
 
-    -- Ratio KPIs (§10). Unit-free, so they need no currency conversion.
     ebitda        / nullif(revenue, 0)          as ebitda_margin,
     net_income    / nullif(revenue, 0)          as net_margin,
     gross_profit  / nullif(revenue, 0)          as gross_margin,

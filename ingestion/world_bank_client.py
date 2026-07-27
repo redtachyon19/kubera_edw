@@ -1,18 +1,3 @@
-"""World Bank client — country-level macro indicators.
-
-REST, no key. Pattern:
-  https://api.worldbank.org/v2/country/{iso3};{iso3}/indicator/{code}?format=json&per_page=...
-
-The response is a 2-element envelope: [pagination_metadata, rows].
-
-Notes:
-  - Macro figures are revised and published with a long lag, so every landing records a
-    ``loaded_at`` stamp and a date-stamped filename — a later revision lands alongside the
-    earlier load rather than silently overwriting reporting an analyst already relied on (§11).
-  - Taiwan (TWN) has no World Bank coverage; it is skipped with a warning, not a crash
-    (recorded as a known gap during Phase 0 scope lock).
-"""
-
 from __future__ import annotations
 
 import logging
@@ -30,7 +15,6 @@ INDICATORS: dict[str, str] = {
     "unemployment_pct": "SL.UEM.TOTL.ZS",
 }
 
-#: ISO3 codes with no World Bank coverage — skipped rather than failing the run.
 UNSUPPORTED_ISO3 = {"TWN"}
 
 
@@ -41,11 +25,6 @@ class WorldBankClient(BaseClient):
     def fetch_indicator(
         self, iso3_codes: list[str], indicator: str, *, start_year: int, end_year: int
     ) -> list:
-        """Fetch one indicator for one or more countries over a year range; land raw.
-
-        Returns the data rows (envelope element 1), and lands them wrapped with load
-        provenance so macro revisions stay auditable.
-        """
         code = INDICATORS[indicator]
         supported = [c for c in iso3_codes if c not in UNSUPPORTED_ISO3]
         skipped = sorted(set(iso3_codes) - set(supported))
@@ -60,7 +39,6 @@ class WorldBankClient(BaseClient):
             path, format="json", per_page=20000, date=f"{start_year}:{end_year}"
         ).json()
 
-        # World Bank returns [metadata, rows]; rows is None when a query matches nothing.
         rows = payload[1] if isinstance(payload, list) and len(payload) > 1 else []
         rows = rows or []
 
@@ -82,7 +60,6 @@ class WorldBankClient(BaseClient):
 
 
 def main() -> None:
-    """Land all macro indicators for every country in the universe."""
     bootstrap()
     countries = sorted(country_iso3_set())
     end_year = datetime.now(UTC).year

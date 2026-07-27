@@ -1,23 +1,13 @@
-# Dagster instance config. Point DAGSTER_HOME at this directory:
-#   export DAGSTER_HOME=$(pwd)/dagster_home
-# Without it Dagster uses a temp dir and discards run history between sessions.
 
-# Detect runs whose process died (OOM, container restart) rather than leaving them "started"
-# forever. max_resume_run_attempts must be 0 with the default run launcher, which cannot resume
-# a dead run worker — such runs are marked failed and the run_retries setting below relaunches
-# them. Raise this only when running on a launcher that supports resumption (k8s, ECS).
 run_monitoring:
   enabled: true
   start_timeout_seconds: 300
   max_resume_run_attempts: 0
 
-# Whole-run retries, complementing the per-asset RetryPolicy in the pipeline: the asset policy
-# handles a flaky HTTP call, this handles the process itself dying.
 run_retries:
   enabled: true
   max_retries: 1
 
-# Keep the instance from growing without bound on a laptop.
 retention:
   schedule:
     purge_after_days: 90

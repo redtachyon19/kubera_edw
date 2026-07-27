@@ -1,10 +1,3 @@
-"""Shared pytest fixtures — mock API responses and sample payloads.
-
-Tests here exercise the *code* (parsing, landing, caching, error handling) against mocked HTTP
-responses, so `pytest tests/` runs fast with no network and no warehouse (see project_spec.md §8).
-`respx` stubs httpx calls; RAW_DATA_DIR is redirected to a tmp dir so nothing touches data/raw.
-"""
-
 from __future__ import annotations
 
 import pytest
@@ -14,18 +7,15 @@ from ingestion.base_client import BaseClient
 
 @pytest.fixture(autouse=True)
 def _isolated_env(tmp_path, monkeypatch):
-    """Every test runs against a throwaway landing dir, test creds, and no throttle delay."""
     monkeypatch.setenv("RAW_DATA_DIR", str(tmp_path / "raw"))
     monkeypatch.setenv("SEC_EDGAR_USER_AGENT", "Kubera Test test@example.com")
     monkeypatch.setenv("FRED_API_KEY", "test-fred-key")
     monkeypatch.setenv("ALPHA_VANTAGE_API_KEY", "test-av-key")
-    # Self-throttling is correct in production but would just slow the suite down.
     monkeypatch.setattr(BaseClient, "min_interval_s", 0.0)
 
 
 @pytest.fixture
 def sample_sec_company_facts() -> dict:
-    """A minimal SEC XBRL companyfacts payload shape (trimmed) for parser tests."""
     return {
         "cik": 320193,
         "entityName": "Apple Inc.",
@@ -51,7 +41,6 @@ def sample_sec_company_facts() -> dict:
 
 @pytest.fixture
 def sample_sec_ticker_map() -> dict:
-    """SEC company_tickers.json shape: integer CIKs needing zero-padding to 10 digits."""
     return {
         "0": {"cik_str": 320193, "ticker": "AAPL", "title": "Apple Inc."},
         "1": {"cik_str": 789019, "ticker": "MSFT", "title": "MICROSOFT CORP"},
@@ -60,7 +49,6 @@ def sample_sec_ticker_map() -> dict:
 
 @pytest.fixture
 def sample_fx_timeseries() -> dict:
-    """A minimal Frankfurter time-series payload (base USD)."""
     return {
         "base": "USD",
         "start_date": "2023-01-02",
@@ -74,7 +62,6 @@ def sample_fx_timeseries() -> dict:
 
 @pytest.fixture
 def sample_world_bank_response() -> list:
-    """World Bank's 2-element envelope: [pagination metadata, rows]."""
     return [
         {"page": 1, "pages": 1, "per_page": 20000, "total": 2},
         [
@@ -98,7 +85,6 @@ def sample_world_bank_response() -> list:
 
 @pytest.fixture
 def sample_fred_observations() -> dict:
-    """FRED observations payload — note the '.' marker for a missing value."""
     return {
         "realtime_start": "2026-07-24",
         "observation_start": "2010-01-01",
@@ -113,7 +99,6 @@ def sample_fred_observations() -> dict:
 
 @pytest.fixture
 def sample_stooq_csv() -> str:
-    """Stooq daily OHLCV CSV body."""
     return (
         "Date,Open,High,Low,Close,Volume\n"
         "2023-01-03,130.28,130.90,124.17,125.07,112117471\n"

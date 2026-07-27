@@ -1,10 +1,3 @@
--- Staging: SEC EDGAR financial facts. Light cleaning/typing/renaming only — no business logic.
--- Grain: one row per company per taxonomy/concept per unit per reported period.
---
--- Deliberately NOT done here (belongs in intermediate):
---   * picking canonical concepts from the us-gaap/ifrs-full tag candidates
---   * de-duplicating restatements (the same period is re-reported across later filings, so
---     one (cik, concept, period) legitimately has several rows with different accessions)
 
 with source as (
 
@@ -18,21 +11,20 @@ renamed as (
         cik,
         ticker,
         entity_name,
-        taxonomy,                                                   -- us-gaap | ifrs-full
-        concept,                                                    -- raw XBRL tag
-        unit,                                                       -- USD, JPY, CNY, shares...
+        taxonomy,
+        concept,
+        unit,
         cast(period_start as date)                  as period_start_date,
         cast(period_end   as date)                  as period_end_date,
         cast(value as {{ type_money() }})       as value_reported,
         cast(fiscal_year as {{ dbt.type_int() }})   as fiscal_year,
-        fiscal_period,                                              -- FY | Q1..Q4
-        form,                                                       -- 10-K, 10-Q, 20-F, 6-K
+        fiscal_period,
+        form,
         cast(filed_date as date)                    as filed_date,
         frame,
         accession
 
     from source
-    -- A fact with no period end cannot be placed on the date dimension.
     where period_end is not null
 
 )

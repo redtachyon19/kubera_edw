@@ -1,7 +1,5 @@
 version: 2
 
-# Raw landed data, loaded by `python -m ingestion.load_raw` (the EL step dbt does not do).
-# The loader targets DuckDB or Postgres/Neon identically, so these models are portable.
 sources:
   - name: raw
     description: Raw responses parsed from data/raw/ into tidy tables — no business logic.

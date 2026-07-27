@@ -1,8 +1,5 @@
 version: 2
 
-# dbt unit tests: exercise the SQL math against fixed inputs, with no warehouse data required.
-# These catch the two errors that would be most expensive to discover downstream — inverting an
-# FX rate, and computing a return across the wrong partition.
 unit_tests:
 
   - name: test_fx_conversion_divides_by_rate
@@ -29,7 +26,6 @@ unit_tests:
              is_carried_forward: false}
     expect:
       rows:
-        # 48,036,704,000,000 JPY / 150 = 320,244,693,333.33 USD
         - {ticker: "TM", period_type: "FY", revenue_usd: 320244693333.3333}
 
   - name: test_usd_reporter_conversion_is_identity
@@ -74,8 +70,6 @@ unit_tests:
              close_price_usd: 125.0, volume: 1000, quote_currency: "USD", rate_per_usd: 1.0,
              is_held_position: true, fx_rate_carried_forward: false,
              open_price: 0, high_price: 0, low_price: 0, price_source: "test"}
-          # Different ticker at a very different price level — its first row must be null,
-          # NOT (500/125 - 1) = 300%.
           - {ticker: "MSFT", trade_date: "2024-01-03", close_price_local: 500.0,
              close_price_usd: 500.0, volume: 1000, quote_currency: "USD", rate_per_usd: 1.0,
              is_held_position: true, fx_rate_carried_forward: false,

@@ -25,11 +25,9 @@ jobs:
         run: ruff check .
 
       - name: Format check (ruff)
-        # Stricter than `ruff check`: catches drift in formatting that lint alone allows.
         run: ruff format --check .
 
       - name: Python unit tests (pytest)
-        # Fast: no warehouse required — ingestion clients are tested against mocked responses.
         run: pytest tests/ -v
 
   dbt-build:
@@ -53,15 +51,9 @@ jobs:
         run: dbt deps
 
       - name: dbt seed (load committed CI fixtures into the raw schema)
-        # Seeds run as their own step, not via `dbt build`: dbt has no DAG edge from a
-        # source() to the seed that populates it, so in a single build it would schedule the
-        # staging models in parallel with the seeds and hit a missing table.
         working-directory: dbt
         run: dbt seed --target ci --profiles-dir .
 
       - name: dbt build — full DAG offline
-        # seeds -> staging -> intermediate -> marts -> snapshots -> every test, with NO API
-        # keys, NO network and NO extraction run. The reconciliation test is severity=warn and
-        # is EXPECTED to fire on the deliberately-broken filer in the fixtures.
         working-directory: dbt
         run: dbt build --target ci --profiles-dir .

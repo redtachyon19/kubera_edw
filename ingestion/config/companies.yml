@@ -1,46 +1,10 @@
-# Kubera coverage universe — FULL SCALE-OUT.
-#
-# 38 companies across 13 countries. Expanded from the 9-company proving subset in Phase 8,
-# after verifying every candidate against the sources that actually feed the warehouse
-# (scripts/verify_universe.py — re-run it before any further change to this file).
-#
-# SCOPE PROVENANCE: verified 2026-07-25 against SEC EDGAR (company_tickers.json for CIKs,
-#   submissions for filer type + fiscal year end, companyfacts XBRL units for reporting
-#   currency + taxonomy), plus live World Bank and Frankfurter coverage checks.
-#
-# FIELD SEMANTICS:
-#   cik                 zero-padded 10-digit SEC CIK (quoted so YAML keeps leading zeros).
-#   currency            DOMESTIC currency of the country — drives dim_currency + macro context.
-#   reporting_currency  currency the company PRESENTS its SEC financials in, READ FROM THE XBRL
-#                       UNITS. Domicile does NOT imply this: 12 of 38 companies file in a
-#                       currency other than their home one (most foreign issuers file in USD;
-#                       Unilever, a UK company, files in EUR). Getting this wrong double-converts.
-#   xbrl_taxonomy       taxonomy the facts actually appear under, VERIFIED — not inferable from
-#                       filer_type. 10 companies carry BOTH us-gaap and ifrs-full, and several
-#                       20-F filers (ASML, BABA, BIDU, JD, MUFG, SONY) tag under us-gaap.
-#   fiscal_year_end     MM-DD. Cadence is mixed: 10-Q quarterly for US filers, annual-only 20-F
-#                       for most foreign issuers.
-#
-# EXCLUDED from the §6 list, with reasons:
-#   IBN (ICICI Bank, India) — SEC returns 404 for its companyfacts endpoint; no XBRL financial
-#       data exists to model.
-#   TSM (Taiwan Semiconductor) — Taiwan has no World Bank macro coverage AND TWD is not served
-#       by Frankfurter, so its TWD financials cannot be USD-normalized at all. Same reason it
-#       was removed in Phase 1; nothing has changed.
-#
-# KNOWN GAPS carried into this scope:
-#   - Alpha Vantage's free tier allows ~25 price requests/day; 38 companies + 2 benchmarks
-#     + the gold proxy exceed that, so price coverage fills in across runs (see notes_for_red.md).
-#   - XOM's ticker resolves to a reorg holdco with no 10-K; its operating CIK is pinned below.
 
 benchmarks:
-  # Benchmark tickers for relative-performance KPIs (not held positions). ETFs — no SEC CIK.
   sector_or_index:
-    - SPY   # S&P 500 proxy
-    - ACWI  # MSCI ACWI (global) proxy
+    - SPY
+    - ACWI
 
 companies:
-  # --- North America ---
   - ticker: AAPL
     cik: "0000320193"
     legal_name: Apple Inc.
@@ -138,8 +102,6 @@ companies:
     xbrl_taxonomy: us-gaap
 
   - ticker: XOM
-    # Ticker resolves to 'ExxonMobil Holdings Corp' (reorg successor) which has NO 10-K.
-    # Pinned to the operating entity that holds the filing history.
     cik: "0000034088"
     legal_name: Exxon Mobil Corporation
     country: United States
@@ -152,7 +114,6 @@ companies:
     xbrl_taxonomy: us-gaap
 
 
-  # --- Europe ---
   - ticker: ASML
     cik: "0000937966"
     legal_name: ASML Holding N.V.
@@ -171,7 +132,7 @@ companies:
     country: United Kingdom
     country_iso3: GBR
     currency: GBP
-    reporting_currency: USD   # files in USD, not GBP
+    reporting_currency: USD
     sector: Healthcare
     filer_type: 20-F
     fiscal_year_end: "12-31"
@@ -183,7 +144,7 @@ companies:
     country: United Kingdom
     country_iso3: GBR
     currency: GBP
-    reporting_currency: USD   # files in USD, not GBP
+    reporting_currency: USD
     sector: Energy
     filer_type: 20-F
     fiscal_year_end: "12-31"
@@ -211,7 +172,7 @@ companies:
     sector: Consumer Staples
     filer_type: 20-F
     fiscal_year_end: "06-30"
-    xbrl_taxonomy: ifrs-full  # also carries us-gaap facts
+    xbrl_taxonomy: ifrs-full
 
   - ticker: GSK
     cik: "0001131399"
@@ -231,7 +192,7 @@ companies:
     country: United Kingdom
     country_iso3: GBR
     currency: GBP
-    reporting_currency: USD   # files in USD, not GBP
+    reporting_currency: USD
     sector: Financials
     filer_type: 20-F
     fiscal_year_end: "12-31"
@@ -243,7 +204,7 @@ companies:
     country: Switzerland
     country_iso3: CHE
     currency: CHF
-    reporting_currency: USD   # files in USD, not CHF
+    reporting_currency: USD
     sector: Healthcare
     filer_type: 20-F
     fiscal_year_end: "12-31"
@@ -255,7 +216,7 @@ companies:
     country: Netherlands/UK
     country_iso3: GBR
     currency: GBP
-    reporting_currency: USD   # files in USD, not GBP
+    reporting_currency: USD
     sector: Energy
     filer_type: 20-F
     fiscal_year_end: "12-31"
@@ -279,11 +240,11 @@ companies:
     country: France
     country_iso3: FRA
     currency: EUR
-    reporting_currency: USD   # files in USD, not EUR
+    reporting_currency: USD
     sector: Energy
     filer_type: 20-F
     fiscal_year_end: "12-31"
-    xbrl_taxonomy: ifrs-full  # also carries us-gaap facts
+    xbrl_taxonomy: ifrs-full
 
   - ticker: UBS
     cik: "0001610520"
@@ -291,7 +252,7 @@ companies:
     country: Switzerland
     country_iso3: CHE
     currency: CHF
-    reporting_currency: USD   # files in USD, not CHF
+    reporting_currency: USD
     sector: Financials
     filer_type: 20-F
     fiscal_year_end: "12-31"
@@ -303,14 +264,13 @@ companies:
     country: United Kingdom
     country_iso3: GBR
     currency: GBP
-    reporting_currency: EUR   # files in EUR, not GBP
+    reporting_currency: EUR
     sector: Consumer Staples
     filer_type: 20-F
     fiscal_year_end: "12-31"
     xbrl_taxonomy: ifrs-full
 
 
-  # --- Asia-Pacific ---
   - ticker: BABA
     cik: "0001577552"
     legal_name: Alibaba Group Holding
@@ -329,11 +289,11 @@ companies:
     country: Australia
     country_iso3: AUS
     currency: AUD
-    reporting_currency: USD   # files in USD, not AUD
+    reporting_currency: USD
     sector: Materials
     filer_type: 20-F
     fiscal_year_end: "06-30"
-    xbrl_taxonomy: ifrs-full  # also carries us-gaap facts
+    xbrl_taxonomy: ifrs-full
 
   - ticker: BIDU
     cik: "0001329099"
@@ -357,7 +317,7 @@ companies:
     sector: Consumer Discretionary
     filer_type: 20-F
     fiscal_year_end: "03-31"
-    xbrl_taxonomy: ifrs-full  # also carries us-gaap facts
+    xbrl_taxonomy: ifrs-full
 
   - ticker: INFY
     cik: "0001067491"
@@ -365,7 +325,7 @@ companies:
     country: India
     country_iso3: IND
     currency: INR
-    reporting_currency: USD   # files in USD, not INR
+    reporting_currency: USD
     sector: Technology
     filer_type: 20-F
     fiscal_year_end: "03-31"
@@ -393,7 +353,7 @@ companies:
     sector: Financials
     filer_type: 20-F
     fiscal_year_end: "12-31"
-    xbrl_taxonomy: ifrs-full  # also carries us-gaap facts
+    xbrl_taxonomy: ifrs-full
 
   - ticker: MUFG
     cik: "0000067088"
@@ -429,7 +389,7 @@ companies:
     sector: Technology / Media
     filer_type: 20-F
     fiscal_year_end: "03-31"
-    xbrl_taxonomy: us-gaap  # also carries us-gaap facts
+    xbrl_taxonomy: us-gaap
 
   - ticker: TM
     cik: "0001094517"
@@ -441,7 +401,7 @@ companies:
     sector: Consumer Discretionary
     filer_type: 20-F
     fiscal_year_end: "03-31"
-    xbrl_taxonomy: ifrs-full  # also carries us-gaap facts
+    xbrl_taxonomy: ifrs-full
 
   - ticker: WIT
     cik: "0001123799"
@@ -456,7 +416,6 @@ companies:
     xbrl_taxonomy: ifrs-full
 
 
-  # --- Latin America ---
   - ticker: AMX
     cik: "0001129137"
     legal_name: America Movil SAB
@@ -479,7 +438,7 @@ companies:
     sector: Financials
     filer_type: 20-F
     fiscal_year_end: "12-31"
-    xbrl_taxonomy: ifrs-full  # also carries us-gaap facts
+    xbrl_taxonomy: ifrs-full
 
   - ticker: PBR
     cik: "0001119639"
@@ -487,11 +446,11 @@ companies:
     country: Brazil
     country_iso3: BRA
     currency: BRL
-    reporting_currency: USD   # files in USD, not BRL
+    reporting_currency: USD
     sector: Energy
     filer_type: 20-F
     fiscal_year_end: "12-31"
-    xbrl_taxonomy: ifrs-full  # also carries us-gaap facts
+    xbrl_taxonomy: ifrs-full
 
   - ticker: VALE
     cik: "0000917851"
@@ -499,9 +458,9 @@ companies:
     country: Brazil
     country_iso3: BRA
     currency: BRL
-    reporting_currency: USD   # files in USD, not BRL
+    reporting_currency: USD
     sector: Materials
     filer_type: 20-F
     fiscal_year_end: "12-31"
-    xbrl_taxonomy: ifrs-full  # also carries us-gaap facts
+    xbrl_taxonomy: ifrs-full
 

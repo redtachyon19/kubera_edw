@@ -1,21 +1,3 @@
-"""Load landed raw files into the warehouse `raw` schema (the "EL" of ELT).
-
-dbt handles transformation, not extraction or loading — this module bridges the gap between
-``data/raw/*`` (landed by the ingestion clients) and the ``raw.*`` source tables that the
-Phase-2 staging models read via ``{{ source('raw', ...) }}``.
-
-Why a Python loader rather than reading files from SQL:
-  - DuckDB *can* read local JSON directly, but a hosted Postgres (Neon) cannot — the server
-    lives in the cloud with no access to your filesystem. Parsing here keeps the staging
-    models byte-identical across both targets, so switching warehouse is one dbt flag.
-  - Python's json module tolerates duplicate object keys (Alibaba's companyfacts has a
-    repeated "Segment" key that makes DuckDB's read_json_auto struct inference fail outright).
-
-Usage:
-    python -m ingestion.load_raw                  # -> DuckDB (default)
-    LOAD_TARGET=postgres python -m ingestion.load_raw   # -> Neon / any Postgres
-"""
-
 from __future__ import annotations
 
 import csv
@@ -33,16 +15,10 @@ from .config_loader import bootstrap, load_companies
 log = logging.getLogger(__name__)
 
 RAW_SCHEMA = "raw"
-#: Document-metadata taxonomy — filing boilerplate, not financial facts.
 SKIP_TAXONOMIES = {"dei"}
 
 
-# --------------------------------------------------------------------------- parsers
 def parse_sec_facts() -> pd.DataFrame:
-    """Flatten every companyfacts JSON into tidy fact rows.
-
-    Grain: one row per company per taxonomy/concept per unit per reported period.
-    """
     ticker_by_cik = {c["cik"]: c["ticker"] for c in load_companies()}
     rows: list[dict[str, Any]] = []
 
@@ -78,13 +54,6 @@ def parse_sec_facts() -> pd.DataFrame:
 
 
 def parse_companies() -> pd.DataFrame:
-    """The coverage universe itself, as a warehouse table.
-
-    companies.yml stays the single source of truth; loading it here (rather than duplicating
-    it into a dbt seed) is what lets the SCD Type 2 snapshot detect classification changes —
-    a sector reclassification or a filer-type change edits the YAML, and the next snapshot
-    run closes the old row and opens a new one.
-    """
     return pd.DataFrame(
         [
             {
@@ -106,7 +75,6 @@ def parse_companies() -> pd.DataFrame:
 
 
 def parse_world_bank() -> pd.DataFrame:
-    """Flatten World Bank envelopes, carrying the load stamp for revision auditing."""
     rows: list[dict[str, Any]] = []
     for path in sorted((raw_root() / "world_bank").glob("*.json")):
         env = json.loads(path.read_text())
@@ -127,15 +95,6 @@ def parse_world_bank() -> pd.DataFrame:
 
 
 def parse_fx() -> pd.DataFrame:
-    """Unpivot Frankfurter's {date: {ccy: rate}} into (date, currency, rate) rows.
-
-    DEDUPLICATES on (rate_date, currency), newest file winning. The landing filename encodes
-    the requested window (timeseries_USD_<start>_<end>.json), so a run on a new day — or after
-    the currency set changes — writes a NEW file beside the old one. Unioning the glob blindly
-    then double-counts every date the two windows share, which fans out downstream: each
-    duplicated rate multiplies the fact rows that join to it. This surfaced as 81 duplicate
-    fact_financials rows the first time the pipeline ran on a second calendar day.
-    """
     frames: list[pd.DataFrame] = []
     for path in sorted((raw_root() / "fx").glob("timeseries_*.json")):
         payload = json.loads(path.read_text())
@@ -157,7 +116,6 @@ def parse_fx() -> pd.DataFrame:
     if not frames:
         return _empty(["rate_date", "base_currency", "currency", "rate_per_base", "source_file"])
 
-    # sorted() glob order puts the newest window last, so keep="last" prefers the fresher pull.
     combined = pd.concat(frames, ignore_index=True)
     return combined.drop_duplicates(subset=["rate_date", "currency"], keep="last").reset_index(
         drop=True
@@ -165,24 +123,14 @@ def parse_fx() -> pd.DataFrame:
 
 
 def _empty(columns: list[str]) -> pd.DataFrame:
-    """An empty frame with every column explicitly typed as string.
-
-    Without explicit dtypes an empty frame lands with numeric-inferred columns, and a later
-    join against a varchar dimension key fails with a type-conversion error. Sources blocked
-    on an API key must still produce a *correctly shaped* empty table.
-    """
     return pd.DataFrame({c: pd.Series(dtype="object") for c in columns})
 
 
 def parse_gold() -> pd.DataFrame:
-    """FRED observations. Values stay as text — '.' missing markers are cleaned in staging."""
     path = raw_root() / "gold_price" / "gold_lbma_fixing.json"
     if not path.exists():
         return _empty(["price_date", "value_raw", "series_id", "source"])
     payload = json.loads(path.read_text())
-    # Provenance comes from the payload, never hardcoded: the backend is now GLD via Alpha
-    # Vantage (FRED retired its spot series), and stamping the old FRED id on GLD data would
-    # assert a source the numbers do not have.
     series_id = payload.get("series_id", "unknown")
     source = payload.get("source", "fred")
     rows = [
@@ -200,7 +148,6 @@ def parse_gold() -> pd.DataFrame:
 
 
 def parse_prices() -> pd.DataFrame:
-    """Daily OHLCV from either backend (Stooq CSV or Alpha Vantage JSON)."""
     rows: list[dict[str, Any]] = []
     price_columns = [
         "ticker",
@@ -216,7 +163,7 @@ def parse_prices() -> pd.DataFrame:
     if not prices_dir.exists():
         return _empty(price_columns)
 
-    for path in sorted(prices_dir.glob("*.csv")):  # Stooq
+    for path in sorted(prices_dir.glob("*.csv")):
         for r in csv.DictReader(io.StringIO(path.read_text())):
             rows.append(
                 {
@@ -230,7 +177,7 @@ def parse_prices() -> pd.DataFrame:
                     "source": "stooq",
                 }
             )
-    for path in sorted(prices_dir.glob("av_*.json")):  # Alpha Vantage
+    for path in sorted(prices_dir.glob("av_*.json")):
         payload = json.loads(path.read_text())
         ticker = path.stem.removeprefix("av_")
         for trade_date, bar in payload.get("Time Series (Daily)", {}).items():
@@ -250,14 +197,12 @@ def parse_prices() -> pd.DataFrame:
 
 
 def parse_imf() -> pd.DataFrame:
-    """IMF DataMapper {values: {indicator: {iso3: {year: value}}}} -> tidy rows."""
     wanted = {c["country_iso3"] for c in load_companies()}
     rows: list[dict[str, Any]] = []
     for path in sorted((raw_root() / "imf").glob("*.json")):
         payload = json.loads(path.read_text())
         for code, by_country in (payload.get("values") or {}).items():
             for iso3, by_year in (by_country or {}).items():
-                # IMF returns null for countries it lists but has no series for.
                 if iso3 not in wanted or not by_year:
                     continue
                 for year, value in by_year.items():
@@ -273,7 +218,6 @@ def parse_imf() -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-# --------------------------------------------------------------------------- warehouse
 def _write_duckdb(tables: dict[str, pd.DataFrame]) -> str:
     import duckdb
 
@@ -296,7 +240,6 @@ def _write_postgres(tables: dict[str, pd.DataFrame]) -> str:
         f"postgresql+psycopg2://{os.environ['POSTGRES_USER']}:{os.environ['POSTGRES_PASSWORD']}"
         f"@{host}:{os.environ.get('POSTGRES_PORT', '5432')}/{os.environ['POSTGRES_DB']}"
     )
-    # Neon (and every hosted Postgres) requires TLS.
     engine = create_engine(url, connect_args={"sslmode": os.environ.get("PGSSLMODE", "require")})
     with engine.begin() as con:
         con.execute(text(f"create schema if not exists {RAW_SCHEMA}"))
@@ -312,13 +255,6 @@ def _write_postgres(tables: dict[str, pd.DataFrame]) -> str:
             ).first()
 
             if exists:
-                # TRUNCATE, never DROP. pandas' if_exists="replace" issues a DROP TABLE, which
-                # Postgres refuses once the dbt staging VIEWS depend on it:
-                #   "cannot drop table raw.sec_edgar_facts because other objects depend on it"
-                # That only bites on the SECOND load — the first one runs before any view
-                # exists — so it is exactly the failure that breaks a scheduled pipeline on
-                # day two. Truncating preserves the dependent views. (DuckDB tolerates the
-                # drop, so this never surfaces locally.)
                 con.execute(text(f'truncate table "{RAW_SCHEMA}"."{name}"'))
 
         df.to_sql(
@@ -331,11 +267,10 @@ def _write_postgres(tables: dict[str, pd.DataFrame]) -> str:
             method="multi",
         )
     engine.dispose()
-    return f"postgres:{host}"  # host only — never log credentials
+    return f"postgres:{host}"
 
 
 def load_all(target: str | None = None) -> dict[str, int]:
-    """Parse every landed source and write it to the warehouse's raw schema."""
     target = target or os.environ.get("LOAD_TARGET", "duckdb")
     tables = {
         "companies": parse_companies(),
