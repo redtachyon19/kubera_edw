@@ -127,23 +127,41 @@ def parse_world_bank() -> pd.DataFrame:
 
 
 def parse_fx() -> pd.DataFrame:
-    """Unpivot Frankfurter's {date: {ccy: rate}} into (date, currency, rate) rows."""
-    rows: list[dict[str, Any]] = []
+    """Unpivot Frankfurter's {date: {ccy: rate}} into (date, currency, rate) rows.
+
+    DEDUPLICATES on (rate_date, currency), newest file winning. The landing filename encodes
+    the requested window (timeseries_USD_<start>_<end>.json), so a run on a new day — or after
+    the currency set changes — writes a NEW file beside the old one. Unioning the glob blindly
+    then double-counts every date the two windows share, which fans out downstream: each
+    duplicated rate multiplies the fact rows that join to it. This surfaced as 81 duplicate
+    fact_financials rows the first time the pipeline ran on a second calendar day.
+    """
+    frames: list[pd.DataFrame] = []
     for path in sorted((raw_root() / "fx").glob("timeseries_*.json")):
         payload = json.loads(path.read_text())
         base = payload.get("base", "USD")
-        for rate_date, quotes in payload.get("rates", {}).items():
-            for currency, rate in quotes.items():
-                rows.append(
-                    {
-                        "rate_date": rate_date,
-                        "base_currency": base,
-                        "currency": currency,
-                        "rate_per_base": rate,
-                        "source_file": path.name,
-                    }
-                )
-    return pd.DataFrame(rows)
+        rows = [
+            {
+                "rate_date": rate_date,
+                "base_currency": base,
+                "currency": currency,
+                "rate_per_base": rate,
+                "source_file": path.name,
+            }
+            for rate_date, quotes in payload.get("rates", {}).items()
+            for currency, rate in quotes.items()
+        ]
+        if rows:
+            frames.append(pd.DataFrame(rows))
+
+    if not frames:
+        return _empty(["rate_date", "base_currency", "currency", "rate_per_base", "source_file"])
+
+    # sorted() glob order puts the newest window last, so keep="last" prefers the fresher pull.
+    combined = pd.concat(frames, ignore_index=True)
+    return combined.drop_duplicates(subset=["rate_date", "currency"], keep="last").reset_index(
+        drop=True
+    )
 
 
 def _empty(columns: list[str]) -> pd.DataFrame:
@@ -160,13 +178,24 @@ def parse_gold() -> pd.DataFrame:
     """FRED observations. Values stay as text — '.' missing markers are cleaned in staging."""
     path = raw_root() / "gold_price" / "gold_lbma_fixing.json"
     if not path.exists():
-        return _empty(["price_date", "value_raw", "series_id"])
+        return _empty(["price_date", "value_raw", "series_id", "source"])
     payload = json.loads(path.read_text())
-    return pd.DataFrame(
-        [
-            {"price_date": o["date"], "value_raw": o["value"], "series_id": "GOLDAMGBD228NLBM"}
-            for o in payload.get("observations", [])
-        ]
+    # Provenance comes from the payload, never hardcoded: the backend is now GLD via Alpha
+    # Vantage (FRED retired its spot series), and stamping the old FRED id on GLD data would
+    # assert a source the numbers do not have.
+    series_id = payload.get("series_id", "unknown")
+    source = payload.get("source", "fred")
+    rows = [
+        {
+            "price_date": o["date"],
+            "value_raw": o["value"],
+            "series_id": series_id,
+            "source": source,
+        }
+        for o in payload.get("observations", [])
+    ]
+    return (
+        pd.DataFrame(rows) if rows else _empty(["price_date", "value_raw", "series_id", "source"])
     )
 
 
@@ -174,7 +203,14 @@ def parse_prices() -> pd.DataFrame:
     """Daily OHLCV from either backend (Stooq CSV or Alpha Vantage JSON)."""
     rows: list[dict[str, Any]] = []
     price_columns = [
-        "ticker", "trade_date", "open", "high", "low", "close", "volume", "source",
+        "ticker",
+        "trade_date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "source",
     ]
     prices_dir = raw_root() / "prices"
     if not prices_dir.exists():
@@ -264,9 +300,36 @@ def _write_postgres(tables: dict[str, pd.DataFrame]) -> str:
     engine = create_engine(url, connect_args={"sslmode": os.environ.get("PGSSLMODE", "require")})
     with engine.begin() as con:
         con.execute(text(f"create schema if not exists {RAW_SCHEMA}"))
+
     for name, df in tables.items():
-        df.to_sql(name, engine, schema=RAW_SCHEMA, if_exists="replace", index=False,
-                  chunksize=10_000, method="multi")
+        with engine.begin() as con:
+            exists = con.execute(
+                text(
+                    "select 1 from information_schema.tables "
+                    "where table_schema = :s and table_name = :t"
+                ),
+                {"s": RAW_SCHEMA, "t": name},
+            ).first()
+
+            if exists:
+                # TRUNCATE, never DROP. pandas' if_exists="replace" issues a DROP TABLE, which
+                # Postgres refuses once the dbt staging VIEWS depend on it:
+                #   "cannot drop table raw.sec_edgar_facts because other objects depend on it"
+                # That only bites on the SECOND load — the first one runs before any view
+                # exists — so it is exactly the failure that breaks a scheduled pipeline on
+                # day two. Truncating preserves the dependent views. (DuckDB tolerates the
+                # drop, so this never surfaces locally.)
+                con.execute(text(f'truncate table "{RAW_SCHEMA}"."{name}"'))
+
+        df.to_sql(
+            name,
+            engine,
+            schema=RAW_SCHEMA,
+            if_exists="append" if exists else "replace",
+            index=False,
+            chunksize=10_000,
+            method="multi",
+        )
     engine.dispose()
     return f"postgres:{host}"  # host only — never log credentials
 

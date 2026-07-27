@@ -94,12 +94,13 @@ def test_non_json_body_raises_clearly() -> None:
 # -- loader-level -----------------------------------------------------------
 def test_loader_parsers_survive_degenerate_landed_files() -> None:
     """Landed files that are structurally valid JSON but semantically empty."""
-    _write("sec_edgar/companyfacts_CIK0000320193.json", {"cik": 320193})       # no facts
-    _write("world_bank/gdp_20260724.json", {"indicator": "gdp",
-                                           "indicator_code": "NY.GDP.MKTP.CD",
-                                           "data": None})                      # null rows
-    _write("fx/timeseries_USD_a_b.json", {"base": "USD"})                       # no rates
-    _write("imf/gdp_growth_pct_NGDP_RPCH.json", {})                             # no values
+    _write("sec_edgar/companyfacts_CIK0000320193.json", {"cik": 320193})  # no facts
+    _write(
+        "world_bank/gdp_20260724.json",
+        {"indicator": "gdp", "indicator_code": "NY.GDP.MKTP.CD", "data": None},
+    )  # null rows
+    _write("fx/timeseries_USD_a_b.json", {"base": "USD"})  # no rates
+    _write("imf/gdp_growth_pct_NGDP_RPCH.json", {})  # no values
 
     assert parse_sec_facts().empty
     assert parse_world_bank().empty
@@ -112,7 +113,10 @@ def test_loader_skips_unreadable_shape_without_partial_rows() -> None:
     # of nulls that would look like a real reported fact downstream.
     _write(
         "sec_edgar/companyfacts_CIK0000320193.json",
-        {"cik": 320193, "entityName": "Apple Inc.",
-         "facts": {"us-gaap": {"Revenues": {"units": {}}}}},
+        {
+            "cik": 320193,
+            "entityName": "Apple Inc.",
+            "facts": {"us-gaap": {"Revenues": {"units": {}}}},
+        },
     )
     assert parse_sec_facts().empty

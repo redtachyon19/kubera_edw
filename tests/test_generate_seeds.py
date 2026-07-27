@@ -24,11 +24,11 @@ def test_committed_seed_matches_companies_yml() -> None:
 
 
 def test_seed_covers_every_company() -> None:
+    """The seed must mirror companies.yml exactly — whatever size it currently is."""
     rows = build_rows()
-    assert len(rows) == len(load_companies()) == 9
-    assert {r["ticker"] for r in rows} == {
-        "AAPL", "MSFT", "JPM", "XOM", "AZN", "SHEL", "TM", "INFY", "BABA",
-    }
+    companies = load_companies()
+    assert len(rows) == len(companies)
+    assert {r["ticker"] for r in rows} == {c["ticker"] for c in companies}
 
 
 def test_seed_excludes_benchmarks() -> None:

@@ -23,9 +23,9 @@ def test_missing_fred_key_raises(monkeypatch: pytest.MonkeyPatch) -> None:
 
 def test_fetch_gold_series(sample_fred_observations: dict) -> None:
     with respx.mock:
-        route = respx.get(url__startswith="https://api.stlouisfed.org/fred/series/observations").mock(
-            return_value=httpx.Response(200, json=sample_fred_observations)
-        )
+        route = respx.get(
+            url__startswith="https://api.stlouisfed.org/fred/series/observations"
+        ).mock(return_value=httpx.Response(200, json=sample_fred_observations))
         with GoldPriceClient() as client:
             payload = client.fetch_gold_series(start="2010-01-01")
             landed = client._land_path("gold_lbma_fixing")

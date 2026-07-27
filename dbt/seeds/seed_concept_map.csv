@@ -4,6 +4,8 @@ revenue,Revenue,ifrs-full,2,income_statement
 revenue,RevenueFromContractsWithCustomers,ifrs-full,3,income_statement
 revenue,Revenues,us-gaap,4,income_statement
 revenue,SalesRevenueNet,us-gaap,5,income_statement
+revenue,RevenueFromSaleOfGoods,ifrs-full,6,income_statement
+revenue,RevenueAndOperatingIncome,ifrs-full,7,income_statement
 cost_of_revenue,CostOfRevenue,us-gaap,1,income_statement
 cost_of_revenue,CostOfGoodsAndServicesSold,us-gaap,2,income_statement
 cost_of_revenue,CostOfSales,ifrs-full,3,income_statement

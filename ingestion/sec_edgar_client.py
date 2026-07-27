@@ -98,9 +98,7 @@ class SecEdgarClient(BaseClient):
             payload = self._get(TICKER_MAP_URL).json()
             self._land("company_tickers", payload)
         # Payload is {"0": {"cik_str": 320193, "ticker": "AAPL", "title": ...}, ...}
-        return {
-            row["ticker"].upper(): str(row["cik_str"]).zfill(10) for row in payload.values()
-        }
+        return {row["ticker"].upper(): str(row["cik_str"]).zfill(10) for row in payload.values()}
 
     def resolve_cik(self, ticker: str) -> str:
         """Resolve a ticker to a zero-padded 10-digit CIK. Raises on miss — never guesses.
@@ -152,7 +150,11 @@ class SecEdgarClient(BaseClient):
                     self._land(f"frame_{concept}_{namespace}_{tag}_{period}", payload)
                     log.info(
                         "concept %s resolved via %s:%s for %s (%d rows)",
-                        concept, namespace, tag, period, len(payload["data"]),
+                        concept,
+                        namespace,
+                        tag,
+                        period,
+                        len(payload["data"]),
                     )
                     return payload
         raise LookupError(f"no XBRL tag resolved for concept {concept!r} in period {period!r}")

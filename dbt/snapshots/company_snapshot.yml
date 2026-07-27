@@ -22,7 +22,11 @@ snapshots:
       unique_key: ticker
       strategy: check
       check_cols:
-        - legal_name
+        # legal_name is deliberately NOT tracked. Company names arrive with inconsistent
+        # capitalisation and suffixes depending on the source ("AstraZeneca PLC" vs
+        # "AstraZeneca plc", "Infosys Ltd" vs "Infosys Ltd."), so tracking it manufactured five
+        # spurious versions during the Phase-8 scale-out from a pure formatting difference.
+        # A rename is not a change in what the company IS; the attributes below are.
         - sector
         - industry
         - filer_type

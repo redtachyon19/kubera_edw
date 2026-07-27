@@ -5,5 +5,12 @@ rate_date,base_currency,currency,rate_per_base,source_file
 2024-03-26,USD,GBP,0.7912,ci_fixture
 2024-03-27,USD,GBP,0.7925,ci_fixture
 2024-03-28,USD,GBP,0.7918,ci_fixture
+2024-03-28,USD,EUR,0.9256,ci_fixture
+2024-03-28,USD,CNY,7.2265,ci_fixture
+2024-03-28,USD,KRW,1347.50,ci_fixture
+2024-03-28,USD,MXN,16.5500,ci_fixture
+2024-03-28,USD,BRL,4.9900,ci_fixture
+2024-03-28,USD,INR,83.4000,ci_fixture
 2023-12-29,USD,JPY,141.04,ci_fixture
 2023-12-29,USD,GBP,0.7846,ci_fixture
+2023-12-29,USD,EUR,0.9048,ci_fixture

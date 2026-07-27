@@ -15,20 +15,22 @@ from ingestion.config_loader import (
     tickers,
 )
 
-UNIVERSE = {"AAPL", "MSFT", "JPM", "XOM", "AZN", "SHEL", "TM", "INFY", "BABA"}
+# Deliberately NOT a frozen ticker list. The universe is expected to grow (9 -> 38 in
+# Phase 8), so these tests assert the RULES the universe must satisfy rather than its exact
+# membership — a hardcoded list only ever fails for the wrong reason on a scale-out.
+MIN_COMPANIES = 30
 
 
-def test_universe_is_the_locked_subset() -> None:
-    assert len(load_companies()) == 9
-    assert set(tickers()) == UNIVERSE
+def test_universe_is_populated_and_unique() -> None:
+    companies = load_companies()
+    assert len(companies) >= MIN_COMPANIES
+    assert len(set(tickers())) == len(companies), "duplicate ticker in companies.yml"
 
 
-def test_taiwan_was_dropped() -> None:
-    # TSM reports in TWD, which Frankfurter does not serve — its financials could not be
-    # USD-normalized at all, so it was replaced by INFY + BABA rather than special-cased.
+def test_taiwan_stays_excluded() -> None:
+    # TSM reports in TWD, which Frankfurter does not serve, and Taiwan has no World Bank
+    # macro — so its financials cannot be USD-normalized at all. Re-verified at scale-out.
     assert "TSM" not in tickers()
-    assert "TWN" not in country_iso3_set()
-    assert "TWD" not in non_usd_currencies()
 
 
 def test_every_company_has_a_pinned_cik() -> None:
@@ -53,13 +55,16 @@ def test_reporting_currency_verified_against_filings() -> None:
         assert by_ticker[ticker]["reporting_currency"] == "USD"
 
 
-def test_only_two_companies_need_fx_conversion() -> None:
-    # FX normalization is exercised solely by TM (JPY) and BABA (CNY); everything else
-    # reports in USD. Losing either would leave the FX-contribution KPI resting on one name.
-    needs_fx = {
-        c["ticker"] for c in load_companies() if c["reporting_currency"] != "USD"
-    }
-    assert needs_fx == {"TM", "BABA"}
+def test_fx_conversion_is_exercised_by_multiple_currencies() -> None:
+    """FX normalization must not rest on a single company or currency.
+
+    At the 9-company scope only TM (JPY) and BABA (CNY) converted, which made the whole
+    FX-contribution capability fragile — dropping either would have removed it.
+    """
+    non_usd = [c for c in load_companies() if c["reporting_currency"] != "USD"]
+    currencies = {c["reporting_currency"] for c in non_usd}
+    assert len(non_usd) >= 5, "too few companies exercise currency conversion"
+    assert len(currencies) >= 3, f"conversion rests on too few currencies: {currencies}"
 
 
 def test_taxonomy_is_verified_not_inferred_from_filer_type() -> None:
@@ -76,14 +81,18 @@ def test_taxonomy_is_verified_not_inferred_from_filer_type() -> None:
         assert by_ticker[ticker]["xbrl_taxonomy"] == "ifrs-full"
 
 
-def test_countries_and_currencies_are_fully_covered() -> None:
-    # Every country here has World Bank data and every currency is Frankfurter-served
-    # (both verified live during the Phase-1 scope revision).
-    assert country_iso3_set() == {"USA", "GBR", "JPN", "IND", "CHN"}
-    assert non_usd_currencies() == {"GBP", "JPY", "INR", "CNY"}
+def test_countries_and_currencies_avoid_the_known_coverage_gaps() -> None:
+    """Taiwan/TWD are the verified coverage gaps: no World Bank macro, no Frankfurter rate.
+
+    Any company reintroducing them cannot be USD-normalized or given macro context, so the
+    universe must stay clear of them however it grows.
+    """
+    assert "TWN" not in country_iso3_set()
+    assert "TWD" not in non_usd_currencies()
+    assert len(country_iso3_set()) >= 5
 
 
 def test_price_tickers_include_benchmarks() -> None:
     assert benchmarks() == ["SPY", "ACWI"]
-    assert len(price_tickers()) == 11
+    assert len(price_tickers()) == len(tickers()) + len(benchmarks())
     assert set(benchmarks()) <= set(price_tickers())

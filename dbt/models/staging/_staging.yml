@@ -27,15 +27,23 @@ models:
 
   - name: stg_fx__rates
     description: Daily USD-base FX rates.
+    tests:
+      # One rate per currency per day. Without this, an accumulated second landing file
+      # silently doubles rates and fans out every fact that joins to them.
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [rate_date, currency_iso]
     columns:
       - name: rate_date
         tests: [not_null]
       - name: currency_iso
-        tests:
-          - not_null
-          - accepted_values:
-              arguments:
-                values: [GBP, JPY, INR, CNY]
+        description: >
+          Deliberately NOT an accepted_values list. The pulled currency set is derived from
+          companies.yml and changes on every scale-out, so a hardcoded enumeration goes stale
+          and fails for the wrong reason (it did exactly that when the universe went 9 -> 38).
+          Integrity is enforced instead by assert_fx_currencies_are_modelled, which checks the
+          set against dim_currency — the dimension that is supposed to define it.
+        tests: [not_null]
       - name: rate_per_usd
         description: Units of the foreign currency per 1 USD — divide to convert into USD.
         tests: [not_null]

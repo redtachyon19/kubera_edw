@@ -91,10 +91,13 @@ with st.sidebar:
     for name, n in counts.items():
         st.markdown(f"{'🟢' if n else '⚪️'} `{name}` — {n:,}")
     st.divider()
-    st.caption(
-        "Empty marts are sources still blocked on a free API key, not pipeline failures. "
-        "See the Market Performance tab."
-    )
+    if any(n == 0 for n in counts.values()):
+        st.caption(
+            "Empty marts are sources still blocked on a free API key, not pipeline failures — "
+            "the affected tab explains which key and why."
+        )
+    else:
+        st.caption("All marts populated.")
 
 tabs = st.tabs(
     [
@@ -241,7 +244,8 @@ with tabs[2]:
         tickers = sorted(prices["ticker"].unique())
         picked = st.multiselect("Companies", tickers, default=tickers[:4], key="mkt")
         view = prices[prices["ticker"].isin(picked)].copy()
-        palette = theme.colors_for(tickers)
+        palette = theme.colors_for(tickers)  # stable per company
+        shown = {t: palette[t] for t in picked}  # legend shows only what is plotted
         view["cumulative_return"] = view.groupby("ticker")["daily_return"].transform(
             lambda s: (1 + s.fillna(0)).cumprod() - 1
         )
@@ -257,7 +261,7 @@ with tabs[2]:
                 ),
                 color=alt.Color(
                     "ticker:N",
-                    scale=alt.Scale(domain=list(palette), range=list(palette.values())),
+                    scale=alt.Scale(domain=list(shown), range=list(shown.values())),
                     title="Company",
                 ),
                 tooltip=["ticker", "trade_date", alt.Tooltip("cumulative_return:Q", format=".1%")],
@@ -351,8 +355,8 @@ with tabs[4]:
         countries = sorted(macro["country_iso3"].unique())
         picked = st.multiselect("Countries", countries, default=countries, key="macro")
         view = macro[macro["country_iso3"].isin(picked)]
-        palette = theme.colors_for(countries)          # stable per country
-        shown = {c: palette[c] for c in picked}        # legend shows only the selection
+        palette = theme.colors_for(countries)  # stable per country
+        shown = {c: palette[c] for c in picked}  # legend shows only the selection
         scale = alt.Scale(domain=list(shown), range=list(shown.values()))
 
         def macro_line(field, title, fmt):
@@ -414,8 +418,8 @@ with tabs[4]:
                 .mark_line(strokeWidth=2, color=theme.SERIES[3])
                 .encode(
                     x=alt.X("price_date:T", title=None),
-                    y=alt.Y("gold_price_usd_per_oz:Q", title="Gold (USD/oz)"),
-                    tooltip=["price_date", "gold_price_usd_per_oz"],
+                    y=alt.Y("gold_price_usd:Q", title="Gold proxy (USD/share)"),
+                    tooltip=["price_date", "gold_price_usd", "series_id"],
                 )
                 .properties(height=260),
                 use_container_width=True,

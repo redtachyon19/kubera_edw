@@ -8,13 +8,14 @@
 -- here so daily_change_pct is computed over consecutive OBSERVED fixings rather than treating
 -- a missing day as a zero-price crash.
 --
--- Currently empty pending a FRED_API_KEY.
+-- Backend is GLD (SPDR Gold Shares) via Alpha Vantage; FRED retired its spot USD/oz
+-- series. series_id and source travel with every row so the provenance is queryable.
 
 with gold as (
 
     select *
     from {{ ref('stg_gold__prices') }}
-    where gold_price_usd_per_oz is not null
+    where gold_price_usd is not null
 
 ),
 
@@ -22,7 +23,7 @@ with_change as (
 
     select
         *,
-        lag(gold_price_usd_per_oz) over (order by price_date) as prev_price
+        lag(gold_price_usd) over (order by price_date) as prev_price
     from gold
 
 )
@@ -36,7 +37,8 @@ select
 
     price_date,
     series_id,
-    gold_price_usd_per_oz,
-    (gold_price_usd_per_oz / nullif(prev_price, 0)) - 1     as daily_change_pct
+    source,
+    gold_price_usd,
+    (gold_price_usd / nullif(prev_price, 0)) - 1            as daily_change_pct
 
 from with_change

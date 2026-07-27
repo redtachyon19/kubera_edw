@@ -126,7 +126,7 @@ def macro() -> pd.DataFrame:
 
 # --------------------------------------------------------------- market performance
 def market_prices() -> pd.DataFrame:
-    """Daily USD prices and returns. Empty until ALPHA_VANTAGE_API_KEY is configured."""
+    """Daily USD prices and returns from Alpha Vantage (free tier: latest ~100 days)."""
     return query(
         """
         select ticker, trade_date, close_price_usd, daily_return, volume
@@ -137,10 +137,10 @@ def market_prices() -> pd.DataFrame:
 
 
 def gold_prices() -> pd.DataFrame:
-    """LBMA daily gold fixing. Empty until FRED_API_KEY is configured."""
+    """Daily gold benchmark (currently the GLD ETF proxy — see gold_price_client)."""
     return query(
         """
-        select price_date, gold_price_usd_per_oz, daily_change_pct
+        select price_date, series_id, source, gold_price_usd, daily_change_pct
         from marts.fact_gold_price
         order by price_date
         """

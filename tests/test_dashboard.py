@@ -79,9 +79,14 @@ def test_allocation_sums_to_100_pct() -> None:
 
 
 @needs_warehouse
-def test_holdings_match_the_locked_universe() -> None:
+def test_holdings_match_the_configured_universe() -> None:
+    from ingestion.config_loader import load_companies
+
     df = queries.holdings()
-    assert len(df) == 9
+    # One row per company: dim_company is SCD2, so the dashboard must read current versions
+    # only. A duplicate here means a closed version leaked into the holdings list.
+    assert len(df) == len(load_companies())
+    assert df["ticker"].is_unique
     assert "TSM" not in set(df["ticker"])
 
 
@@ -96,8 +101,8 @@ def test_fundamentals_are_usd_comparable() -> None:
 @needs_warehouse
 def test_fx_impact_covers_only_non_usd_reporters() -> None:
     df = queries.fx_impact()
-    assert set(df["reporting_currency"]) <= {"JPY", "CNY"}
-    assert set(df["ticker"]) <= {"TM", "BABA"}
+    assert "USD" not in set(df["reporting_currency"]), "USD reporters must not appear here"
+    assert not df.empty, "no company exercises currency conversion"
 
 
 @needs_warehouse
@@ -108,8 +113,25 @@ def test_macro_has_no_orphan_years() -> None:
 
 
 @needs_warehouse
-def test_blocked_sources_return_empty_not_error() -> None:
-    # These are the two key-gated marts; the dashboard renders an empty state from them, so
-    # they must return an empty frame rather than raising.
-    assert queries.market_prices().empty
-    assert queries.gold_prices().empty
+def test_market_prices_are_usable_for_return_math() -> None:
+    df = queries.market_prices()
+    if df.empty:
+        pytest.skip("prices not landed (ALPHA_VANTAGE_API_KEY unset)")
+    assert df["close_price_usd"].notna().all()
+    # Exactly one null return per ticker: the first observed day has no prior close to lag to.
+    nulls = df.groupby("ticker")["daily_return"].apply(lambda s: s.isna().sum())
+    assert (nulls == 1).all(), f"unexpected return gaps: {nulls[nulls != 1].to_dict()}"
+    # A daily equity move beyond +/-50% is a data error, not a market event.
+    assert df["daily_return"].abs().max() < 0.5
+
+
+@needs_warehouse
+def test_gold_series_carries_its_real_provenance() -> None:
+    df = queries.gold_prices()
+    if df.empty:
+        pytest.skip("gold not landed")
+    # The backend is the GLD proxy since FRED retired its spot series; the rows must say so
+    # rather than inheriting the old FRED series id, which would assert a false source.
+    assert set(df["series_id"]) == {"GLD"}
+    assert set(df["source"]) == {"alpha_vantage"}
+    assert df["gold_price_usd"].gt(0).all()

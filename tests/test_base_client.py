@@ -75,9 +75,7 @@ def test_retry_policy_distinguishes_transient_from_permanent() -> None:
 
 def test_get_does_not_retry_on_404() -> None:
     with respx.mock:
-        route = respx.get("https://example.test/missing").mock(
-            return_value=httpx.Response(404)
-        )
+        route = respx.get("https://example.test/missing").mock(return_value=httpx.Response(404))
         with _Dummy() as client, pytest.raises(httpx.HTTPStatusError):
             client._get("/missing")
 

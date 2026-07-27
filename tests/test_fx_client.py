@@ -23,9 +23,7 @@ def test_fetch_timeseries(sample_fx_timeseries: dict) -> None:
             return_value=httpx.Response(200, json=sample_fx_timeseries)
         )
         with FxClient() as client:
-            payload = client.fetch_timeseries(
-                "USD", ["GBP", "JPY"], "2023-01-02", "2023-01-03"
-            )
+            payload = client.fetch_timeseries("USD", ["GBP", "JPY"], "2023-01-02", "2023-01-03")
             landed = client._land_path("timeseries_USD_2023-01-02_2023-01-03")
 
     assert route.called

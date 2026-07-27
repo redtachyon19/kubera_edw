@@ -1,0 +1,1018 @@
+[
+  {
+    "ticker": "AAPL",
+    "status": "ok",
+    "notes": [],
+    "cik": "0000320193",
+    "entity": "Apple Inc.",
+    "fiscal_year_end": "0926",
+    "filer_type": "10-K",
+    "latest_annual": "2025-10-31",
+    "currency_units": {
+      "USD": 21651
+    },
+    "reporting_currency": "USD",
+    "taxonomies": [
+      "us-gaap"
+    ],
+    "xbrl_taxonomy": "us-gaap",
+    "name": "Apple Inc.",
+    "country": "United States",
+    "sector": "Technology",
+    "filer_hint": "10-K",
+    "country_iso3": "USA",
+    "currency": "USD"
+  },
+  {
+    "ticker": "MSFT",
+    "status": "ok",
+    "notes": [],
+    "cik": "0000789019",
+    "entity": "MICROSOFT CORP",
+    "fiscal_year_end": "0630",
+    "filer_type": "10-K",
+    "latest_annual": "2025-07-30",
+    "currency_units": {
+      "USD": 28609,
+      "EUR": 3,
+      "Job": 2
+    },
+    "reporting_currency": "USD",
+    "taxonomies": [
+      "us-gaap"
+    ],
+    "xbrl_taxonomy": "us-gaap",
+    "name": "Microsoft Corp.",
+    "country": "United States",
+    "sector": "Technology",
+    "filer_hint": "10-K",
+    "country_iso3": "USA",
+    "currency": "USD"
+  },
+  {
+    "ticker": "JPM",
+    "status": "ok",
+    "notes": [],
+    "cik": "0000019617",
+    "entity": "JPMORGAN CHASE & CO",
+    "fiscal_year_end": "1231",
+    "filer_type": "10-K",
+    "latest_annual": "2026-02-13",
+    "currency_units": {
+      "USD": 48251
+    },
+    "reporting_currency": "USD",
+    "taxonomies": [
+      "us-gaap"
+    ],
+    "xbrl_taxonomy": "us-gaap",
+    "name": "JPMorgan Chase & Co.",
+    "country": "United States",
+    "sector": "Financials",
+    "filer_hint": "10-K",
+    "country_iso3": "USA",
+    "currency": "USD"
+  },
+  {
+    "ticker": "XOM",
+    "status": "NO_ANNUAL_FILING",
+    "notes": [
+      "ticker resolves to an entity with no 10-K/20-F"
+    ],
+    "cik": "0002115436",
+    "entity": "ExxonMobil Holdings Corp",
+    "fiscal_year_end": "1231",
+    "name": "Exxon Mobil Corp.",
+    "country": "United States",
+    "sector": "Energy",
+    "filer_hint": "10-K",
+    "country_iso3": "USA",
+    "currency": "USD"
+  },
+  {
+    "ticker": "JNJ",
+    "status": "ok",
+    "notes": [],
+    "cik": "0000200406",
+    "entity": "JOHNSON & JOHNSON",
+    "fiscal_year_end": "0103",
+    "filer_type": "10-K",
+    "latest_annual": "2026-02-11",
+    "currency_units": {
+      "USD": 23240,
+      "EUR": 1
+    },
+    "reporting_currency": "USD",
+    "taxonomies": [
+      "us-gaap"
+    ],
+    "xbrl_taxonomy": "us-gaap",
+    "name": "Johnson & Johnson",
+    "country": "United States",
+    "sector": "Healthcare",
+    "filer_hint": "10-K",
+    "country_iso3": "USA",
+    "currency": "USD"
+  },
+  {
+    "ticker": "PG",
+    "status": "ok",
+    "notes": [],
+    "cik": "0000080424",
+    "entity": "PROCTER & GAMBLE Co",
+    "fiscal_year_end": "0630",
+    "filer_type": "10-K",
+    "latest_annual": "2025-08-04",
+    "currency_units": {
+      "USD": 21629
+    },
+    "reporting_currency": "USD",
+    "taxonomies": [
+      "us-gaap"
+    ],
+    "xbrl_taxonomy": "us-gaap",
+    "name": "Procter & Gamble Co.",
+    "country": "United States",
+    "sector": "Consumer Staples",
+    "filer_hint": "10-K",
+    "country_iso3": "USA",
+    "currency": "USD"
+  },
+  {
+    "ticker": "CAT",
+    "status": "ok",
+    "notes": [],
+    "cik": "0000018230",
+    "entity": "CATERPILLAR INC",
+    "fiscal_year_end": "1231",
+    "filer_type": "10-K",
+    "latest_annual": "2026-02-13",
+    "currency_units": {
+      "USD": 34433,
+      "JPY": 7
+    },
+    "reporting_currency": "USD",
+    "taxonomies": [
+      "us-gaap"
+    ],
+    "xbrl_taxonomy": "us-gaap",
+    "name": "Caterpillar Inc.",
+    "country": "United States",
+    "sector": "Industrials",
+    "filer_hint": "10-K",
+    "country_iso3": "USA",
+    "currency": "USD"
+  },
+  {
+    "ticker": "F",
+    "status": "ok",
+    "notes": [],
+    "cik": "0000037996",
+    "entity": "FORD MOTOR CO",
+    "fiscal_year_end": "1231",
+    "filer_type": "10-K",
+    "latest_annual": "2026-02-11",
+    "currency_units": {
+      "USD": 21897
+    },
+    "reporting_currency": "USD",
+    "taxonomies": [
+      "us-gaap"
+    ],
+    "xbrl_taxonomy": "us-gaap",
+    "name": "Ford Motor Co.",
+    "country": "United States",
+    "sector": "Consumer Discretionary",
+    "filer_hint": "10-K",
+    "country_iso3": "USA",
+    "currency": "USD"
+  },
+  {
+    "ticker": "KO",
+    "status": "ok",
+    "notes": [],
+    "cik": "0000021344",
+    "entity": "COCA COLA CO",
+    "fiscal_year_end": "1231",
+    "filer_type": "10-K",
+    "latest_annual": "2026-02-20",
+    "currency_units": {
+      "USD": 29503,
+      "EUR": 5
+    },
+    "reporting_currency": "USD",
+    "taxonomies": [
+      "us-gaap"
+    ],
+    "xbrl_taxonomy": "us-gaap",
+    "name": "Coca-Cola Co.",
+    "country": "United States",
+    "sector": "Consumer Staples",
+    "filer_hint": "10-K",
+    "country_iso3": "USA",
+    "currency": "USD"
+  },
+  {
+    "ticker": "AMX",
+    "status": "ok",
+    "notes": [],
+    "cik": "0001129137",
+    "entity": "AMERICA MOVIL SAB DE CV/",
+    "fiscal_year_end": "1231",
+    "filer_type": "20-F",
+    "latest_annual": "2026-04-28",
+    "currency_units": {
+      "MXN": 5675,
+      "USD": 1043,
+      "BRL": 28
+    },
+    "reporting_currency": "MXN",
+    "taxonomies": [
+      "ifrs-full"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "America Movil SAB",
+    "country": "Mexico",
+    "sector": "Telecom",
+    "filer_hint": "20-F",
+    "country_iso3": "MEX",
+    "currency": "MXN"
+  },
+  {
+    "ticker": "AZN",
+    "status": "ok",
+    "notes": [],
+    "cik": "0000901832",
+    "entity": "ASTRAZENECA PLC",
+    "fiscal_year_end": "1231",
+    "filer_type": "20-F",
+    "latest_annual": "2026-02-24",
+    "currency_units": {
+      "USD": 8921
+    },
+    "reporting_currency": "USD",
+    "taxonomies": [
+      "ifrs-full"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "AstraZeneca plc",
+    "country": "United Kingdom",
+    "sector": "Healthcare",
+    "filer_hint": "20-F",
+    "country_iso3": "GBR",
+    "currency": "GBP"
+  },
+  {
+    "ticker": "UL",
+    "status": "ok",
+    "notes": [],
+    "cik": "0000217410",
+    "entity": "UNILEVER PLC",
+    "fiscal_year_end": "1231",
+    "filer_type": "20-F",
+    "latest_annual": "2026-03-12",
+    "currency_units": {
+      "EUR": 7264,
+      "GBP": 4,
+      "USD": 2
+    },
+    "reporting_currency": "EUR",
+    "taxonomies": [
+      "ifrs-full"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "Unilever plc",
+    "country": "United Kingdom",
+    "sector": "Consumer Staples",
+    "filer_hint": "20-F",
+    "country_iso3": "GBR",
+    "currency": "GBP"
+  },
+  {
+    "ticker": "BP",
+    "status": "ok",
+    "notes": [],
+    "cik": "0000313807",
+    "entity": "BP PLC",
+    "fiscal_year_end": "1231",
+    "filer_type": "20-F",
+    "latest_annual": "2026-03-06",
+    "currency_units": {
+      "USD": 8668
+    },
+    "reporting_currency": "USD",
+    "taxonomies": [
+      "ifrs-full"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "BP plc",
+    "country": "United Kingdom",
+    "sector": "Energy",
+    "filer_hint": "20-F",
+    "country_iso3": "GBR",
+    "currency": "GBP"
+  },
+  {
+    "ticker": "HSBC",
+    "status": "ok",
+    "notes": [],
+    "cik": "0001089113",
+    "entity": "HSBC HOLDINGS PLC",
+    "fiscal_year_end": "1231",
+    "filer_type": "20-F",
+    "latest_annual": "2026-02-26",
+    "currency_units": {
+      "USD": 8476,
+      "GBP": 48
+    },
+    "reporting_currency": "USD",
+    "taxonomies": [
+      "ifrs-full"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "HSBC Holdings plc",
+    "country": "United Kingdom",
+    "sector": "Financials",
+    "filer_hint": "20-F",
+    "country_iso3": "GBR",
+    "currency": "GBP"
+  },
+  {
+    "ticker": "GSK",
+    "status": "ok",
+    "notes": [],
+    "cik": "0001131399",
+    "entity": "GSK plc",
+    "fiscal_year_end": "",
+    "filer_type": "20-F",
+    "latest_annual": "2026-03-06",
+    "currency_units": {
+      "GBP": 6249,
+      "USD": 5
+    },
+    "reporting_currency": "GBP",
+    "taxonomies": [
+      "ifrs-full"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "GSK plc",
+    "country": "United Kingdom",
+    "sector": "Healthcare",
+    "filer_hint": "20-F",
+    "country_iso3": "GBR",
+    "currency": "GBP"
+  },
+  {
+    "ticker": "DEO",
+    "status": "ok",
+    "notes": [
+      "BOTH taxonomies present (ifrs-full+us-gaap)"
+    ],
+    "cik": "0000835403",
+    "entity": "DIAGEO PLC",
+    "fiscal_year_end": "0630",
+    "filer_type": "20-F",
+    "latest_annual": "2025-08-14",
+    "currency_units": {
+      "GBP": 4908,
+      "USD": 2064,
+      "EUR": 6
+    },
+    "reporting_currency": "GBP",
+    "taxonomies": [
+      "ifrs-full",
+      "us-gaap"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "Diageo plc",
+    "country": "United Kingdom",
+    "sector": "Consumer Staples",
+    "filer_hint": "20-F",
+    "country_iso3": "GBR",
+    "currency": "GBP"
+  },
+  {
+    "ticker": "SNY",
+    "status": "ok",
+    "notes": [],
+    "cik": "0001121404",
+    "entity": "Sanofi",
+    "fiscal_year_end": "1231",
+    "filer_type": "20-F",
+    "latest_annual": "2026-02-17",
+    "currency_units": {
+      "EUR": 6904,
+      "USD": 3
+    },
+    "reporting_currency": "EUR",
+    "taxonomies": [
+      "ifrs-full"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "Sanofi",
+    "country": "France",
+    "sector": "Healthcare",
+    "filer_hint": "20-F",
+    "country_iso3": "FRA",
+    "currency": "EUR"
+  },
+  {
+    "ticker": "TTE",
+    "status": "ok",
+    "notes": [
+      "BOTH taxonomies present (ifrs-full+us-gaap)"
+    ],
+    "cik": "0000879764",
+    "entity": "TotalEnergies SE",
+    "fiscal_year_end": "1231",
+    "filer_type": "20-F",
+    "latest_annual": "2026-03-27",
+    "currency_units": {
+      "USD": 9007,
+      "EUR": 67
+    },
+    "reporting_currency": "USD",
+    "taxonomies": [
+      "ifrs-full",
+      "us-gaap"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "TotalEnergies SE",
+    "country": "France",
+    "sector": "Energy",
+    "filer_hint": "20-F",
+    "country_iso3": "FRA",
+    "currency": "EUR"
+  },
+  {
+    "ticker": "SHEL",
+    "status": "ok",
+    "notes": [],
+    "cik": "0001306965",
+    "entity": "Shell plc",
+    "fiscal_year_end": "1231",
+    "filer_type": "20-F",
+    "latest_annual": "2026-03-12",
+    "currency_units": {
+      "USD": 9249
+    },
+    "reporting_currency": "USD",
+    "taxonomies": [
+      "ifrs-full"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "Shell plc",
+    "country": "Netherlands/UK",
+    "sector": "Energy",
+    "filer_hint": "20-F",
+    "country_iso3": "GBR",
+    "currency": "GBP"
+  },
+  {
+    "ticker": "ASML",
+    "status": "ok",
+    "notes": [],
+    "cik": "0000937966",
+    "entity": "ASML HOLDING NV",
+    "fiscal_year_end": "1231",
+    "filer_type": "20-F",
+    "latest_annual": "2026-02-25",
+    "currency_units": {
+      "EUR": 9864,
+      "USD": 5,
+      "JPY": 2
+    },
+    "reporting_currency": "EUR",
+    "taxonomies": [
+      "us-gaap"
+    ],
+    "xbrl_taxonomy": "us-gaap",
+    "name": "ASML Holding N.V.",
+    "country": "Netherlands",
+    "sector": "Technology",
+    "filer_hint": "20-F",
+    "country_iso3": "NLD",
+    "currency": "EUR"
+  },
+  {
+    "ticker": "NVS",
+    "status": "ok",
+    "notes": [],
+    "cik": "0001114448",
+    "entity": "NOVARTIS AG",
+    "fiscal_year_end": "1231",
+    "filer_type": "20-F",
+    "latest_annual": "2026-02-04",
+    "currency_units": {
+      "USD": 7979,
+      "CHF": 7,
+      "EUR": 1
+    },
+    "reporting_currency": "USD",
+    "taxonomies": [
+      "ifrs-full"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "Novartis AG",
+    "country": "Switzerland",
+    "sector": "Healthcare",
+    "filer_hint": "20-F",
+    "country_iso3": "CHE",
+    "currency": "CHF"
+  },
+  {
+    "ticker": "UBS",
+    "status": "ok",
+    "notes": [],
+    "cik": "0001610520",
+    "entity": "UBS Group AG",
+    "fiscal_year_end": "1231",
+    "filer_type": "20-F",
+    "latest_annual": "2026-03-09",
+    "currency_units": {
+      "USD": 7224,
+      "CHF": 1169,
+      "THB": 1
+    },
+    "reporting_currency": "USD",
+    "taxonomies": [
+      "ifrs-full"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "UBS Group AG",
+    "country": "Switzerland",
+    "sector": "Financials",
+    "filer_hint": "20-F",
+    "country_iso3": "CHE",
+    "currency": "CHF"
+  },
+  {
+    "ticker": "DB",
+    "status": "ok",
+    "notes": [],
+    "cik": "0001159508",
+    "entity": "DEUTSCHE BANK AKTIENGESELLSCHAFT",
+    "fiscal_year_end": "1231",
+    "filer_type": "20-F",
+    "latest_annual": "2026-03-12",
+    "currency_units": {
+      "EUR": 6227,
+      "USD": 62,
+      "GBP": 1
+    },
+    "reporting_currency": "EUR",
+    "taxonomies": [
+      "ifrs-full"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "Deutsche Bank AG",
+    "country": "Germany",
+    "sector": "Financials",
+    "filer_hint": "20-F",
+    "country_iso3": "DEU",
+    "currency": "EUR"
+  },
+  {
+    "ticker": "TM",
+    "status": "ok",
+    "notes": [
+      "BOTH taxonomies present (ifrs-full+us-gaap)"
+    ],
+    "cik": "0001094517",
+    "entity": "TOYOTA MOTOR CORP/",
+    "fiscal_year_end": "0331",
+    "filer_type": "20-F",
+    "latest_annual": "2026-06-10",
+    "currency_units": {
+      "JPY": 9271,
+      "USD": 919
+    },
+    "reporting_currency": "JPY",
+    "taxonomies": [
+      "ifrs-full",
+      "us-gaap"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "Toyota Motor Corp.",
+    "country": "Japan",
+    "sector": "Consumer Discretionary",
+    "filer_hint": "20-F",
+    "country_iso3": "JPN",
+    "currency": "JPY"
+  },
+  {
+    "ticker": "SONY",
+    "status": "ok",
+    "notes": [
+      "BOTH taxonomies present (us-gaap+ifrs-full)"
+    ],
+    "cik": "0000313838",
+    "entity": "Sony Group Corp",
+    "fiscal_year_end": "0331",
+    "filer_type": "20-F",
+    "latest_annual": "2026-06-18",
+    "currency_units": {
+      "JPY": 12499,
+      "USD": 38,
+      "EUR": 6
+    },
+    "reporting_currency": "JPY",
+    "taxonomies": [
+      "us-gaap",
+      "ifrs-full"
+    ],
+    "xbrl_taxonomy": "us-gaap",
+    "name": "Sony Group Corp.",
+    "country": "Japan",
+    "sector": "Technology / Media",
+    "filer_hint": "20-F",
+    "country_iso3": "JPN",
+    "currency": "JPY"
+  },
+  {
+    "ticker": "HMC",
+    "status": "ok",
+    "notes": [
+      "BOTH taxonomies present (ifrs-full+us-gaap)"
+    ],
+    "cik": "0000715153",
+    "entity": "HONDA MOTOR CO LTD",
+    "fiscal_year_end": "0331",
+    "filer_type": "20-F",
+    "latest_annual": "2026-06-18",
+    "currency_units": {
+      "JPY": 7496
+    },
+    "reporting_currency": "JPY",
+    "taxonomies": [
+      "ifrs-full",
+      "us-gaap"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "Honda Motor Co.",
+    "country": "Japan",
+    "sector": "Consumer Discretionary",
+    "filer_hint": "20-F",
+    "country_iso3": "JPN",
+    "currency": "JPY"
+  },
+  {
+    "ticker": "MUFG",
+    "status": "ok",
+    "notes": [],
+    "cik": "0000067088",
+    "entity": "MITSUBISHI UFJ FINANCIAL GROUP INC",
+    "fiscal_year_end": "0331",
+    "filer_type": "20-F",
+    "latest_annual": "2026-07-06",
+    "currency_units": {
+      "JPY": 21005,
+      "USD": 16
+    },
+    "reporting_currency": "JPY",
+    "taxonomies": [
+      "us-gaap"
+    ],
+    "xbrl_taxonomy": "us-gaap",
+    "name": "Mitsubishi UFJ Financial Group",
+    "country": "Japan",
+    "sector": "Financials",
+    "filer_hint": "20-F",
+    "country_iso3": "JPN",
+    "currency": "JPY"
+  },
+  {
+    "ticker": "TSM",
+    "status": "ok",
+    "notes": [],
+    "cik": "0001046179",
+    "entity": "TAIWAN SEMICONDUCTOR MANUFACTURING CO LTD",
+    "fiscal_year_end": "1231",
+    "filer_type": "20-F",
+    "latest_annual": "2026-04-16",
+    "currency_units": {
+      "TWD": 4624,
+      "USD": 1010,
+      "EUR": 7
+    },
+    "reporting_currency": "TWD",
+    "taxonomies": [
+      "ifrs-full"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "Taiwan Semiconductor Mfg.",
+    "country": "Taiwan",
+    "sector": "Technology",
+    "filer_hint": "20-F",
+    "country_iso3": "TWN",
+    "currency": "TWD"
+  },
+  {
+    "ticker": "SKM",
+    "status": "ok",
+    "notes": [],
+    "cik": "0001015650",
+    "entity": "SK TELECOM CO LTD",
+    "fiscal_year_end": "1231",
+    "filer_type": "20-F",
+    "latest_annual": "2026-04-29",
+    "currency_units": {
+      "KRW": 5453
+    },
+    "reporting_currency": "KRW",
+    "taxonomies": [
+      "ifrs-full"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "SK Telecom Co.",
+    "country": "South Korea",
+    "sector": "Telecom",
+    "filer_hint": "20-F",
+    "country_iso3": "KOR",
+    "currency": "KRW"
+  },
+  {
+    "ticker": "KB",
+    "status": "ok",
+    "notes": [
+      "BOTH taxonomies present (ifrs-full+us-gaap)"
+    ],
+    "cik": "0001445930",
+    "entity": "KB Financial Group Inc.",
+    "fiscal_year_end": "1231",
+    "filer_type": "20-F",
+    "latest_annual": "2026-04-28",
+    "currency_units": {
+      "KRW": 7579,
+      "USD": 1153
+    },
+    "reporting_currency": "KRW",
+    "taxonomies": [
+      "ifrs-full",
+      "us-gaap"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "KB Financial Group",
+    "country": "South Korea",
+    "sector": "Financials",
+    "filer_hint": "20-F",
+    "country_iso3": "KOR",
+    "currency": "KRW"
+  },
+  {
+    "ticker": "BABA",
+    "status": "ok",
+    "notes": [],
+    "cik": "0001577552",
+    "entity": "Alibaba Group Holding Ltd",
+    "fiscal_year_end": "",
+    "filer_type": "20-F",
+    "latest_annual": "2026-05-20",
+    "currency_units": {
+      "CNY": 6729,
+      "USD": 1376
+    },
+    "reporting_currency": "CNY",
+    "taxonomies": [
+      "us-gaap"
+    ],
+    "xbrl_taxonomy": "us-gaap",
+    "name": "Alibaba Group Holding",
+    "country": "China",
+    "sector": "Technology / Consumer",
+    "filer_hint": "20-F",
+    "country_iso3": "CHN",
+    "currency": "CNY"
+  },
+  {
+    "ticker": "JD",
+    "status": "ok",
+    "notes": [],
+    "cik": "0001549802",
+    "entity": "JD.com, Inc.",
+    "fiscal_year_end": "1231",
+    "filer_type": "20-F",
+    "latest_annual": "2026-04-16",
+    "currency_units": {
+      "CNY": 6089,
+      "USD": 1507
+    },
+    "reporting_currency": "CNY",
+    "taxonomies": [
+      "us-gaap"
+    ],
+    "xbrl_taxonomy": "us-gaap",
+    "name": "JD.com Inc.",
+    "country": "China",
+    "sector": "Consumer Discretionary",
+    "filer_hint": "20-F",
+    "country_iso3": "CHN",
+    "currency": "CNY"
+  },
+  {
+    "ticker": "BIDU",
+    "status": "ok",
+    "notes": [],
+    "cik": "0001329099",
+    "entity": "Baidu, Inc.",
+    "fiscal_year_end": "1231",
+    "filer_type": "20-F",
+    "latest_annual": "2026-03-17",
+    "currency_units": {
+      "CNY": 9815,
+      "USD": 3958
+    },
+    "reporting_currency": "CNY",
+    "taxonomies": [
+      "us-gaap"
+    ],
+    "xbrl_taxonomy": "us-gaap",
+    "name": "Baidu Inc.",
+    "country": "China",
+    "sector": "Technology",
+    "filer_hint": "20-F",
+    "country_iso3": "CHN",
+    "currency": "CNY"
+  },
+  {
+    "ticker": "INFY",
+    "status": "ok",
+    "notes": [],
+    "cik": "0001067491",
+    "entity": "Infosys Ltd",
+    "fiscal_year_end": "0331",
+    "filer_type": "20-F",
+    "latest_annual": "2026-06-15",
+    "currency_units": {
+      "USD": 4032,
+      "INR": 1
+    },
+    "reporting_currency": "USD",
+    "taxonomies": [
+      "ifrs-full"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "Infosys Ltd.",
+    "country": "India",
+    "sector": "Technology",
+    "filer_hint": "20-F",
+    "country_iso3": "IND",
+    "currency": "INR"
+  },
+  {
+    "ticker": "IBN",
+    "status": "NO_COMPANYFACTS",
+    "notes": [
+      "Client error '404 Not Found' for url 'https://data.sec.gov/api/xbrl/companyfacts"
+    ],
+    "cik": "0001103838",
+    "entity": "ICICI BANK LTD",
+    "fiscal_year_end": "0331",
+    "filer_type": "20-F",
+    "latest_annual": "2026-07-20",
+    "name": "ICICI Bank Ltd.",
+    "country": "India",
+    "sector": "Financials",
+    "filer_hint": "20-F",
+    "country_iso3": "IND",
+    "currency": "INR"
+  },
+  {
+    "ticker": "WIT",
+    "status": "ok",
+    "notes": [],
+    "cik": "0001123799",
+    "entity": "WIPRO LTD",
+    "fiscal_year_end": "0331",
+    "filer_type": "20-F",
+    "latest_annual": "2026-06-02",
+    "currency_units": {
+      "INR": 4828,
+      "USD": 891,
+      "EUR": 1
+    },
+    "reporting_currency": "INR",
+    "taxonomies": [
+      "ifrs-full"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "Wipro Ltd.",
+    "country": "India",
+    "sector": "Technology",
+    "filer_hint": "20-F",
+    "country_iso3": "IND",
+    "currency": "INR"
+  },
+  {
+    "ticker": "BHP",
+    "status": "ok",
+    "notes": [
+      "BOTH taxonomies present (ifrs-full+us-gaap)"
+    ],
+    "cik": "0000811809",
+    "entity": "BHP Group Ltd",
+    "fiscal_year_end": "0630",
+    "filer_type": "20-F",
+    "latest_annual": "2025-08-22",
+    "currency_units": {
+      "USD": 5746
+    },
+    "reporting_currency": "USD",
+    "taxonomies": [
+      "ifrs-full",
+      "us-gaap"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "BHP Group Ltd.",
+    "country": "Australia",
+    "sector": "Materials",
+    "filer_hint": "20-F",
+    "country_iso3": "AUS",
+    "currency": "AUD"
+  },
+  {
+    "ticker": "PBR",
+    "status": "ok",
+    "notes": [
+      "BOTH taxonomies present (ifrs-full+us-gaap)"
+    ],
+    "cik": "0001119639",
+    "entity": "PETROBRAS - PETROLEO BRASILEIRO SA",
+    "fiscal_year_end": "1231",
+    "filer_type": "20-F",
+    "latest_annual": "2026-04-09",
+    "currency_units": {
+      "USD": 10562,
+      "BRL": 7
+    },
+    "reporting_currency": "USD",
+    "taxonomies": [
+      "ifrs-full",
+      "us-gaap"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "Petroleo Brasileiro (Petrobras)",
+    "country": "Brazil",
+    "sector": "Energy",
+    "filer_hint": "20-F",
+    "country_iso3": "BRA",
+    "currency": "BRL"
+  },
+  {
+    "ticker": "VALE",
+    "status": "ok",
+    "notes": [
+      "BOTH taxonomies present (ifrs-full+us-gaap)"
+    ],
+    "cik": "0000917851",
+    "entity": "Vale S.A.",
+    "fiscal_year_end": "1231",
+    "filer_type": "20-F",
+    "latest_annual": "2026-03-27",
+    "currency_units": {
+      "USD": 16065,
+      "BRL": 84,
+      "EUR": 2
+    },
+    "reporting_currency": "USD",
+    "taxonomies": [
+      "ifrs-full",
+      "us-gaap"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "Vale S.A.",
+    "country": "Brazil",
+    "sector": "Materials",
+    "filer_hint": "20-F",
+    "country_iso3": "BRA",
+    "currency": "BRL"
+  },
+  {
+    "ticker": "ITUB",
+    "status": "ok",
+    "notes": [
+      "BOTH taxonomies present (ifrs-full+us-gaap)"
+    ],
+    "cik": "0001132597",
+    "entity": "Itau Unibanco Holding S.A.",
+    "fiscal_year_end": "1231",
+    "filer_type": "20-F",
+    "latest_annual": "2026-04-30",
+    "currency_units": {
+      "BRL": 5192,
+      "USD": 32
+    },
+    "reporting_currency": "BRL",
+    "taxonomies": [
+      "ifrs-full",
+      "us-gaap"
+    ],
+    "xbrl_taxonomy": "ifrs-full",
+    "name": "Itau Unibanco Holding",
+    "country": "Brazil",
+    "sector": "Financials",
+    "filer_hint": "20-F",
+    "country_iso3": "BRA",
+    "currency": "BRL"
+  }
+]

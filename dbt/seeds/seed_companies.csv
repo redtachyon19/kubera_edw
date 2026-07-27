@@ -1,10 +1,39 @@
 ticker,cik,legal_name,country_name,country_iso3,currency_iso,reporting_currency,sector,industry,filer_type,fiscal_year_end,xbrl_taxonomy,valid_from
 AAPL,0000320193,Apple Inc.,United States,USA,USD,USD,Technology,,10-K,09-26,us-gaap,2024-01-01
-AZN,0000901832,AstraZeneca PLC,United Kingdom,GBR,GBP,USD,Healthcare,,20-F,12-31,ifrs-full,2024-01-01
-BABA,0001577552,Alibaba Group Holding Ltd,China,CHN,CNY,CNY,Technology,,20-F,03-31,us-gaap,2024-01-01
-INFY,0001067491,Infosys Ltd,India,IND,INR,USD,Technology,,20-F,03-31,ifrs-full,2024-01-01
+AMX,0001129137,America Movil SAB,Mexico,MEX,MXN,MXN,Telecom,,20-F,12-31,ifrs-full,2024-01-01
+ASML,0000937966,ASML Holding N.V.,Netherlands,NLD,EUR,EUR,Technology,,20-F,12-31,us-gaap,2024-01-01
+AZN,0000901832,AstraZeneca plc,United Kingdom,GBR,GBP,USD,Healthcare,,20-F,12-31,ifrs-full,2024-01-01
+BABA,0001577552,Alibaba Group Holding,China,CHN,CNY,CNY,Technology / Consumer,,20-F,03-31,us-gaap,2024-01-01
+BHP,0000811809,BHP Group Ltd.,Australia,AUS,AUD,USD,Materials,,20-F,06-30,ifrs-full,2024-01-01
+BIDU,0001329099,Baidu Inc.,China,CHN,CNY,CNY,Technology,,20-F,12-31,us-gaap,2024-01-01
+BP,0000313807,BP plc,United Kingdom,GBR,GBP,USD,Energy,,20-F,12-31,ifrs-full,2024-01-01
+CAT,0000018230,Caterpillar Inc.,United States,USA,USD,USD,Industrials,,10-K,12-31,us-gaap,2024-01-01
+DB,0001159508,Deutsche Bank AG,Germany,DEU,EUR,EUR,Financials,,20-F,12-31,ifrs-full,2024-01-01
+DEO,0000835403,Diageo plc,United Kingdom,GBR,GBP,GBP,Consumer Staples,,20-F,06-30,ifrs-full,2024-01-01
+F,0000037996,Ford Motor Co.,United States,USA,USD,USD,Consumer Discretionary,,10-K,12-31,us-gaap,2024-01-01
+GSK,0001131399,GSK plc,United Kingdom,GBR,GBP,GBP,Healthcare,,20-F,12-31,ifrs-full,2024-01-01
+HMC,0000715153,Honda Motor Co.,Japan,JPN,JPY,JPY,Consumer Discretionary,,20-F,03-31,ifrs-full,2024-01-01
+HSBC,0001089113,HSBC Holdings plc,United Kingdom,GBR,GBP,USD,Financials,,20-F,12-31,ifrs-full,2024-01-01
+INFY,0001067491,Infosys Ltd.,India,IND,INR,USD,Technology,,20-F,03-31,ifrs-full,2024-01-01
+ITUB,0001132597,Itau Unibanco Holding,Brazil,BRA,BRL,BRL,Financials,,20-F,12-31,ifrs-full,2024-01-01
+JD,0001549802,JD.com Inc.,China,CHN,CNY,CNY,Consumer Discretionary,,20-F,12-31,us-gaap,2024-01-01
+JNJ,0000200406,Johnson & Johnson,United States,USA,USD,USD,Healthcare,,10-K,01-03,us-gaap,2024-01-01
 JPM,0000019617,JPMorgan Chase & Co.,United States,USA,USD,USD,Financials,,10-K,12-31,us-gaap,2024-01-01
-MSFT,0000789019,Microsoft Corporation,United States,USA,USD,USD,Technology,,10-K,06-30,us-gaap,2024-01-01
-SHEL,0001306965,Shell plc,United Kingdom,GBR,GBP,USD,Energy,,20-F,12-31,ifrs-full,2024-01-01
-TM,0001094517,Toyota Motor Corporation,Japan,JPN,JPY,JPY,Consumer Discretionary,,20-F,03-31,ifrs-full,2024-01-01
+KB,0001445930,KB Financial Group,South Korea,KOR,KRW,KRW,Financials,,20-F,12-31,ifrs-full,2024-01-01
+KO,0000021344,Coca-Cola Co.,United States,USA,USD,USD,Consumer Staples,,10-K,12-31,us-gaap,2024-01-01
+MSFT,0000789019,Microsoft Corp.,United States,USA,USD,USD,Technology,,10-K,06-30,us-gaap,2024-01-01
+MUFG,0000067088,Mitsubishi UFJ Financial Group,Japan,JPN,JPY,JPY,Financials,,20-F,03-31,us-gaap,2024-01-01
+NVS,0001114448,Novartis AG,Switzerland,CHE,CHF,USD,Healthcare,,20-F,12-31,ifrs-full,2024-01-01
+PBR,0001119639,Petroleo Brasileiro (Petrobras),Brazil,BRA,BRL,USD,Energy,,20-F,12-31,ifrs-full,2024-01-01
+PG,0000080424,Procter & Gamble Co.,United States,USA,USD,USD,Consumer Staples,,10-K,06-30,us-gaap,2024-01-01
+SHEL,0001306965,Shell plc,Netherlands/UK,GBR,GBP,USD,Energy,,20-F,12-31,ifrs-full,2024-01-01
+SKM,0001015650,SK Telecom Co.,South Korea,KOR,KRW,KRW,Telecom,,20-F,12-31,ifrs-full,2024-01-01
+SNY,0001121404,Sanofi,France,FRA,EUR,EUR,Healthcare,,20-F,12-31,ifrs-full,2024-01-01
+SONY,0000313838,Sony Group Corp.,Japan,JPN,JPY,JPY,Technology / Media,,20-F,03-31,us-gaap,2024-01-01
+TM,0001094517,Toyota Motor Corp.,Japan,JPN,JPY,JPY,Consumer Discretionary,,20-F,03-31,ifrs-full,2024-01-01
+TTE,0000879764,TotalEnergies SE,France,FRA,EUR,USD,Energy,,20-F,12-31,ifrs-full,2024-01-01
+UBS,0001610520,UBS Group AG,Switzerland,CHE,CHF,USD,Financials,,20-F,12-31,ifrs-full,2024-01-01
+UL,0000217410,Unilever plc,United Kingdom,GBR,GBP,EUR,Consumer Staples,,20-F,12-31,ifrs-full,2024-01-01
+VALE,0000917851,Vale S.A.,Brazil,BRA,BRL,USD,Materials,,20-F,12-31,ifrs-full,2024-01-01
+WIT,0001123799,Wipro Ltd.,India,IND,INR,INR,Technology,,20-F,03-31,ifrs-full,2024-01-01
 XOM,0000034088,Exxon Mobil Corporation,United States,USA,USD,USD,Energy,,10-K,12-31,us-gaap,2024-01-01

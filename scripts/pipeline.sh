@@ -14,6 +14,10 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
+# Export .env so dbt sees POSTGRES_* / DUCKDB_PATH. The Python clients load it themselves via
+# python-dotenv, but the dbt CLI reads only the process environment.
+if [ -f .env ]; then set -a; . ./.env; set +a; fi
+
 TARGET="${1:-dev}"
 PY="$ROOT/.venv/bin/python"
 DBT="$ROOT/.venv/bin/dbt"

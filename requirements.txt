@@ -27,6 +27,8 @@ dagster-dbt>=0.29        # @dbt_assets: models become first-class Dagster assets
 
 # --- BI ---
 streamlit>=1.36
+altair>=5.0            # charting (ships with streamlit)
+vl-convert-python>=1.0 # render charts to PNG for the README
 
 # --- Testing / quality ---
 pytest>=8.2

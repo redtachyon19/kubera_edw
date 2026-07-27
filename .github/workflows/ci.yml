@@ -24,6 +24,10 @@ jobs:
       - name: Lint (ruff)
         run: ruff check .
 
+      - name: Format check (ruff)
+        # Stricter than `ruff check`: catches drift in formatting that lint alone allows.
+        run: ruff format --check .
+
       - name: Python unit tests (pytest)
         # Fast: no warehouse required — ingestion clients are tested against mocked responses.
         run: pytest tests/ -v

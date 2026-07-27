@@ -36,11 +36,19 @@ EXPECTED_CSV_HEADER = "Date,Open,High,Low,Close"
 #: Marker text in Stooq's bot-verification interstitial.
 STOOQ_CHALLENGE_MARKERS = ("requires JavaScript", "__verify")
 DEFAULT_BACKEND = "alpha_vantage"
+#: Requests to spend on prices in a single run. Alpha Vantage's free tier allows ~25/day and the
+#: universe now needs more than that, so a run takes the freshest-needed slice and leaves the
+#: rest for the next one. Combined with the freshness cache this rotates coverage across runs
+#: rather than failing the tail of the ticker list every time.
+DAILY_REQUEST_BUDGET = int(os.environ.get("PRICES_REQUEST_BUDGET", "20"))
 
 
 class PricesClient(BaseClient):
     source_name = "prices"
     base_url = "https://stooq.com"
+    # Alpha Vantage free tier enforces ~1 request/second in addition to the ~25/day cap;
+    # firing faster returns an "Information" throttle message with HTTP 200, not a 429.
+    min_interval_s = 1.3
 
     # -- Stooq (no key; currently bot-gated) ---------------------------------
     def fetch_daily_stooq(self, ticker: str, *, force: bool = False) -> str:
@@ -71,12 +79,21 @@ class PricesClient(BaseClient):
 
     # -- Alpha Vantage (free key, rate-limited) ------------------------------
     def fetch_daily_alpha_vantage(
-        self, ticker: str, *, force: bool = False, adjusted: bool = False
+        self,
+        ticker: str,
+        *,
+        force: bool = False,
+        adjusted: bool = False,
+        outputsize: str = "compact",
     ) -> dict:
         """Daily series from Alpha Vantage; land raw.
 
-        ``adjusted=True`` requests TIME_SERIES_DAILY_ADJUSTED, which is a premium endpoint —
-        it will raise on a free key.
+        FREE-TIER LIMITS, both learned the hard way from HTTP 200 responses carrying an
+        "Information" message rather than an error status:
+          * ``outputsize="full"`` (20+ years) is a PREMIUM feature for TIME_SERIES_DAILY.
+            The default here is "compact" — the latest ~100 trading days, which is what a
+            free key can actually retrieve.
+          * ``adjusted=True`` requests TIME_SERIES_DAILY_ADJUSTED, also premium.
         """
         api_key = get_api_key("ALPHA_VANTAGE_API_KEY")
         if not api_key:
@@ -96,7 +113,7 @@ class PricesClient(BaseClient):
             function=function,
             symbol=ticker.upper(),
             apikey=api_key,
-            outputsize="full",
+            outputsize=outputsize,
         ).json()
 
         # Rate limits and errors arrive as HTTP 200 with an explanatory key, not a bad status.
@@ -136,17 +153,39 @@ def main() -> None:
 
     log.info("prices backend: %s (%d tickers)", backend, len(tickers))
 
-    ok, failed = 0, []
+    ok, cached, failed, deferred = 0, 0, [], []
+    spent = 0
     with PricesClient() as client:
         for ticker in tickers:
+            # A cached ticker costs no request, so it never counts against the budget.
+            if client._is_fresh(
+                client._land_path(f"av_{ticker.upper()}", "json"), CACHE_MAX_AGE_DAYS
+            ):
+                cached += 1
+                continue
+            if backend == "alpha_vantage" and spent >= DAILY_REQUEST_BUDGET:
+                deferred.append(ticker)
+                continue
             try:
                 client.fetch_daily(ticker, backend=backend)
+                spent += 1
                 ok += 1
             except Exception as exc:  # noqa: BLE001 — one bad ticker shouldn't kill the run
+                spent += 1
                 log.error("%s: %s", ticker, exc)
                 failed.append(ticker)
 
-    log.info("done — %d/%d price series landed", ok, len(tickers))
+    log.info(
+        "done — %d fetched, %d already cached, %d deferred, %d failed (of %d tickers; budget %d)",
+        ok,
+        cached,
+        len(deferred),
+        len(failed),
+        len(tickers),
+        DAILY_REQUEST_BUDGET,
+    )
+    if deferred:
+        log.warning("deferred to a later run (free-tier daily cap): %s", ", ".join(deferred))
     if failed:
         log.warning("failed tickers: %s", ", ".join(failed))
 
