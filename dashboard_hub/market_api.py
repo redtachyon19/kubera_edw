@@ -12,6 +12,8 @@ to Yahoo directly.
     GET /api/market/search?q=apple
     GET /api/market/history?symbols=AAPL,MSFT,GC=F&period=5Y
     GET /api/market/quotes?symbols=^GSPC,GC=F
+    GET /api/market/sectors?period=1Y
+    GET /api/market/sector?slug=ai&period=1Y
 """
 
 from __future__ import annotations
@@ -56,6 +58,22 @@ class Handler(BaseHTTPRequestHandler):
                 symbols = [s.strip() for s in raw.split(",") if s.strip()]
                 period = (params.get("period") or ["5Y"])[0]
                 self._send(market_data.history(symbols, period))
+                return
+
+            if parsed.path == "/api/market/sectors":
+                period = (params.get("period") or ["1Y"])[0]
+                self._send({"sectors": market_data.sectors_overview(period)})
+                return
+
+            if parsed.path == "/api/market/sector":
+                slug = (params.get("slug") or [""])[0]
+                definition = market_data.sector(slug)
+                if not definition:
+                    self._send({"error": f"unknown sector {slug!r}"}, status=404)
+                    return
+                period = (params.get("period") or ["1Y"])[0]
+                snapshot = market_data.sector_snapshot(definition["symbols"], period)
+                self._send({**definition, **snapshot})
                 return
 
             if parsed.path == "/api/market/quotes":

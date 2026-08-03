@@ -6,6 +6,7 @@ import { embedPathFor, isNative } from '../../config/dashboards';
 import type { Dashboard, Section } from '../../config/dashboards';
 import { useThemeMode } from '../../ThemeContext';
 import StockExplorer from '../stock/StockExplorer';
+import Sectors from './Sectors';
 import Ticker from './Ticker';
 import './MarketsWorkspace.css';
 
@@ -24,11 +25,24 @@ export default function MarketsWorkspace({ section }: { section: Section }) {
   const { mode } = useThemeMode();
   const live = section.dashboards.filter((entry) => entry.status === 'stub');
   const [activeId, setActiveId] = useState(live[0]?.id ?? '');
+  // The basket lives here, not inside Explorer, so Sectors can load one and hand
+  // the reader straight to the chart.
+  const [basket, setBasket] = useState<string[]>(['AAPL', 'MSFT']);
+
+  function chart(symbols: string[]) {
+    if (symbols.length === 0) return;
+    setBasket(symbols);
+    setActiveId('stock-explorer');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
   const active = live.find((entry) => entry.id === activeId) ?? live[0];
 
   function body(dashboard: Dashboard | undefined) {
     if (!dashboard) return <p className="ws__empty">Nothing is running on this desk yet.</p>;
-    if (isNative(dashboard)) return <StockExplorer />;
+    if (dashboard.id === 'sectors') return <Sectors onCompare={chart} />;
+    if (isNative(dashboard)) {
+      return <StockExplorer symbols={basket} onSymbolsChange={setBasket} />;
+    }
     const embed = embedPathFor(dashboard);
     if (!embed) {
       return <p className="ws__empty">This view has not been commissioned yet.</p>;

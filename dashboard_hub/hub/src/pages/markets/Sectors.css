@@ -1,0 +1,359 @@
+.sectors {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  transition: opacity 0.2s ease;
+}
+
+.sectors.is-loading {
+  opacity: 0.5;
+}
+
+.sectors__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.sectors__lead {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--ink-3);
+}
+
+.sectors__back,
+.sectors__cta,
+.sectors__mini {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.sectors__back {
+  padding: 0;
+  border: 0;
+  font-size: 0.6rem;
+  color: var(--ink-3);
+}
+
+.sectors__back:hover {
+  color: var(--ink);
+}
+
+/* ── Grid of sectors ───────────────────────────────────────────────────────── */
+.sectors__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--rule);
+  border-left: 1px solid var(--rule);
+}
+
+.sector-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    'name return'
+    'blurb blurb'
+    'foot foot';
+  gap: 10px 14px;
+  align-items: start;
+  text-align: left;
+  padding: 22px 24px 18px;
+  background: var(--surface);
+  border: 0;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer;
+  transition: background 0.16s ease;
+}
+
+.sector-card:hover {
+  background: var(--surface-sunk);
+}
+
+.sector-card__name {
+  grid-area: name;
+  font-family: var(--font-display);
+  font-size: 0.76rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.sector-card__return {
+  grid-area: return;
+  font-size: 1.05rem;
+}
+
+.sector-card__blurb {
+  grid-area: blurb;
+  font-size: 0.84rem;
+  line-height: 1.6;
+  color: var(--ink-3);
+}
+
+.sector-card__foot {
+  grid-area: foot;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+  font-size: 0.72rem;
+  color: var(--ink-4);
+}
+
+.sector-card__foot b {
+  font-weight: 400;
+  color: var(--ink-2);
+}
+
+.sector-card__foot i {
+  font-style: normal;
+}
+
+.sector-card__count {
+  color: var(--ink-4);
+}
+
+/* ── Sector detail ─────────────────────────────────────────────────────────── */
+.sectors__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 14px 20px;
+}
+
+.sectors__title {
+  font-size: 1.2rem;
+  letter-spacing: 0.16em;
+}
+
+.sectors__blurb {
+  flex: 1 1 320px;
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--ink-3);
+}
+
+.sectors__cta {
+  padding: 10px 18px;
+  font-size: 0.6rem;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+}
+
+.sectors__cta:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.sectors__mini {
+  padding: 5px 11px;
+  font-size: 0.54rem;
+  color: var(--ink-3);
+  border: 1px solid var(--rule-strong);
+}
+
+.sectors__mini:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.sectors__pairs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 28px;
+}
+
+.sectors__pairlist {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+}
+
+.sectors__pairlist button {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 9px 2px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink-2);
+  font-size: 0.82rem;
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.15s ease;
+}
+
+.sectors__pairlist button:hover {
+  color: var(--ink);
+}
+
+.sectors__pairlist b {
+  font-weight: 400;
+}
+
+/* ── Correlation grid ──────────────────────────────────────────────────────── */
+.corr {
+  overflow-x: auto;
+}
+
+.corr__table {
+  border-collapse: collapse;
+  font-size: 0.68rem;
+}
+
+.corr__table th {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.62rem;
+  color: var(--ink-4);
+  padding: 4px 6px;
+  white-space: nowrap;
+  transition: color 0.12s ease;
+}
+
+.corr__table thead th {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  height: 62px;
+  vertical-align: bottom;
+}
+
+.corr__table tbody th {
+  text-align: right;
+}
+
+.corr__table th.is-lit {
+  color: var(--ink);
+}
+
+.corr__cell {
+  width: 38px;
+  height: 30px;
+  text-align: center;
+  border: 1px solid var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 0.62rem;
+}
+
+.corr__cell.is-self {
+  color: var(--ink-4);
+  cursor: default;
+}
+
+.corr__cell:hover {
+  outline: 1px solid var(--ink);
+  outline-offset: -1px;
+}
+
+.corr__key {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0 0;
+  font-family: var(--font-display);
+  font-size: 0.56rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.corr__swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+}
+
+.corr__scale {
+  display: inline-block;
+  width: 88px;
+  height: 8px;
+  background: linear-gradient(to right, var(--down), var(--surface-sunk), var(--up));
+}
+
+.corr__key em {
+  font-family: var(--font-body);
+  font-style: normal;
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 0.74rem;
+  margin-left: 6px;
+}
+
+/* ── Pair rows: headline, downside, rolling range and its trace ────────────── */
+.sectors__pairlist button {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.sectors__pairname {
+  font-size: 0.78rem;
+}
+
+.sectors__pairstats {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.sectors__pairstats i {
+  font-style: normal;
+  font-size: 0.68rem;
+  color: var(--ink-4);
+}
+
+.spark {
+  display: block;
+  overflow: visible;
+}
+
+.spark__zero {
+  stroke: var(--rule);
+  stroke-width: 1;
+}
+
+.spark__line {
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-width: 1.2;
+}
+
+.spark__dot {
+  fill: var(--accent, var(--gold));
+}
+
+/* ── Method toggle above the grid ──────────────────────────────────────────── */
+.corr__methods {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 18px;
+  margin-bottom: 18px;
+}
+
+.corr__hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--ink-3);
+}

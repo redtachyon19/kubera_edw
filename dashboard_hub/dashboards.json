@@ -139,6 +139,17 @@
           "kind": "native"
         },
         {
+          "id": "sectors",
+          "title": "Sectors",
+          "module": "sectors",
+          "status": "stub",
+          "kind": "native",
+          "blurb": "Browse the market by industry, then by what actually moves together \u2014 constituents, performance and pairwise correlation.",
+          "source": "Yahoo Finance, live \u2014 rendered natively by the hub",
+          "marts": [],
+          "planned": []
+        },
+        {
           "id": "macro-overlay",
           "title": "Macro Overlay",
           "module": "macro_overlay",

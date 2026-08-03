@@ -45,8 +45,24 @@ const pct = (value: number | null, digits = 1) =>
 
 const sign = (value: number | null) => (value === null ? '' : value > 0 ? 'up' : value < 0 ? 'down' : '');
 
-export default function StockExplorer() {
-  const [symbols, setSymbols] = useState<string[]>(['AAPL', 'MSFT']);
+export interface StockExplorerProps {
+  /** Controlled basket — supplied when another view (Sectors) drives the chart. */
+  symbols?: string[];
+  onSymbolsChange?: (symbols: string[]) => void;
+}
+
+export default function StockExplorer({ symbols: given, onSymbolsChange }: StockExplorerProps = {}) {
+  const [own, setOwn] = useState<string[]>(['AAPL', 'MSFT']);
+  const symbols = given ?? own;
+  const setSymbols = useCallback(
+    (next: string[] | ((current: string[]) => string[])) => {
+      const resolve = (current: string[]) =>
+        typeof next === 'function' ? (next as (c: string[]) => string[])(current) : next;
+      if (onSymbolsChange) onSymbolsChange(resolve(symbols));
+      else setOwn(resolve);
+    },
+    [onSymbolsChange, symbols],
+  );
   const [period, setPeriod] = useState<Period>('5Y');
   const [scale, setScale] = useState<Scale>('price');
   const [withGold, setWithGold] = useState(true);

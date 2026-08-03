@@ -1,0 +1,515 @@
+{
+  "note": "Sector membership is an editorial call, not an exchange classification. A name can sit in more than one sector \u2014 NVDA is both AI and Semiconductors \u2014 because that is how a desk actually thinks about it. Edit freely; nothing downstream hardcodes these.",
+  "sectors": [
+    {
+      "slug": "ai",
+      "name": "Artificial Intelligence",
+      "blurb": "Model builders, the silicon they train on, and the platforms selling it.",
+      "symbols": [
+        "NVDA",
+        "MSFT",
+        "GOOGL",
+        "AVGO",
+        "AMD",
+        "PLTR",
+        "TSM",
+        "META",
+        "ARM",
+        "SMCI"
+      ]
+    },
+    {
+      "slug": "semiconductors",
+      "name": "Semiconductors",
+      "blurb": "Designers, foundries and the equipment makers behind them.",
+      "symbols": [
+        "NVDA",
+        "TSM",
+        "AVGO",
+        "AMD",
+        "INTC",
+        "QCOM",
+        "MU",
+        "ASML",
+        "AMAT",
+        "LRCX"
+      ]
+    },
+    {
+      "slug": "technology",
+      "name": "Technology",
+      "blurb": "Large-cap software, hardware and cloud.",
+      "symbols": [
+        "AAPL",
+        "MSFT",
+        "GOOGL",
+        "AMZN",
+        "META",
+        "ORCL",
+        "CRM",
+        "ADBE",
+        "CSCO",
+        "IBM"
+      ]
+    },
+    {
+      "slug": "healthcare",
+      "name": "Healthcare",
+      "blurb": "Pharma, insurers, devices and diagnostics.",
+      "symbols": [
+        "LLY",
+        "JNJ",
+        "UNH",
+        "ABBV",
+        "MRK",
+        "PFE",
+        "TMO",
+        "ABT",
+        "AMGN",
+        "BMY"
+      ]
+    },
+    {
+      "slug": "restaurants",
+      "name": "Restaurants",
+      "blurb": "Quick service and casual dining, franchised and owned.",
+      "symbols": [
+        "MCD",
+        "SBUX",
+        "CMG",
+        "YUM",
+        "QSR",
+        "DRI",
+        "DPZ",
+        "TXRH",
+        "WEN",
+        "SHAK"
+      ]
+    },
+    {
+      "slug": "automobiles",
+      "name": "Automobiles",
+      "blurb": "Legacy manufacturers, EV pure-plays and the luxury end.",
+      "symbols": [
+        "TSLA",
+        "TM",
+        "GM",
+        "F",
+        "STLA",
+        "HMC",
+        "RACE",
+        "RIVN",
+        "LCID",
+        "NIO"
+      ]
+    },
+    {
+      "slug": "banks",
+      "name": "Banks & Financials",
+      "blurb": "Money-centre banks, brokers and asset managers.",
+      "symbols": [
+        "JPM",
+        "BAC",
+        "WFC",
+        "GS",
+        "MS",
+        "C",
+        "SCHW",
+        "BLK",
+        "AXP",
+        "USB"
+      ]
+    },
+    {
+      "slug": "energy",
+      "name": "Energy",
+      "blurb": "Integrated majors, E&P and oilfield services.",
+      "symbols": [
+        "XOM",
+        "CVX",
+        "COP",
+        "SLB",
+        "EOG",
+        "PSX",
+        "MPC",
+        "OXY",
+        "SHEL",
+        "BP"
+      ]
+    },
+    {
+      "slug": "retail",
+      "name": "Retail & Consumer",
+      "blurb": "Big-box, discount, home improvement and brands.",
+      "symbols": [
+        "WMT",
+        "COST",
+        "HD",
+        "TGT",
+        "LOW",
+        "NKE",
+        "TJX",
+        "DG",
+        "KR",
+        "PG"
+      ]
+    },
+    {
+      "slug": "defense",
+      "name": "Aerospace & Defense",
+      "blurb": "Primes, engines and defence electronics.",
+      "symbols": [
+        "BA",
+        "RTX",
+        "LMT",
+        "NOC",
+        "GD",
+        "LHX",
+        "TDG",
+        "HWM",
+        "LDOS",
+        "TXT"
+      ]
+    },
+    {
+      "slug": "crypto",
+      "name": "Crypto & Fintech",
+      "blurb": "Exchanges, treasuries, miners and payments.",
+      "symbols": [
+        "COIN",
+        "MSTR",
+        "HOOD",
+        "PYPL",
+        "XYZ",
+        "MARA",
+        "RIOT",
+        "SOFI",
+        "BTC-USD",
+        "ETH-USD"
+      ]
+    },
+    {
+      "slug": "media",
+      "name": "Media & Entertainment",
+      "blurb": "Streaming, studios, games and live content.",
+      "symbols": [
+        "NFLX",
+        "DIS",
+        "CMCSA",
+        "SPOT",
+        "WBD",
+        "EA",
+        "TTWO",
+        "RBLX",
+        "LYV",
+        "PSKY"
+      ]
+    },
+    {
+      "slug": "apparel",
+      "name": "Apparel & Footwear",
+      "blurb": "Sportswear, footwear and branded clothing.",
+      "symbols": [
+        "NKE",
+        "LULU",
+        "UAA",
+        "DECK",
+        "ONON",
+        "RL",
+        "PVH",
+        "CROX",
+        "VFC",
+        "ANF"
+      ]
+    },
+    {
+      "slug": "software",
+      "name": "Enterprise Software",
+      "blurb": "SaaS, data platforms and developer tools.",
+      "symbols": [
+        "CRM",
+        "NOW",
+        "INTU",
+        "SNOW",
+        "DDOG",
+        "WDAY",
+        "TEAM",
+        "HUBS",
+        "MDB",
+        "ZM"
+      ]
+    },
+    {
+      "slug": "cybersecurity",
+      "name": "Cybersecurity",
+      "blurb": "Endpoint, network, cloud and identity security.",
+      "symbols": [
+        "PANW",
+        "CRWD",
+        "FTNT",
+        "ZS",
+        "OKTA",
+        "NET",
+        "S",
+        "QLYS",
+        "TENB",
+        "RBRK"
+      ]
+    },
+    {
+      "slug": "video-games",
+      "name": "Video Games",
+      "blurb": "Studios, publishers, platforms and user-generated worlds.",
+      "symbols": [
+        "EA",
+        "TTWO",
+        "RBLX",
+        "U",
+        "NTES",
+        "SE",
+        "PLTK",
+        "NCTY",
+        "DDI",
+        "GRVY"
+      ]
+    },
+    {
+      "slug": "gambling",
+      "name": "Casinos & Betting",
+      "blurb": "Sportsbooks, integrated resorts and racing.",
+      "symbols": [
+        "DKNG",
+        "FLUT",
+        "LVS",
+        "MGM",
+        "WYNN",
+        "CZR",
+        "PENN",
+        "BYD",
+        "CHDN",
+        "RSI"
+      ]
+    },
+    {
+      "slug": "biotech",
+      "name": "Biotech",
+      "blurb": "Drug discovery and gene therapy, distinct from big pharma.",
+      "symbols": [
+        "AMGN",
+        "GILD",
+        "VRTX",
+        "REGN",
+        "BIIB",
+        "MRNA",
+        "ALNY",
+        "INCY",
+        "BMRN",
+        "SRPT"
+      ]
+    },
+    {
+      "slug": "agriculture",
+      "name": "Agriculture & Farm",
+      "blurb": "Crop inputs, processors, fertiliser and machinery.",
+      "symbols": [
+        "ADM",
+        "BG",
+        "CTVA",
+        "MOS",
+        "CF",
+        "NTR",
+        "DE",
+        "AGCO",
+        "FMC",
+        "TSN"
+      ]
+    },
+    {
+      "slug": "staples",
+      "name": "Consumer Staples",
+      "blurb": "Food, drink and household brands.",
+      "symbols": [
+        "KO",
+        "PEP",
+        "MDLZ",
+        "GIS",
+        "HSY",
+        "KHC",
+        "STZ",
+        "MNST",
+        "CL",
+        "KDP"
+      ]
+    },
+    {
+      "slug": "industrials",
+      "name": "Industrials & Machinery",
+      "blurb": "Heavy equipment, automation and diversified manufacturing.",
+      "symbols": [
+        "CAT",
+        "HON",
+        "GE",
+        "MMM",
+        "EMR",
+        "ETN",
+        "PH",
+        "ITW",
+        "CMI",
+        "ROK"
+      ]
+    },
+    {
+      "slug": "materials",
+      "name": "Materials & Mining",
+      "blurb": "Miners, steel and industrial metals.",
+      "symbols": [
+        "BHP",
+        "RIO",
+        "VALE",
+        "FCX",
+        "NEM",
+        "SCCO",
+        "NUE",
+        "AA",
+        "GOLD",
+        "STLD"
+      ]
+    },
+    {
+      "slug": "utilities",
+      "name": "Utilities",
+      "blurb": "Regulated power and the grid behind electrification.",
+      "symbols": [
+        "NEE",
+        "DUK",
+        "SO",
+        "D",
+        "AEP",
+        "EXC",
+        "SRE",
+        "XEL",
+        "ED",
+        "PEG"
+      ]
+    },
+    {
+      "slug": "reits",
+      "name": "Real Estate & REITs",
+      "blurb": "Warehouses, data centres, towers, retail and healthcare property.",
+      "symbols": [
+        "PLD",
+        "AMT",
+        "EQIX",
+        "WELL",
+        "SPG",
+        "O",
+        "PSA",
+        "CCI",
+        "DLR",
+        "VICI"
+      ]
+    },
+    {
+      "slug": "travel",
+      "name": "Travel & Airlines",
+      "blurb": "Carriers, hotels, cruise lines and booking platforms.",
+      "symbols": [
+        "BKNG",
+        "ABNB",
+        "MAR",
+        "HLT",
+        "DAL",
+        "UAL",
+        "LUV",
+        "RCL",
+        "CCL",
+        "EXPE"
+      ]
+    },
+    {
+      "slug": "logistics",
+      "name": "Logistics & Shipping",
+      "blurb": "Parcel, freight, rail-adjacent and ocean carriers.",
+      "symbols": [
+        "UPS",
+        "FDX",
+        "ODFL",
+        "XPO",
+        "CHRW",
+        "JBHT",
+        "EXPD",
+        "MATX",
+        "ZIM",
+        "GXO"
+      ]
+    },
+    {
+      "slug": "homebuilders",
+      "name": "Homebuilders",
+      "blurb": "Housebuilders and building products.",
+      "symbols": [
+        "DHI",
+        "LEN",
+        "PHM",
+        "NVR",
+        "TOL",
+        "KBH",
+        "MTH",
+        "TMHC",
+        "BLDR",
+        "MAS"
+      ]
+    },
+    {
+      "slug": "insurance",
+      "name": "Insurance",
+      "blurb": "Property, casualty, life and the conglomerate that owns them.",
+      "symbols": [
+        "BRK-B",
+        "PGR",
+        "CB",
+        "TRV",
+        "ALL",
+        "AIG",
+        "MET",
+        "PRU",
+        "AFL",
+        "HIG"
+      ]
+    },
+    {
+      "slug": "telecom",
+      "name": "Telecom",
+      "blurb": "Carriers, cable and satellite connectivity.",
+      "symbols": [
+        "T",
+        "VZ",
+        "TMUS",
+        "CHTR",
+        "AMX",
+        "VOD",
+        "LUMN",
+        "SATS",
+        "IRDM",
+        "CABO"
+      ]
+    },
+    {
+      "slug": "space",
+      "name": "Space & Satellites",
+      "blurb": "Launch, in-orbit services and satellite communications.",
+      "symbols": [
+        "RKLB",
+        "LUNR",
+        "ASTS",
+        "PL",
+        "RDW",
+        "SPCE",
+        "IRDM",
+        "SATS",
+        "BA",
+        "NOC"
+      ]
+    }
+  ]
+}

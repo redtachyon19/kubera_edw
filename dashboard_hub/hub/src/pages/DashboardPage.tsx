@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import { embedPathFor, getSectionBySlug, isNative, sectionRoute } from '../config/dashboards';
+import Sectors from './markets/Sectors';
 import StockExplorer from './stock/StockExplorer';
 import { useThemeMode } from '../ThemeContext';
 import './DashboardPage.css';
@@ -29,7 +30,12 @@ export default function DashboardPage() {
 
   // Native dashboards are hub pages, so they inherit the stock automatically and
   // there is no separate service to open in a tab.
-  const NATIVE: Record<string, () => JSX.Element> = { 'stock-explorer': StockExplorer };
+  // Standalone routes render each native view with its own internal state — the
+  // cross-view hand-off only exists inside the Markets workspace.
+  const NATIVE: Record<string, () => JSX.Element> = {
+    'stock-explorer': () => <StockExplorer />,
+    sectors: () => <Sectors />,
+  };
   const NativeView = native ? NATIVE[dashboard.id] : undefined;
 
   return (

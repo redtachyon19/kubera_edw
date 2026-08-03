@@ -11,7 +11,10 @@ that handshake) rather than the frontend calling Yahoo directly.
 
 from __future__ import annotations
 
+import functools
+import json
 import math
+import pathlib
 import time
 from typing import Any
 
@@ -293,4 +296,245 @@ def quotes(symbols: tuple[str, ...]) -> list[dict]:
         quote = _cached(("quote", symbol), lambda s=symbol: one(s), ttl=45)
         if quote:
             out.append(quote)
+    return out
+
+
+_SECTORS_PATH = pathlib.Path(__file__).resolve().parents[1] / "sectors.json"
+
+
+@functools.lru_cache(maxsize=1)
+def sectors() -> list[dict]:
+    """Editorial sector definitions from `sectors.json`."""
+    with _SECTORS_PATH.open(encoding="utf-8") as handle:
+        return json.load(handle)["sectors"]
+
+
+def sector(slug: str) -> dict | None:
+    return next((s for s in sectors() if s["slug"] == slug), None)
+
+
+# RiskMetrics daily decay — the standard weighting for "recent counts more".
+_EWMA_LAMBDA = 0.94
+_ROLL_MIN = 20
+_SPARK_POINTS = 36
+
+
+def _grid(matrix: pd.DataFrame, labels: list[str]) -> list[list[float | None]]:
+    """A correlation frame as a plain nested list, aligned to `labels`."""
+    matrix = matrix.reindex(index=labels, columns=labels)
+    return [
+        [None if pd.isna(v) else round(float(v), 4) for v in matrix.loc[row].tolist()]
+        for row in labels
+    ]
+
+
+def _matrices(returns: pd.DataFrame) -> tuple[list[str], dict[str, list[list[float | None]]]]:
+    """Four readings of the same relationships, because one number hides a lot.
+
+    pearson   linear co-movement over the whole window — the headline.
+    spearman  the same on ranks, so a handful of gap days cannot dominate it.
+    downside  conditioned on the basket falling. Diversification tends to fail
+              exactly when it is needed, and an unconditional number cannot show
+              that.
+    ewma      exponentially weighted, so last month counts for more than a year
+              ago. This is what "exponential" properly means here — prices are
+              already de-trended by working in returns.
+    """
+    labels = list(returns.columns)
+    basket = returns.mean(axis=1)
+    down = returns[basket < 0]
+
+    out = {
+        "pearson": _grid(returns.corr(), labels),
+        # Rank-then-Pearson is Spearman by definition, and avoids a scipy dependency.
+        "spearman": _grid(returns.rank().corr(), labels),
+        "downside": _grid(down.corr(), labels) if len(down) > _ROLL_MIN else [],
+        "ewma": [],
+    }
+    try:
+        weighted = returns.ewm(alpha=1 - _EWMA_LAMBDA).corr()
+        out["ewma"] = _grid(weighted.loc[returns.index[-1]], labels)
+    except (KeyError, ValueError):  # too few observations to weight
+        out["ewma"] = []
+    return labels, out
+
+
+def _betas(returns: pd.DataFrame) -> dict[str, dict]:
+    """Sensitivity to the basket, not just co-movement with it.
+
+    Correlation says whether two things move together; beta says by how much. A
+    name can track its sector almost perfectly and still swing twice as hard.
+    """
+    basket = returns.mean(axis=1)
+    variance = float(basket.var())
+    out: dict[str, dict] = {}
+    for symbol in returns.columns:
+        if not variance:
+            out[symbol] = {"beta": None, "r2": None}
+            continue
+        correlation = returns[symbol].corr(basket)
+        out[symbol] = {
+            "beta": round(float(returns[symbol].cov(basket) / variance), 4),
+            "r2": None if pd.isna(correlation) else round(float(correlation**2), 4),
+        }
+    return out
+
+
+def _rolling(returns: pd.DataFrame, a: str, b: str) -> dict | None:
+    """How much the pair's correlation actually moves over the window.
+
+    A headline of +0.71 can be a band from +0.40 to +0.90; the range is often
+    more informative than the average.
+    """
+    window = max(_ROLL_MIN, min(60, len(returns) // 4))
+    if len(returns) < window + 5:
+        return None
+    series = returns[a].rolling(window).corr(returns[b]).dropna()
+    if series.empty:
+        return None
+    step = max(1, len(series) // _SPARK_POINTS)
+    return {
+        "min": round(float(series.min()), 3),
+        "median": round(float(series.median()), 3),
+        "max": round(float(series.max()), 3),
+        "window": window,
+        "series": [round(float(v), 3) for v in series.iloc[::step].tolist()],
+    }
+
+
+def sector_snapshot(symbols: list[str], period_label: str) -> dict:
+    """Constituents, performance and pairwise correlation for a basket.
+
+    Correlation is computed on returns, never on price. Two securities can both
+    drift upward and look related on a price chart while their day-to-day moves
+    are unconnected — it is the returns that say whether they travel together.
+
+    Args:
+        symbols: Tickers in the basket.
+        period_label: A key of `PERIODS`.
+
+    Returns:
+        `{constituents, labels, matrix, pairs, missing, interval, start}` where
+        `pairs` is every pairing sorted by correlation, strongest first.
+    """
+    period, interval = PERIODS.get(period_label, PERIODS["1Y"])
+    intraday = interval.endswith(("m", "h"))
+    wanted = tuple(dict.fromkeys(symbols))
+    blank = {
+        "constituents": [],
+        "labels": [],
+        "matrices": {},
+        "pairs": [],
+        "observations": 0,
+        "downDays": 0,
+        "missing": list(wanted),
+        "interval": interval,
+        "start": None,
+    }
+    if not wanted:
+        return blank
+
+    frame = _cached(
+        ("hist", wanted, period, interval, intraday),
+        lambda: _closes(wanted, period, interval, intraday),
+        ttl=_TTL_BY_PERIOD.get(period_label, _DEFAULT_TTL),
+    )
+    missing = [s for s in wanted if s not in frame.columns]
+    aligned, start, _ = _align(frame)
+    if aligned.empty:
+        return {**blank, "missing": missing}
+
+    returns = aligned.pct_change().dropna(how="any")
+    labels, matrices = _matrices(returns)
+    betas = _betas(returns)
+
+    constituents = []
+    for symbol in aligned.columns:
+        column = aligned[symbol].dropna()
+        if len(column) < 2:
+            continue
+        stats = _stats(column)
+        constituents.append(
+            {
+                "symbol": symbol,
+                "currency": _currency(symbol),
+                "last": stats["endPrice"],
+                "periodReturn": stats["totalReturn"],
+                "annualisedVol": stats["annualisedVol"],
+                "maxDrawdown": stats["maxDrawdown"],
+                **betas.get(symbol, {"beta": None, "r2": None}),
+            }
+        )
+    constituents.sort(key=lambda c: c["periodReturn"], reverse=True)
+
+    pearson = matrices["pearson"]
+    downside = matrices["downside"]
+    pairs = []
+    for i, a in enumerate(labels):
+        for j in range(i + 1, len(labels)):
+            value = pearson[i][j]
+            if value is None:
+                continue
+            pairs.append(
+                {
+                    "a": a,
+                    "b": labels[j],
+                    "correlation": value,
+                    "downside": downside[i][j] if downside else None,
+                    "rolling": _rolling(returns, a, labels[j]),
+                }
+            )
+    pairs.sort(key=lambda p: p["correlation"], reverse=True)
+
+    return {
+        "constituents": constituents,
+        "labels": labels,
+        "matrices": matrices,
+        "pairs": pairs,
+        "observations": len(returns),
+        "downDays": int((returns.mean(axis=1) < 0).sum()),
+        "missing": missing,
+        "interval": interval,
+        "start": start.strftime("%Y-%m-%dT%H:%M" if intraday else "%Y-%m-%d"),
+    }
+
+
+def sectors_overview(period_label: str) -> list[dict]:
+    """Every sector with its equal-weighted return over the window.
+
+    All constituents across all sectors are fetched in a single batch — twelve
+    separate downloads would take far longer than one call for the ~100 unique
+    tickers they share between them.
+    """
+    period, interval = PERIODS.get(period_label, PERIODS["1Y"])
+    every = tuple(dict.fromkeys(s for sec in sectors() for s in sec["symbols"]))
+    frame = _cached(
+        ("overview", every, period, interval),
+        lambda: _closes(every, period, interval, False),
+        ttl=_TTL_BY_PERIOD.get(period_label, _DEFAULT_TTL),
+    )
+
+    out = []
+    for sec in sectors():
+        moves: list[tuple[str, float]] = []
+        for symbol in sec["symbols"]:
+            if symbol not in frame.columns:
+                continue
+            column = frame[symbol].dropna()
+            if len(column) < 2 or not column.iloc[0]:
+                continue
+            moves.append((symbol, float(column.iloc[-1] / column.iloc[0] - 1)))
+        moves.sort(key=lambda m: m[1], reverse=True)
+        out.append(
+            {
+                "slug": sec["slug"],
+                "name": sec["name"],
+                "blurb": sec["blurb"],
+                "count": len(sec["symbols"]),
+                "priced": len(moves),
+                "averageReturn": (sum(m[1] for m in moves) / len(moves)) if moves else None,
+                "best": {"symbol": moves[0][0], "return": moves[0][1]} if moves else None,
+                "worst": {"symbol": moves[-1][0], "return": moves[-1][1]} if moves else None,
+            }
+        )
     return out
