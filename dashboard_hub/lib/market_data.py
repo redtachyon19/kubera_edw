@@ -538,3 +538,69 @@ def sectors_overview(period_label: str) -> list[dict]:
             }
         )
     return out
+
+
+_NEWS_TTL = 600
+_NEWS_TICKERS = 5
+_NEWS_LIMIT = 12
+
+
+def _story(item: dict) -> dict | None:
+    """Flatten one Yahoo news item to what the card needs.
+
+    Only the headline, source, timestamp, image and link are kept — this is a
+    reading list, not a content pipeline, and nothing here is parsed for meaning.
+    """
+    content = item.get("content") or item
+    title = (content.get("title") or "").strip()
+    link = (content.get("canonicalUrl") or content.get("clickThroughUrl") or {}).get("url")
+    if not title or not link:
+        return None
+
+    resolutions = (content.get("thumbnail") or {}).get("resolutions") or []
+    # Prefer a small rendition; the originals run to 1400px and would dwarf a card.
+    small = next((r.get("url") for r in resolutions if r.get("tag") != "original"), None)
+
+    return {
+        "id": content.get("id") or link,
+        "title": title,
+        "summary": (content.get("summary") or content.get("description") or "").strip()[:240],
+        "url": link,
+        "publisher": (content.get("provider") or {}).get("displayName") or "",
+        "published": content.get("pubDate") or content.get("displayTime"),
+        "thumbnail": small or (resolutions[0].get("url") if resolutions else None),
+    }
+
+
+def sector_news(slug: str, limit: int = _NEWS_LIMIT) -> list[dict]:
+    """Recent coverage across a sector's largest names.
+
+    Yahoo publishes news per ticker, not per industry, so a sector feed is the
+    union over a handful of its constituents — deduplicated, because the same
+    wire story is routinely attached to every name it mentions.
+    """
+    definition = sector(slug)
+    if not definition:
+        return []
+
+    def run() -> list[dict]:
+        seen: set[str] = set()
+        stories: list[dict] = []
+        for symbol in definition["symbols"][:_NEWS_TICKERS]:
+            try:
+                items = yf.Ticker(symbol).news or []
+            except Exception:  # noqa: BLE001 — one dead feed must not empty the list
+                continue
+            for item in items:
+                story = _story(item)
+                if not story:
+                    continue
+                key = story["url"].split("?")[0]
+                if key in seen:
+                    continue
+                seen.add(key)
+                stories.append({**story, "ticker": symbol})
+        stories.sort(key=lambda s: s.get("published") or "", reverse=True)
+        return stories[:limit]
+
+    return _cached(("news", slug, limit), run, ttl=_NEWS_TTL)

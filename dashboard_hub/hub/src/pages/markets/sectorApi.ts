@@ -76,6 +76,18 @@ export interface SectorDetail {
   downDays: number;
 }
 
+export interface Story {
+  id: string;
+  title: string;
+  summary: string;
+  url: string;
+  publisher: string;
+  published: string | null;
+  thumbnail: string | null;
+  /** Which constituent the story was filed against. */
+  ticker: string;
+}
+
 async function get<T>(path: string, signal?: AbortSignal): Promise<T> {
   const response = await fetch(path, { signal });
   const body = await response.json();
@@ -95,4 +107,23 @@ export function fetchSector(
   signal?: AbortSignal,
 ): Promise<SectorDetail> {
   return get<SectorDetail>(`/api/market/sector?slug=${slug}&period=${period}`, signal);
+}
+
+export function fetchNews(slug: string, signal?: AbortSignal): Promise<Story[]> {
+  return get<{ stories: Story[] }>(`/api/market/news?slug=${slug}`, signal).then(
+    (body) => body.stories,
+  );
+}
+
+/** "3h ago" reads faster than a timestamp on a feed. */
+export function timeAgo(iso: string | null): string {
+  if (!iso) return '';
+  const ms = Date.now() - new Date(iso).getTime();
+  if (!Number.isFinite(ms) || ms < 0) return '';
+  const mins = Math.round(ms / 60000);
+  if (mins < 60) return `${Math.max(1, mins)}m ago`;
+  const hours = Math.round(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.round(hours / 24);
+  return days < 30 ? `${days}d ago` : `${Math.round(days / 30)}mo ago`;
 }

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { PERIODS } from '../stock/api';
 import type { Period } from '../stock/api';
 import CorrelationMatrix from './CorrelationMatrix';
+import SectorNews from './SectorNews';
 import Sparkline from './Sparkline';
 import { fetchSector, fetchSectors } from './sectorApi';
 import type { Pair, SectorCard, SectorDetail } from './sectorApi';
@@ -198,6 +199,12 @@ export default function Sectors({ onCompare }: { onCompare?: (symbols: string[])
           matrices={detail.matrices}
           onPick={(a, b) => compare([a, b])}
         />
+
+        <section className="sectors__news" aria-label="Sector coverage">
+          <p className="eyebrow">Coverage</p>
+          <div className="sectors__news-rule" />
+          <SectorNews slug={detail.slug} />
+        </section>
 
         <p className="stock__footnote">
           {detail.observations} daily observations, {detail.downDays} of them down days for the
