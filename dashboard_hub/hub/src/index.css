@@ -1,4 +1,55 @@
 /* ─────────────────────────────────────────────────────────────────────────────
+   Self-hosted, so the hub renders identically on every platform and never calls
+   out to a font CDN. `swap` everywhere, so text paints immediately and reflows
+   once the face lands rather than sitting invisible.
+
+   Copperplate Gothic is the display face — the real one, bundled from the OTFs
+   rather than relying on whatever Copperplate the reader's OS happens to have.
+   Two cuts: Regular for the engraved caps and 31 AB, the heaviest of the series,
+   so a bold is drawn rather than synthesised by the browser. Cinzel stays behind
+   it as an open-licence stand-in.
+   ───────────────────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'Copperplate Gothic Web';
+  src: url('/fonts/copperplate-gothic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Copperplate Gothic Web';
+  src: url('/fonts/copperplate-gothic-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cinzel';
+  src: url('/fonts/cinzel-latin.woff2') format('woff2');
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'EB Garamond';
+  src: url('/fonts/ebgaramond-latin.woff2') format('woff2');
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'EB Garamond';
+  src: url('/fonts/ebgaramond-italic-latin.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
    Finance Dashboard Hub — engraved-stationery house style.
 
    Bone stock, black ink, hairline rules, Copperplate set in caps with wide
@@ -9,12 +60,12 @@
    ───────────────────────────────────────────────────────────────────────── */
 
 :root {
-  /* Copperplate ships on macOS; Copperplate Gothic on Windows. Optima and
-     Palatino are the closest engraved fallbacks before the generic serif. */
+  /* Copperplate Gothic and EB Garamond are bundled, so these render the same
+     everywhere. Cinzel and the system faces sit behind them as fallbacks. */
   --font-display:
-    'Copperplate', 'Copperplate Gothic Light', 'Copperplate Gothic Bold', 'Copperplate Gothic',
-    'Optima', 'Palatino Linotype', 'Palatino', 'Times New Roman', serif;
-  --font-body: 'Optima', 'Palatino Linotype', 'Palatino', Georgia, 'Times New Roman', serif;
+    'Copperplate Gothic Web', 'Cinzel', 'Copperplate', 'Copperplate Gothic Light',
+    'Copperplate Gothic', 'Optima', 'Palatino Linotype', 'Times New Roman', serif;
+  --font-body: 'EB Garamond', 'Palatino Linotype', 'Palatino', Georgia, 'Times New Roman', serif;
   --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
 
   /* Light — the default. Bone stock, black ink. */
