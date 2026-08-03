@@ -1,0 +1,165 @@
+.home__masthead {
+  border-bottom: 1px solid var(--rule);
+  background: var(--surface);
+}
+
+.home__masthead-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 104px 32px 88px;
+}
+
+.home__eyebrow {
+  margin: 0 0 26px;
+}
+
+.home__title {
+  font-size: clamp(1.9rem, 4.2vw, 3.1rem);
+  letter-spacing: 0.16em;
+  color: var(--ink);
+  margin: 0;
+}
+
+.home__hairline {
+  width: 96px;
+  height: 2px;
+  background: var(--gold);
+  margin: 30px 0;
+}
+
+.home__standfirst {
+  max-width: 620px;
+  font-size: 1.02rem;
+  line-height: 1.85;
+  color: var(--ink-2);
+  margin: 0 0 52px;
+}
+
+/* Engraved key figures, the way a tombstone ad sets them. */
+.home__facts {
+  display: flex;
+  gap: 64px;
+  margin: 0;
+  padding-top: 26px;
+  border-top: 1px solid var(--rule);
+}
+
+.home__facts dt {
+  font-family: var(--font-display);
+  font-size: 0.56rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 8px;
+}
+
+.home__facts dd {
+  margin: 0;
+  font-size: 1.7rem;
+  color: var(--ink);
+}
+
+.home__index {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 72px 32px 104px;
+}
+
+.home__index-rule {
+  height: 1px;
+  background: var(--rule);
+  margin: 14px 0 40px;
+}
+
+.home__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(258px, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--rule);
+  border-left: 1px solid var(--rule);
+}
+
+/* Cards are cells in a ruled ledger — no rounding, no shadow, one gold edge. */
+.desk-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 232px;
+  padding: 32px 28px 28px;
+  background: var(--surface);
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.18s ease;
+}
+
+.desk-card:hover {
+  background: var(--surface-sunk);
+}
+
+.desk-card__accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--accent, var(--gold));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.22s ease;
+}
+
+.desk-card:hover .desk-card__accent {
+  transform: scaleX(1);
+}
+
+.desk-card__no {
+  font-size: 0.68rem;
+  color: var(--ink-4);
+  letter-spacing: 0.08em;
+  margin-bottom: 18px;
+}
+
+.desk-card__name {
+  font-size: 0.94rem;
+  letter-spacing: 0.16em;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+.desk-card__tagline {
+  flex: 1 0 auto;
+  margin: 0 0 20px;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--ink-3);
+}
+
+.desk-card__meta {
+  font-family: var(--font-display);
+  font-size: 0.56rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+}
+
+.desk-card:hover .desk-card__meta {
+  color: var(--accent, var(--gold));
+}
+
+@media (max-width: 720px) {
+  .home__masthead-inner {
+    padding: 64px 20px 56px;
+  }
+
+  .home__facts {
+    gap: 32px;
+  }
+
+  .home__index {
+    padding: 48px 20px 72px;
+  }
+}

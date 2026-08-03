@@ -8,7 +8,7 @@ import vl_convert as vlc
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from dashboards.streamlit_app import queries, theme  # noqa: E402
+from dashboard_hub.lib import queries, theme  # noqa: E402
 
 OUT = Path(__file__).resolve().parent.parent / "docs" / "screenshots"
 SCALE = 2

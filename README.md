@@ -30,14 +30,14 @@ No API keys and no network required — the repo ships CI fixtures that build th
 offline.
 
 ```bash
-make setup && make demo && make dashboard
+make setup && make demo && make hub
 ```
 
 | Command | What it does |
 |---|---|
 | `make setup` | Installs `uv`, Python 3.12, `.venv`, and all dependencies. No admin password. |
 | `make demo` | Builds the warehouse from committed fixtures — **no keys, no network** |
-| `make dashboard` | Serves the Streamlit BI app at http://localhost:8501 |
+| `make hub` | Serves the Finance Dashboard Hub at http://localhost:5173 (hub + every dashboard) |
 | `make pipeline` | Full live pipeline into local DuckDB (needs `.env` keys) |
 | `make prod` | Full live pipeline into hosted Postgres / Neon |
 | `make orchestrate` | Serves the Dagster UI at http://localhost:3000 |
@@ -82,11 +82,17 @@ kubera_edw/
 ├── orchestration/
 │   └── dagster_pipeline.py       # 41 assets, 2 jobs, 1 failure sensor, 06:00 daily schedule
 │
-├── dashboards/streamlit_app/
-│   ├── app.py                    # 5 KPI tabs
-│   ├── queries.py                # SQL against marts -> pandas
-│   ├── db.py                     # read-only warehouse connection, 5-min cache
-│   └── theme.py                  # shared palette, light/dark aware
+├── dashboard_hub/                # BI — hub & spoke, one front door for every dashboard
+│   ├── dashboards.json           # single source of truth — nav, proxy, processes, palette
+│   ├── registry.py               # reads dashboards.json (Python side)
+│   ├── run_local.py              # one Streamlit process per dashboard
+│   ├── lib/                      # shared by every dashboard
+│   │   ├── db.py                 #   read-only warehouse connection, 5-min cache
+│   │   ├── queries.py            #   SQL against marts -> pandas
+│   │   ├── theme.py              #   metallic chart palette + Altair theme
+│   │   └── ui.py                 #   page chrome, empty states, chart helpers
+│   ├── hub/                      # the website — Vite + React + TypeScript
+│   └── dashboards/<module>/app.py  # one independent Streamlit dashboard each
 │
 ├── scripts/
 │   ├── bootstrap.sh              # uv + Python 3.12 + venv + deps
@@ -368,26 +374,96 @@ no network, no flaky external APIs in CI.
 
 ---
 
-## Dashboards
+## Finance Dashboard Hub
 
 ```bash
-make dashboard      # http://localhost:8501
+make hub            # http://localhost:5173
 ```
 
-A Streamlit app with five tabs, reading `marts.*` through a read-only connection with a
-5-minute cache. Every chart ships its underlying table, so an analyst can sanity-check any
-number they don't believe.
+**Hub and spoke.** The hub is a Vite/React app; every dashboard is an independent Streamlit
+server on its own port, embedded in the hub through the Vite dev proxy. One command starts
+both halves and Ctrl+C stops them together.
 
-| Tab | Shows |
+Navigation is two levels — the top bar holds **sections**, and each section holds its
+**dashboards**:
+
+| Desk | Metal | Dashboards |
+|---|---|---|
+| **Portfolio** | gold | Portfolio Allocation · Risk & Concentration · ESG Exposure |
+| **Companies** | bronze | Fundamentals · FX Impact |
+| **Markets** | silver | Stock Explorer · Market Performance · Macro Overlay |
+| **Warehouse** | steel | Data Quality · Pipeline Health |
+
+```
+localhost:5173  hub (Vite)
+   /                          all sections
+   /s/portfolio               one section, listing its dashboards
+   /s/portfolio/allocation    one dashboard, embedded
+
+        ──proxy──▶  /d/allocation          ──▶ localhost:8511
+                    /d/fundamentals        ──▶ localhost:8512
+                    /d/fx-impact           ──▶ localhost:8513
+                    /d/market-performance  ──▶ localhost:8514
+                    /d/macro-overlay       ──▶ localhost:8515
+```
+
+`/d/*` is reserved for the proxy, so the hub's own routes live under `/s/*` and the two never
+collide. Because each spoke is its own process, a dashboard can be rebuilt, restarted or
+swapped for a different framework without touching the hub or any sibling dashboard.
+
+The five dashboards under **Portfolio**, **Companies** and **Markets** are built and read the
+warehouse live. The four under **Risk**, **ESG** and **Warehouse** are registry entries with no
+process behind them yet — their page says so and prints what it will take to wire them up.
+
+[`dashboard_hub/dashboards.json`](dashboard_hub/dashboards.json) is the single source of
+truth. The same file drives the Streamlit processes `run_local.py` spawns, the Vite proxy
+table, the hub's navigation, and the palette the spokes are themed with — so adding a
+dashboard means editing one file, then creating `dashboard_hub/dashboards/<module>/app.py`.
+Entries marked `"status": "planned"` appear in the nav with no process behind them yet.
+
+### House style
+
+Engraved stationery: bone stock, black ink, hairline rules, **Copperplate** set in caps with
+wide letterspacing, and gold as the only accent. It inverts to black stock and bone ink from
+the switch in the top bar — the choice is remembered, and it is stamped on `<html>` before
+first paint so a dark-mode reader never gets a white flash.
+
+The embedded dashboards invert with it. Streamlit fixes its base theme when the process
+starts, so the hub passes `?theme=` on the iframe and
+[`lib/ui.py`](dashboard_hub/lib/ui.py) applies the matching stock as a CSS overlay. Chart
+series stay inside the gold / silver / bronze family in both stocks — separated by lightness
+and the warm/cool axis rather than hue, which is why more than about five series on one chart
+is harder to read here than a rainbow scale would be. That cost is noted in
+[`lib/theme.py`](dashboard_hub/lib/theme.py).
+
+| Command | Does |
 |---|---|
-| **Portfolio Allocation** | Equal-weighted diversification by country, sector, currency, region |
-| **Fundamentals** | Revenue growth, margins and leverage — all USD-normalized |
-| **Market Performance** | Cumulative USD total return by holding |
-| **FX Impact** | What currency movement did to reported results for non-USD reporters |
-| **Macro Overlay** | GDP growth, inflation and unemployment for each holding country |
+| `make hub` | Hub + every dashboard, one terminal |
+| `make hub-dashboards` | Only the Streamlit dashboards, no hub UI |
+| `npm run dev:web` | Only the hub, if the spokes are already running |
 
-Every mart has an **empty state** — if a table has zero rows the tab explains why and prints
-the command that fixes it, rather than crashing.
+The hub reuses the project venv (`make setup`) — there is no second Python environment.
+Node 18+ is required for the hub UI only; the dashboards themselves need no Node.
+
+---
+
+## Dashboards
+
+Every dashboard is its own Streamlit process, embedded by the hub. They share
+`dashboard_hub/lib/` — one warehouse connection with a 5-minute cache, one set of queries, one
+chart theme — so a number means the same thing on every page. Every chart ships its underlying
+table, so an analyst can sanity-check any figure they don't believe.
+
+| Dashboard | Section | Shows |
+|---|---|---|
+| **Portfolio Allocation** | Portfolio | Equal-weighted diversification by country, sector, currency, region |
+| **Fundamentals** | Companies | Revenue growth, margins and leverage — all USD-normalized |
+| **FX Impact** | Companies | What currency movement did to reported results for non-USD reporters |
+| **Market Performance** | Markets | Cumulative USD total return, volatility and drawdown |
+| **Macro Overlay** | Markets | GDP growth, inflation, unemployment, and the gold benchmark |
+
+Every mart has an **empty state** — if a table has zero rows the dashboard explains why and
+prints the command that fixes it, rather than crashing.
 
 | | |
 |---|---|

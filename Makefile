@@ -3,7 +3,7 @@ SHELL := /bin/bash
 VENV  := .venv/bin
 DBT   := DBT_PROFILES_DIR=. ../$(VENV)/dbt
 
-.PHONY: help setup demo pipeline prod dashboard orchestrate test lint verify screenshots universe clean
+.PHONY: help setup demo pipeline prod hub hub-dashboards orchestrate test lint verify screenshots universe clean
 
 help:  ## Show this help
 	@echo "Kubera_EDW"
@@ -11,7 +11,7 @@ help:  ## Show this help
 	@grep -E '^[a-z-]+:.*?## .*$$' $(MAKEFILE_LIST) \
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-13s\033[0m %s\n", $$1, $$2}'
 	@echo ""
-	@echo "  First time:  make setup && make demo && make dashboard"
+	@echo "  First time:  make setup && make demo && make hub"
 
 setup:  ## Install uv, Python 3.12, the venv and all dependencies (no admin password)
 	bash scripts/bootstrap.sh
@@ -29,8 +29,11 @@ pipeline:  ## Full live pipeline into the local DuckDB warehouse (needs .env key
 prod:  ## Full live pipeline into hosted Postgres / Neon (needs .env credentials)
 	bash scripts/pipeline.sh prod
 
-dashboard:  ## Serve the BI app at http://localhost:8501
-	$(VENV)/streamlit run dashboards/streamlit_app/app.py
+hub:  ## Serve the Finance Dashboard Hub at http://localhost:5173 (hub + every dashboard)
+	cd dashboard_hub/hub && npm install --no-audit --no-fund && npm run dev
+
+hub-dashboards:  ## Run only the Streamlit dashboards the hub embeds (no hub UI)
+	$(VENV)/python dashboard_hub/run_local.py
 
 orchestrate:  ## Serve the Dagster UI at http://localhost:3000
 	DAGSTER_HOME=$(PWD)/dagster_home $(VENV)/dagster dev -f orchestration/dagster_pipeline.py

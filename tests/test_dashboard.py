@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from dashboards.streamlit_app import queries, theme
+from dashboard_hub.lib import queries, theme
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 WAREHOUSE = REPO_ROOT / "data" / "kubera_edw.duckdb"
