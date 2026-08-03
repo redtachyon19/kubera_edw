@@ -10,20 +10,28 @@ from dagster import (
     AssetOut,
     Backoff,
     DefaultScheduleStatus,
+    DefaultSensorStatus,
     Definitions,
     MetadataValue,
+    OpExecutionContext,
     Output,
     RetryPolicy,
     RunFailureSensorContext,
+    RunRequest,
     ScheduleDefinition,
+    SensorEvaluationContext,
     asset,
     define_asset_job,
+    job,
     multi_asset,
+    op,
     run_failure_sensor,
+    sensor,
 )
 from dagster_dbt import DagsterDbtTranslator, DbtCliResource, DbtProject, dbt_assets
 
 from ingestion import (
+    backfill,
     fx_client,
     generate_seeds,
     gold_price_client,
@@ -203,6 +211,60 @@ kubera_job = define_asset_job(
     description="Full refresh: extract every source, load raw, then build and test the warehouse.",
 )
 
+
+# ── Backfill on request ──────────────────────────────────────────────────────
+#
+# The warehouse universe is a curated file, so adding a company has always meant
+# editing it and running the pipeline. These two make it a request: the market
+# API queues a ticker, this sensor notices, and the op adds it — resolve the
+# filer from SEC, append it to the universe, pull its filings, rebuild.
+#
+# It is an op job rather than an asset job because it is parameterised by a
+# ticker and touches one company, which is not what the asset graph models.
+
+
+@op(description="Resolve one company from SEC and build it into the warehouse.")
+def backfill_company(context: OpExecutionContext) -> None:
+    ticker = context.op_config["ticker"]
+    context.log.info("backfilling %s", ticker)
+    row = backfill.run(ticker)
+    if row.get("status") == backfill.FAILED:
+        raise RuntimeError(f"backfill failed for {ticker}: {row.get('error')}")
+    context.log.info("%s is now in the warehouse", ticker)
+
+
+@job(
+    description="Add one company to the warehouse universe and build its filings in.",
+    config={"ops": {"backfill_company": {"config": {"ticker": ""}}}},
+)
+def backfill_job() -> None:
+    backfill_company()
+
+
+@sensor(
+    job=backfill_job,
+    minimum_interval_seconds=30,
+    default_status=DefaultSensorStatus.RUNNING,
+    description="Launch a build for every company queued by the Companies desk.",
+)
+def backfill_request_sensor(context: SensorEvaluationContext):
+    """One run per queued ticker.
+
+    The run key is the ticker and the moment it was asked for, so Dagster will
+    not launch the same request twice while it sits in the queue waiting to be
+    picked up — but a company asked for again later is a new request and does
+    run again.
+    """
+    for row in backfill.pending():
+        ticker = row["ticker"]
+        yield RunRequest(
+            run_key=f"{ticker}:{row.get('requestedAt')}",
+            run_config={"ops": {"backfill_company": {"config": {"ticker": ticker}}}},
+            tags={"ticker": ticker},
+        )
+        context.log.info("requested backfill run for %s", ticker)
+
+
 daily_schedule = ScheduleDefinition(
     job=kubera_job,
     cron_schedule="0 6 * * *",
@@ -222,9 +284,9 @@ defs = Definitions(
         raw_tables,
         kubera_dbt_assets,
     ],
-    jobs=[kubera_job],
+    jobs=[kubera_job, backfill_job],
     schedules=[daily_schedule],
-    sensors=[kubera_run_failure_sensor],
+    sensors=[kubera_run_failure_sensor, backfill_request_sensor],
     resources={
         "dbt": DbtCliResource(
             project_dir=dbt_project,

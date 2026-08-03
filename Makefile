@@ -3,7 +3,7 @@ SHELL := /bin/bash
 VENV  := .venv/bin
 DBT   := DBT_PROFILES_DIR=. ../$(VENV)/dbt
 
-.PHONY: help setup demo pipeline prod hub hub-dashboards orchestrate test lint verify screenshots universe clean
+.PHONY: help setup demo pipeline prod hub hub-dashboards orchestrate test lint verify screenshots universe company-universe backfill clean
 
 help:  ## Show this help
 	@echo "Kubera_EDW"
@@ -29,7 +29,7 @@ pipeline:  ## Full live pipeline into the local DuckDB warehouse (needs .env key
 prod:  ## Full live pipeline into hosted Postgres / Neon (needs .env credentials)
 	bash scripts/pipeline.sh prod
 
-hub:  ## Serve the Finance Dashboard Hub at http://localhost:5173 (hub + every dashboard)
+hub:  ## Serve the research terminal at http://localhost:5173 (hub + every dashboard)
 	cd dashboard_hub/hub && npm install --no-audit --no-fund && npm run dev
 
 hub-dashboards:  ## Run only the Streamlit dashboards the hub embeds (no hub UI)
@@ -51,6 +51,12 @@ verify:  ## Re-check the environment (python, deps, lint, tests, dbt connection)
 
 universe:  ## Re-verify every company against SEC EDGAR before changing companies.yml
 	$(VENV)/python scripts/verify_universe.py
+
+company-universe:  ## Rebuild dashboard_hub/companies.json after editing sectors.json
+	$(VENV)/python scripts/generate_company_universe.py
+
+backfill:  ## Add a company to the warehouse: make backfill TICKER=NVDA (or drain the queue)
+	$(VENV)/python -m ingestion.backfill $(TICKER)
 
 screenshots:  ## Re-render the README charts from the live warehouse
 	$(VENV)/python scripts/generate_screenshots.py

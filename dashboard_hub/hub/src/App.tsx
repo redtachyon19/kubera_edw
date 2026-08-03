@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
+import BusinessCard from './components/BusinessCard';
 import Footer from './components/Footer';
 import TopBar from './components/TopBar';
 import DashboardPage from './pages/DashboardPage';
@@ -12,11 +14,12 @@ import './App.css';
 
 export default function App() {
   const [mode, toggle] = useTheme();
+  const [contact, setContact] = useState(false);
 
   return (
     <ThemeContext.Provider value={{ mode, toggle }}>
       <div className="app-shell">
-        <TopBar />
+        <TopBar onBrandDouble={() => setContact(true)} />
         <main className="app-main">
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -26,6 +29,7 @@ export default function App() {
           </Routes>
         </main>
         <Footer />
+        <BusinessCard open={contact} onClose={() => setContact(false)} />
       </div>
     </ThemeContext.Provider>
   );

@@ -24,6 +24,16 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+# Load the project `.env` here so every child — the market API and each
+# dashboard — inherits the same environment the pipeline runs with. Anything
+# already exported by the developer's shell still wins.
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv(Path(__file__).resolve().parents[1] / ".env")
+except ImportError:  # pragma: no cover — python-dotenv ships with the project
+    pass
+
 import registry  # noqa: E402
 
 

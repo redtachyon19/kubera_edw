@@ -1,9 +1,18 @@
-import type { CSSProperties } from 'react';
+import type { CSSProperties, JSX } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import { dashboardRoute, getSectionBySlug, isWorkspace } from '../config/dashboards';
+import type { Section } from '../config/dashboards';
+import CompaniesWorkspace from './companies/CompaniesWorkspace';
 import MarketsWorkspace from './markets/MarketsWorkspace';
+import NotFound from './NotFound';
 import './SectionPage.css';
+
+/** Which shell a live desk uses. A desk with no entry falls back to the index. */
+const WORKSPACES: Record<string, (section: Section) => JSX.Element> = {
+  markets: (section) => <MarketsWorkspace section={section} />,
+  companies: (section) => <CompaniesWorkspace section={section} />,
+};
 
 export default function SectionPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -11,19 +20,18 @@ export default function SectionPage() {
 
   if (!section) {
     return (
-      <div className="section section--missing">
-        <h1>Section not found</h1>
-        <p>There is no desk called &ldquo;{slug}&rdquo;.</p>
-        <Link to="/" className="section__back">
-          &larr; Index
-        </Link>
-      </div>
+      <NotFound title="Desk not found">
+        There is no desk called &ldquo;{slug}&rdquo;.
+      </NotFound>
     );
   }
 
   // Live desks get a workspace; report desks stay an index. The rule lives in
   // the registry so a desk's shape is declared, not special-cased here.
-  if (isWorkspace(section)) return <MarketsWorkspace section={section} />;
+  if (isWorkspace(section)) {
+    const workspace = WORKSPACES[section.slug];
+    if (workspace) return workspace(section);
+  }
 
   return (
     <div className="section" style={{ '--accent': `var(--${section.metal})` } as CSSProperties}>

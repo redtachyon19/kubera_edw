@@ -14,20 +14,39 @@ to Yahoo directly.
     GET /api/market/quotes?symbols=^GSPC,GC=F
     GET /api/market/sectors?period=1Y
     GET /api/market/sector?slug=ai&period=1Y
+    GET /api/market/companies?period=1Y
+    GET /api/market/company?symbol=AAPL
+    GET /api/market/revenue?symbol=AAPL
     GET /api/market/news?slug=ai
+    GET /api/market/news?symbol=AAPL
 """
 
 from __future__ import annotations
 
 import json
+import os
 import sys
+import threading
+import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+REPO_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO_ROOT))
 
-from dashboard_hub.lib import market_data  # noqa: E402
+# The same `.env` the pipeline reads. Without this the server starts with an
+# empty environment and every SEC lookup silently degrades to the quote feed —
+# a page of four annual periods where the filings hold seventy quarters, with
+# nothing on screen to say why.
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv(REPO_ROOT / ".env")
+except ImportError:  # pragma: no cover — python-dotenv ships with the project
+    pass
+
+from dashboard_hub.lib import filings, market_data  # noqa: E402
 
 PORT = 8600
 
@@ -77,7 +96,32 @@ class Handler(BaseHTTPRequestHandler):
                 self._send({**definition, **snapshot})
                 return
 
+            if parsed.path == "/api/market/companies":
+                period = (params.get("period") or ["1Y"])[0]
+                self._send({"companies": market_data.companies_overview(period)})
+                return
+
+            if parsed.path == "/api/market/revenue":
+                symbol = (params.get("symbol") or [""])[0]
+                self._send(market_data.revenue_history(symbol))
+                return
+
+            if parsed.path == "/api/market/company":
+                symbol = (params.get("symbol") or [""])[0]
+                payload = market_data.company(symbol)
+                if not payload:
+                    self._send({"error": "no symbol given"}, status=400)
+                    return
+                self._send(payload)
+                return
+
             if parsed.path == "/api/market/news":
+                # One feed, two callers: a sector takes the union across its
+                # largest names, a company just its own.
+                symbol = (params.get("symbol") or [""])[0]
+                if symbol:
+                    self._send({"stories": market_data.company_news(symbol)})
+                    return
                 slug = (params.get("slug") or [""])[0]
                 self._send({"stories": market_data.sector_news(slug)})
                 return
@@ -88,8 +132,19 @@ class Handler(BaseHTTPRequestHandler):
                 self._send({"quotes": market_data.quotes(wanted)})
                 return
 
+            if parsed.path == "/api/market/backfill":
+                symbol = (params.get("symbol") or [""])[0]
+                self._send(market_data.backfill_status(symbol))
+                return
+
             if parsed.path == "/api/market/health":
-                self._send({"ok": True, "periods": list(market_data.PERIODS)})
+                self._send(
+                    {
+                        "ok": True,
+                        "periods": list(market_data.PERIODS),
+                        "edgar": filings.available(),
+                    }
+                )
                 return
 
             self._send({"error": f"no route for {parsed.path}"}, status=404)
@@ -97,14 +152,94 @@ class Handler(BaseHTTPRequestHandler):
             print(f"[market-api] {parsed.path}: {exc!r}", file=sys.stderr)
             self._send({"error": str(exc)}, status=502)
 
+    def do_POST(self) -> None:  # noqa: N802 — BaseHTTPRequestHandler's naming
+        """The one endpoint that changes anything: queue a company for the warehouse.
+
+        A POST rather than a GET because it is a request to do work, and because
+        a GET that mutates gets fetched by every prefetcher and link checker
+        that ever sees the page.
+        """
+        parsed = urlparse(self.path)
+        if parsed.path != "/api/market/backfill":
+            self._send({"error": f"no route for POST {parsed.path}"}, status=404)
+            return
+
+        try:
+            length = int(self.headers.get("Content-Length") or 0)
+            body = json.loads(self.rfile.read(length) or b"{}") if length else {}
+            symbol = str(body.get("symbol") or "").strip()
+            if not symbol:
+                self._send({"error": "a symbol is required"}, status=400)
+                return
+            self._send(market_data.request_backfill(symbol), status=202)
+        except json.JSONDecodeError:
+            self._send({"error": "body must be JSON"}, status=400)
+        except Exception as exc:  # noqa: BLE001 — never take the page down on a data error
+            print(f"[market-api] POST {parsed.path}: {exc!r}", file=sys.stderr)
+            self._send({"error": str(exc)}, status=502)
+
     def log_message(self, fmt: str, *args) -> None:
         """Quieter than the default: one line per request, on stderr."""
         sys.stderr.write(f"[market-api] {fmt % args}\n")
 
 
+WORKER_INTERVAL = 5
+
+
+def _backfill_worker() -> None:
+    """Run whatever the desk has queued, without anyone opening a terminal.
+
+    Dagster owns this job when its daemon is up, and that is the better home for
+    it — retries, run history, a UI. But the hub runs on its own far more often
+    than the daemon does, and a button that only writes a request to a file and
+    tells you to go and run something is not a button. So the API drains the
+    queue itself.
+
+    Both workers claim a request before starting, so whichever gets there first
+    does the work once. Set `KUBERA_BACKFILL_WORKER=0` to leave it all to
+    Dagster.
+    """
+    try:
+        from ingestion import backfill
+    except ImportError as exc:  # a checkout without the extractor stack installed
+        print(f"[market-api] backfill worker off: {exc}", file=sys.stderr)
+        return
+
+    while True:
+        try:
+            for row in backfill.pending():
+                ticker = row["ticker"]
+                if not backfill.claim(ticker):
+                    continue
+                print(f"[market-api] backfilling {ticker} — this takes a few minutes")
+                finished = backfill.run(ticker)
+                status = finished.get("status")
+                if status == backfill.FAILED:
+                    print(f"[market-api] {ticker} failed: {finished.get('error')}", file=sys.stderr)
+                else:
+                    print(f"[market-api] {ticker} is now a holding")
+        except Exception as exc:  # noqa: BLE001 — the worker must outlive one bad request
+            print(f"[market-api] backfill worker error: {exc!r}", file=sys.stderr)
+        time.sleep(WORKER_INTERVAL)
+
+
 def serve(port: int = PORT) -> None:
     server = ThreadingHTTPServer(("localhost", port), Handler)
     print(f"[market-api] listening on http://localhost:{port}")
+
+    if os.environ.get("KUBERA_BACKFILL_WORKER", "1") != "0":
+        threading.Thread(target=_backfill_worker, daemon=True, name="backfill").start()
+        print("[market-api] backfill worker running — queued companies build here")
+    # Say which sources are actually available, because the difference between
+    # them is twenty years of history and it is otherwise invisible.
+    if filings.available():
+        print("[market-api] SEC EDGAR enabled — full filing history")
+    else:
+        print(
+            "[market-api] SEC_EDGAR_USER_AGENT is not set: revenue history falls back to "
+            'Yahoo (4 years). Add it to .env as "Name you@example.com" for the full run.',
+            file=sys.stderr,
+        )
     try:
         server.serve_forever()
     except KeyboardInterrupt:

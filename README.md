@@ -37,7 +37,7 @@ make setup && make demo && make hub
 |---|---|
 | `make setup` | Installs `uv`, Python 3.12, `.venv`, and all dependencies. No admin password. |
 | `make demo` | Builds the warehouse from committed fixtures — **no keys, no network** |
-| `make hub` | Serves the Finance Dashboard Hub at http://localhost:5173 (hub + every dashboard) |
+| `make hub` | Serves the research terminal at http://localhost:5173 (hub + every dashboard) |
 | `make pipeline` | Full live pipeline into local DuckDB (needs `.env` keys) |
 | `make prod` | Full live pipeline into hosted Postgres / Neon |
 | `make orchestrate` | Serves the Dagster UI at http://localhost:3000 |
@@ -84,13 +84,17 @@ kubera_edw/
 │
 ├── dashboard_hub/                # BI — hub & spoke, one front door for every dashboard
 │   ├── dashboards.json           # single source of truth — nav, proxy, processes, palette
+│   ├── sectors.json              # editorial sector definitions behind the Sectors page
+│   ├── companies.json            # the browsable universe — generated, not hand-edited
 │   ├── registry.py               # reads dashboards.json (Python side)
 │   ├── run_local.py              # starts every dashboard service + the market API
 │   ├── market_api.py             # stdlib JSON endpoint behind the hub's native pages
 │   ├── lib/                      # shared code
 │   │   ├── db.py                 #   read-only warehouse connection, 5-min cache
 │   │   ├── queries.py            #   SQL against marts -> pandas
-│   │   ├── market_data.py        #   live prices/search (Yahoo) — no warehouse, no key
+│   │   ├── warehouse.py          #   the same marts without Streamlit, for the market API
+│   │   ├── filings.py            #   long-run quarterly figures, read live from SEC EDGAR
+│   │   ├── market_data.py        #   live prices/search/financials (Yahoo) — no key
 │   │   ├── theme.py              #   palette + Altair theme, both stocks
 │   │   └── ui.py                 #   page chrome, empty states, chart helpers
 │   ├── hub/                      # the website — Vite + React + TypeScript
@@ -103,7 +107,7 @@ kubera_edw/
 │   ├── verify_universe.py        # re-validates every company against SEC EDGAR
 │   └── generate_screenshots.py   # renders dashboard charts to docs/screenshots/
 │
-├── tests/                        # 83 pytest tests (mocked HTTP via respx)
+├── tests/                        # 115 pytest tests (mocked HTTP via respx)
 ├── docs/                         # screenshots
 ├── data/                         # kubera_edw.duckdb + data/raw/ landing zone (gitignored)
 │
@@ -376,7 +380,7 @@ no network, no flaky external APIs in CI.
 
 ---
 
-## Finance Dashboard Hub
+## Investment Research
 
 ```bash
 make hub            # http://localhost:5173
@@ -392,9 +396,14 @@ Navigation is two levels — the top bar holds **sections**, and each section ho
 | Desk | Metal | Dashboards |
 |---|---|---|
 | **Portfolio** | gold | Portfolio Allocation · Risk & Concentration · ESG Exposure |
-| **Companies** | bronze | Fundamentals · FX Impact |
-| **Markets** | silver | Stock Explorer (native) · Macro Overlay |
+| **Companies** | bronze | Company Explorer (native) · Fundamentals · FX Impact |
+| **Markets** | silver | Stock Explorer (native) · Sectors (native) · Macro Overlay |
 | **Warehouse** | steel | Data Quality · Pipeline Health |
+
+Two of those desks are **workspaces** rather than indexes. A report desk holds sheets you
+open, read and leave, so a list is right for it. Companies and Markets are live and stateful —
+browse, open, compare, hand off — so their views switch in place and keep their state, which
+is what `"layout": "workspace"` declares in the registry.
 
 ```
 localhost:5173  hub (Vite)
@@ -410,14 +419,95 @@ localhost:5173  hub (Vite)
 
 `/d/*` is reserved for the proxy, so the hub's own routes live under `/s/*` and the two never
 collide. A dashboard marked `"kind": "native"` is a React page the hub renders itself rather
-than a service it embeds — the **Stock Explorer** is one. It reads `/api/market/*`, served by
+than a service it embeds — **Stock Explorer**, **Sectors** and **Company Explorer** are the
+three. They read `/api/market/*`, served by
 [`market_api.py`](dashboard_hub/market_api.py) (stdlib HTTP, no web framework), because Yahoo
 rejects browser requests that lack a session cookie and crumb. Because each spoke is its own process, a dashboard can be rebuilt, restarted or
 swapped for a different framework without touching the hub or any sibling dashboard.
 
-The five dashboards under **Portfolio**, **Companies** and **Markets** are built and read the
-warehouse live. The four under **Risk**, **ESG** and **Warehouse** are registry entries with no
-process behind them yet — their page says so and prints what it will take to wire them up.
+The seven dashboards under **Portfolio**, **Companies** and **Markets** are built. The four
+under **Risk**, **ESG** and **Warehouse** are registry entries with no process behind them yet
+— their page says so and prints what it will take to wire them up.
+
+#### Company Explorer
+
+The Companies desk opens on a grid of ~300 listings — every constituent of every editorial
+sector in [`sectors.json`](dashboard_hub/sectors.json), plus the 38 holdings the warehouse
+carries filings for, badged. Opening one gives its price history over any window, the
+valuation multiples, a long-run quarterly revenue chart, and the income statement, margins,
+balance sheet and cash flow, annual or quarterly. The search box is not limited to the grid:
+a ticker it does not recognise is looked up live and opens the same page.
+
+Each statement opens on the handful of lines it is actually read for, with the rest one click
+behind a button that says how many are there — stacked in full, the four statements run to
+forty rows and bury the figures most readers came for.
+
+**Revenue back to 2008.** Yahoo publishes five quarters, which is not a history. So the
+revenue chart reads the filer's own XBRL facts from SEC EDGAR at request time — the same
+source the warehouse is built from, one company at a time — and gets seventy-odd quarters for
+most US filers, windowed to 3, 5 or 10 years or all of it. Four things have to be fixed on
+the way through, all in [`lib/filings.py`](dashboard_hub/lib/filings.py):
+
+| Problem | What the raw facts do | Fix |
+|---|---|---|
+| Periods are unlabelled | `frame` is sparse — NVIDIA has 12 framed quarters against 66 real ones — and revenue tags change over a filer's life | Classify by how long the period actually ran |
+| No fourth quarter | A 10-K filer publishes three 10-Qs and an annual report | Derive it: the year less the three |
+| Two currencies | Toyota carries 27 years of revenue in JPY **and** 4 years of the same line in USD | Pick the currency the most recent filings use, once for the whole series |
+| Lines tagged apart | Revenue and net income often carry start dates a day apart | Join them on the period end |
+
+Both cadences are built and both are offered. Which one opens depends on the filer: a US
+filer reads best quarterly, while a foreign private issuer files annually on Form 20-F and has
+no quarters at all — Yahoo offers five, but its own filings carry eighteen annual years, and
+eighteen years beats five quarters. Ford's chart runs from 2008 and shows both crises;
+Toyota's shows the 2009 loss.
+
+This needs `SEC_EDGAR_USER_AGENT` set, the same variable the pipeline uses. Without it the
+chart falls back to the warehouse's own rows and then to Yahoo's, and says underneath which
+one answered. A listing that files nothing at all — an index, a fund, a currency — says that
+rather than reporting an empty chart.
+
+For a name Kubera holds, a second panel sits below the statements: the **filed** figures from
+`marts.fact_financials`, traceable to a CIK and a taxonomy, with each year converted at the
+rate on its own period end. They are kept in their own panel rather than merged — the two
+sources are on different bases and blending them would hide that.
+
+#### Backfill on request
+
+A company that is not one of the 38 gets that panel replaced by a request. Queueing it adds
+the name to the warehouse for good: SEC is asked what kind of filer it is, an entry is
+appended to `companies.yml`, its filings are landed, and dbt rebuilds. Afterwards it is a
+holding like any other — FX-normalised, dbt-tested, and present in the allocation, FX and
+macro views rather than only on the page that fetched it live.
+
+```bash
+make backfill TICKER=NVDA     # one company, start to finish
+make backfill                 # drain whatever the desk has queued
+```
+
+The queue is [`data/backfill_queue.json`](data/backfill_queue.json), written by the market API
+and read by a Dagster sensor that launches `backfill_job` per request. The sensor needs the
+daemon (`make orchestrate`); without it the same work runs from the make target above, which
+is the identical code path.
+
+**The warehouse takes one writer at a time.** DuckDB locks the file, so anything holding it
+open blocks a rebuild — and the hub used to hold it open in five processes at once, which
+meant a backfill could never run while the desk was up. Both readers now open the file per
+query and close it again ([`lib/db.py`](dashboard_hub/lib/db.py),
+[`lib/warehouse.py`](dashboard_hub/lib/warehouse.py)); results are cached, so this costs a few
+milliseconds a few times an hour. On Postgres the constraint does not apply and the engine is
+pooled as before.
+
+Names and classifications for the grid come from
+[`companies.json`](dashboard_hub/companies.json), resolved once at build time because ~300
+profile lookups is not a page load. Regenerate it after editing `sectors.json` or
+`companies.yml`:
+
+```bash
+make company-universe
+```
+
+The desk works with no warehouse at all — the filed panel is what a clean checkout gives up,
+not the page.
 
 [`dashboard_hub/dashboards.json`](dashboard_hub/dashboards.json) is the single source of
 truth. The same file drives the Streamlit processes `run_local.py` spawns, the Vite proxy
@@ -439,6 +529,12 @@ series stay inside the gold / silver / bronze family in both stocks — separate
 and the warm/cool axis rather than hue, which is why more than about five series on one chart
 is harder to read here than a rainbow scale would be. That cost is noted in
 [`lib/theme.py`](dashboard_hub/lib/theme.py).
+
+There is one joke in here. The house style — bone stock, black ink, Copperplate in caps — is
+Paul Allen's business card, and has been since the first commit, so that is where the contact
+details live: **double-click the KUBERA mark** in the top bar and the card flips out over a
+blurred terminal. Click anywhere off it, or press `Esc`, and it flips away. The 404 page knows
+what film this is too.
 
 | Command | Does |
 |---|---|

@@ -19,6 +19,9 @@ htmlcov/
 # --- Raw / landed data (not committed; re-fetchable from source APIs) ---
 data/raw/*
 !data/raw/.gitkeep
+
+# Backfill request queue — runtime state, rebuilt as companies are asked for
+data/backfill_queue.json
 *.duckdb
 *.duckdb.wal
 

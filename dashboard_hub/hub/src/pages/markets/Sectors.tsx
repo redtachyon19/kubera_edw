@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 
+import NewsFeed from '../../components/NewsFeed';
 import { PERIODS } from '../stock/api';
 import type { Period } from '../stock/api';
 import CorrelationMatrix from './CorrelationMatrix';
-import SectorNews from './SectorNews';
 import Sparkline from './Sparkline';
 import { fetchSector, fetchSectors } from './sectorApi';
 import type { Pair, SectorCard, SectorDetail } from './sectorApi';
@@ -203,7 +203,7 @@ export default function Sectors({ onCompare }: { onCompare?: (symbols: string[])
         <section className="sectors__news" aria-label="Sector coverage">
           <p className="eyebrow">Coverage</p>
           <div className="sectors__news-rule" />
-          <SectorNews slug={detail.slug} />
+          <NewsFeed source={{ slug: detail.slug }} empty="No recent coverage for this sector." />
         </section>
 
         <p className="stock__footnote">

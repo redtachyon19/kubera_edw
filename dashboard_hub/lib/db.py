@@ -21,28 +21,39 @@ def warehouse_target() -> str:
 
 
 @st.cache_resource(show_spinner=False)
-def _connection():
-    if warehouse_target() == "postgres":
-        from sqlalchemy import create_engine
+def _engine():
+    """Postgres pools its own connections, so the engine is worth keeping."""
+    from sqlalchemy import create_engine
 
-        url = (
-            f"postgresql+psycopg2://{os.environ['POSTGRES_USER']}:"
-            f"{os.environ['POSTGRES_PASSWORD']}@{os.environ['POSTGRES_HOST']}:"
-            f"{os.environ.get('POSTGRES_PORT', '5432')}/{os.environ['POSTGRES_DB']}"
-        )
-        return create_engine(url, connect_args={"sslmode": os.environ.get("PGSSLMODE", "require")})
-
-    import duckdb
-
-    return duckdb.connect(str(_duckdb_path()), read_only=True)
+    url = (
+        f"postgresql+psycopg2://{os.environ['POSTGRES_USER']}:"
+        f"{os.environ['POSTGRES_PASSWORD']}@{os.environ['POSTGRES_HOST']}:"
+        f"{os.environ.get('POSTGRES_PORT', '5432')}/{os.environ['POSTGRES_DB']}"
+    )
+    return create_engine(url, connect_args={"sslmode": os.environ.get("PGSSLMODE", "require")})
 
 
 @st.cache_data(ttl=300, show_spinner=False)
 def query(sql: str) -> pd.DataFrame:
-    con = _connection()
+    """Read the marts, holding the file only for as long as the read takes.
+
+    DuckDB is single-writer and takes a file lock, so a dashboard that keeps a
+    connection open — even read-only — blocks anything trying to rebuild the
+    warehouse underneath it. With four dashboards and the market API all up,
+    that was every writer: a pipeline run or a backfill could not start while
+    the hub was running. Results are cached for five minutes, so reconnecting
+    per query costs a few milliseconds a few times an hour.
+    """
     if warehouse_target() == "postgres":
-        return pd.read_sql(sql, con)
-    return con.execute(sql).df()
+        return pd.read_sql(sql, _engine())
+
+    import duckdb
+
+    con = duckdb.connect(str(_duckdb_path()), read_only=True)
+    try:
+        return con.execute(sql).df()
+    finally:
+        con.close()
 
 
 def warehouse_exists() -> bool:

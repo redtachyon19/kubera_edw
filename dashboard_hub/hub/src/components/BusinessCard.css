@@ -1,0 +1,244 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Contact, as a card that flips in.
+
+   The terminal behind it is blurred rather than dimmed: the card is a physical
+   object held up in front of the screen, and the screen going out of focus is
+   what that looks like.
+   ───────────────────────────────────────────────────────────────────────── */
+.card-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  cursor: pointer;
+  background: color-mix(in srgb, var(--paper) 45%, transparent);
+  backdrop-filter: blur(16px) saturate(0.75);
+  -webkit-backdrop-filter: blur(16px) saturate(0.75);
+  animation: card-veil-in 0.32s ease both;
+}
+
+.card-veil.is-leaving {
+  animation: card-veil-in 0.42s ease reverse both;
+}
+
+@keyframes card-veil-in {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0) saturate(1);
+    -webkit-backdrop-filter: blur(0) saturate(1);
+  }
+}
+
+/* The perspective lives on the parent, so the card turns on a real axis rather
+   than shearing. */
+.card-stage {
+  perspective: 1600px;
+  perspective-origin: 50% 45%;
+  cursor: default;
+}
+
+.card {
+  position: relative;
+  backface-visibility: hidden;
+  width: min(clamp(340px, 60vw, 540px), 92vw);
+  aspect-ratio: 1.75 / 1;
+  padding: clamp(18px, 3.6vw, 32px) clamp(20px, 4.4vw, 40px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  background: #f4f1e8;
+  color: #12110f;
+  border: 1px solid #d8d2c2;
+  /* The tasteful thickness of it: stacked hairlines for the edge of the stock,
+     then one soft shadow for the card floating off the page. */
+  box-shadow:
+    1px 1px 0 #e6e1d3,
+    2px 2px 0 #ded8c9,
+    3px 3px 0 #d5cfbe,
+    4px 4px 0 #ccc5b3,
+    18px 26px 48px rgba(0, 0, 0, 0.3);
+  animation: card-flip-in 0.62s cubic-bezier(0.22, 1, 0.3, 1) both;
+}
+
+.card-veil.is-leaving .card {
+  animation: card-flip-out 0.62s cubic-bezier(0.55, 0, 0.7, 0.2) both;
+}
+
+@keyframes card-flip-in {
+  from {
+    transform: rotateY(-96deg) rotateX(8deg) translateZ(-150px) scale(0.84);
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes card-flip-out {
+  from {
+    transform: none;
+    opacity: 1;
+  }
+  to {
+    transform: rotateY(94deg) rotateX(-6deg) translateZ(-160px) scale(0.86);
+    opacity: 0;
+  }
+}
+
+/* ── The card's own typography ─────────────────────────────────────────────
+   Three zones, laid out where the card in the film puts them: telephone top
+   left, firm top right, the name centred in the field, contact along the foot.
+   ───────────────────────────────────────────────────────────────────────── */
+.card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.card__tel {
+  margin: 0;
+  font-size: clamp(0.5rem, 1.3vw, 0.72rem);
+  letter-spacing: 0.04em;
+  color: #3a362f;
+}
+
+.card__firm {
+  text-align: right;
+}
+
+.card__firm-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(0.55rem, 1.5vw, 0.86rem);
+  letter-spacing: 0.1em;
+  color: #12110f;
+}
+
+.card__firm-line {
+  margin: 4px 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(0.44rem, 1.05vw, 0.6rem);
+  letter-spacing: 0.18em;
+  color: #4a4640;
+}
+
+/* The name sits optically centred in the whole card, so the block is nudged up
+   against the taller foot beneath it. */
+.card__mid {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding-bottom: 4%;
+}
+
+.card__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  color: #12110f;
+  text-transform: none;
+  letter-spacing: 0.06em;
+  line-height: 1.1;
+}
+
+/* "Ishan VEMIREDDY": one size across the whole name, the surname set in caps.
+   Capitals carry more width per letter, so the surname is given back a little
+   tracking to keep the two halves optically even. */
+.card__forename,
+.card__surname {
+  font-size: clamp(1.05rem, 3vw, 1.7rem);
+}
+
+.card__forename {
+  letter-spacing: 0.05em;
+}
+
+.card__surname {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.card__title {
+  margin: 7px 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(0.46rem, 1.15vw, 0.66rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #2b2823;
+}
+
+.card__foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  text-align: center;
+}
+
+.card__address {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(0.44rem, 1.05vw, 0.6rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #2b2823;
+}
+
+.card__reach {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px 18px;
+  margin: 0;
+}
+
+.card__email {
+  font-family: var(--font-display);
+  font-size: clamp(0.44rem, 1.05vw, 0.6rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #2b2823;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s ease;
+}
+
+.card__email:hover {
+  border-bottom-color: #8a8375;
+}
+
+.card__fax {
+  font-size: clamp(0.42rem, 1vw, 0.58rem);
+  letter-spacing: 0.06em;
+  color: #4a4640;
+}
+
+/* Reduced motion: the card still arrives, it just does not turn. */
+@media (prefers-reduced-motion: reduce) {
+  .card-veil,
+  .card,
+  .card-veil.is-leaving,
+  .card-veil.is-leaving .card {
+    animation-duration: 0.2s;
+    animation-name: card-fade;
+  }
+
+  @keyframes card-fade {
+    from {
+      opacity: 0;
+    }
+  }
+}

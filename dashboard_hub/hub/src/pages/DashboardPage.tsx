@@ -2,6 +2,8 @@ import type { CSSProperties } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import { embedPathFor, getSectionBySlug, isNative, sectionRoute } from '../config/dashboards';
+import Companies from './companies/Companies';
+import NotFound from './NotFound';
 import Sectors from './markets/Sectors';
 import StockExplorer from './stock/StockExplorer';
 import { useThemeMode } from '../ThemeContext';
@@ -15,13 +17,13 @@ export default function DashboardPage() {
 
   if (!section || !dashboard) {
     return (
-      <div className="dash dash--missing">
-        <h1>Dashboard not found</h1>
-        <p>There is nothing at this address.</p>
-        <Link to={section ? sectionRoute(section) : '/'} className="dash__back">
-          &larr; Back
-        </Link>
-      </div>
+      <NotFound
+        title="Dashboard not found"
+        backTo={section ? sectionRoute(section) : '/'}
+        backLabel={section ? section.name : 'Index'}
+      >
+        There is nothing at this address.
+      </NotFound>
     );
   }
 
@@ -35,6 +37,7 @@ export default function DashboardPage() {
   const NATIVE: Record<string, () => JSX.Element> = {
     'stock-explorer': () => <StockExplorer />,
     sectors: () => <Sectors />,
+    'company-explorer': () => <Companies />,
   };
   const NativeView = native ? NATIVE[dashboard.id] : undefined;
 

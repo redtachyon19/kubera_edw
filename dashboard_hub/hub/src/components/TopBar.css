@@ -17,6 +17,9 @@
 }
 
 .topbar__brand {
+  /* Double-clicking the mark brings out the card; without this it also selects
+     the wordmark, which leaves a highlight sitting behind the overlay. */
+  user-select: none;
   display: flex;
   flex-direction: column;
   gap: 4px;

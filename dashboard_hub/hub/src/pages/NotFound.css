@@ -1,27 +1,131 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   404 — the one screen that gets to be lurid.
+   ───────────────────────────────────────────────────────────────────────── */
 .notfound {
+  position: relative;
+  min-height: 78vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.notfound__blood {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+/* Arterial rather than pillar-box: a red with black in it reads as blood, a
+   pure red reads as an error banner. */
+.notfound__flood {
+  fill: #7a0a0a;
+  animation: nf-flood 1.9s cubic-bezier(0.36, 0, 0.24, 1) both;
+}
+
+.notfound__drips rect {
+  fill: #7a0a0a;
+  transform-origin: top;
+  transform: scaleY(0);
+  animation: nf-drip 1.5s cubic-bezier(0.4, 0, 0.5, 1) both;
+}
+
+/* Every drip on its own clock — eight things falling in step is a curtain. */
+.notfound__drips rect:nth-child(1) {
+  animation-delay: 1.05s;
+}
+.notfound__drips rect:nth-child(2) {
+  animation-delay: 0.8s;
+  animation-duration: 1.9s;
+}
+.notfound__drips rect:nth-child(3) {
+  animation-delay: 1.25s;
+}
+.notfound__drips rect:nth-child(4) {
+  animation-delay: 0.62s;
+  animation-duration: 2.2s;
+}
+.notfound__drips rect:nth-child(5) {
+  animation-delay: 1.4s;
+}
+.notfound__drips rect:nth-child(6) {
+  animation-delay: 0.92s;
+  animation-duration: 2s;
+}
+.notfound__drips rect:nth-child(7) {
+  animation-delay: 1.55s;
+}
+.notfound__drips rect:nth-child(8) {
+  animation-delay: 0.72s;
+  animation-duration: 2.4s;
+}
+
+@keyframes nf-flood {
+  from {
+    transform: translateY(-14%);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes nf-drip {
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* ── The copy, printed on it ───────────────────────────────────────────────── */
+.notfound__inner {
   max-width: 560px;
-  margin: 0 auto;
-  padding: 120px 32px;
+  padding: 96px 32px;
   text-align: center;
+  color: #f6f1e6;
+  animation: nf-settle 0.9s ease 1.35s both;
+}
+
+@keyframes nf-settle {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.notfound__eyebrow {
+  color: #e8bcbc;
 }
 
 .notfound__title {
-  font-size: 1.4rem;
+  font-size: clamp(1.4rem, 4vw, 2.1rem);
   letter-spacing: 0.18em;
   margin: 18px 0 0;
+  color: #fffaf0;
 }
 
 .notfound__hairline {
   width: 64px;
   height: 2px;
-  background: var(--gold);
+  background: #f0d9d9;
   margin: 26px auto;
 }
 
 .notfound__body {
   margin: 0 0 34px;
-  color: var(--ink-3);
+  color: #eccfcf;
   line-height: 1.85;
+}
+
+.notfound__body code {
+  color: #fffaf0;
+  background: rgba(0, 0, 0, 0.24);
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .notfound__back {
@@ -29,8 +133,30 @@
   font-size: 0.6rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--ink);
+  color: #fffaf0;
   text-decoration: none;
-  border-bottom: 1px solid var(--gold);
+  border-bottom: 1px solid #d98080;
   padding-bottom: 3px;
+  transition: border-color 0.15s ease;
+}
+
+.notfound__back:hover {
+  border-bottom-color: #fffaf0;
+}
+
+/* Reduced motion: the room is already red when you get there. */
+@media (prefers-reduced-motion: reduce) {
+  .notfound__flood {
+    animation: none;
+    transform: translateY(100%);
+  }
+
+  .notfound__drips rect {
+    animation: none;
+    transform: scaleY(1);
+  }
+
+  .notfound__inner {
+    animation: none;
+  }
 }

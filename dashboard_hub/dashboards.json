@@ -2,8 +2,8 @@
   "org": {
     "name": "Kubera Global Asset Management",
     "short": "KUBERA",
-    "product": "Finance Dashboard Hub",
-    "descriptor": "Research \u00b7 Analytics \u00b7 Capital Markets",
+    "product": "Investment Research",
+    "descriptor": "Markets · Issuers · Capital Allocation",
     "tagline": "Fictional firm; real public data. Nothing here is investment advice or a claim of ownership."
   },
   "basePrefix": "/d",
@@ -22,108 +22,10 @@
   },
   "sections": [
     {
-      "slug": "portfolio",
-      "name": "Portfolio",
-      "accent": "#E2B84F",
-      "metal": "gold",
-      "tagline": "Positions & Exposure",
-      "description": "Composition, concentration and the mandate screens applied to the book.",
-      "dashboards": [
-        {
-          "id": "allocation",
-          "title": "Portfolio Allocation",
-          "module": "portfolio_allocation",
-          "status": "stub",
-          "port": 8511,
-          "blurb": "Diversification across country, sector, currency and region.",
-          "marts": [
-            "dim_company",
-            "dim_country",
-            "dim_currency"
-          ],
-          "planned": [
-            "Allocation breakdown by country, sector, currency and region",
-            "Holdings table with reporting currency and domicile",
-            "Holding / country / currency count KPIs"
-          ]
-        },
-        {
-          "id": "risk",
-          "title": "Risk & Concentration",
-          "module": "risk",
-          "status": "planned",
-          "blurb": "Concentration limits, correlation and downside exposure.",
-          "marts": [],
-          "planned": [
-            "Country and sector concentration against limits",
-            "Cross-holding correlation matrix",
-            "Value-at-risk and stress scenarios"
-          ]
-        },
-        {
-          "id": "esg",
-          "title": "ESG Exposure",
-          "module": "esg",
-          "status": "planned",
-          "blurb": "Environmental, social and governance screening across the book.",
-          "marts": [],
-          "planned": [
-            "Portfolio-weighted emissions intensity",
-            "Governance flags by holding",
-            "Screening exclusions and coverage gaps"
-          ]
-        }
-      ]
-    },
-    {
-      "slug": "companies",
-      "name": "Companies",
-      "accent": "#CD7F32",
-      "metal": "bronze",
-      "tagline": "Issuer Fundamentals",
-      "description": "Company financials as filed and as converted, normalised for cross-border comparison.",
-      "dashboards": [
-        {
-          "id": "fundamentals",
-          "title": "Fundamentals",
-          "module": "fundamentals",
-          "status": "stub",
-          "port": 8512,
-          "blurb": "Revenue growth, profitability and leverage, USD-normalized.",
-          "marts": [
-            "fact_financials",
-            "dim_company"
-          ],
-          "planned": [
-            "Revenue and net income by fiscal year",
-            "Revenue growth YoY and EBITDA margin",
-            "Net debt / EBITDA leverage trend"
-          ]
-        },
-        {
-          "id": "fx-impact",
-          "title": "FX Impact",
-          "module": "fx_impact",
-          "status": "stub",
-          "port": 8513,
-          "blurb": "How much of a USD figure is the business and how much is the rate.",
-          "marts": [
-            "fact_financials",
-            "dim_currency"
-          ],
-          "planned": [
-            "USD-normalized revenue for non-USD reporters",
-            "Applied year-end FX rate per reporting currency",
-            "Business growth split from translation effect"
-          ]
-        }
-      ]
-    },
-    {
       "slug": "markets",
       "name": "Markets",
-      "accent": "#CFD8DE",
-      "metal": "silver",
+      "accent": "#E2B84F",
+      "metal": "gold",
       "tagline": "Markets & Macro",
       "description": "Price action, realised risk and the macroeconomic backdrop behind it.",
       "dashboards": [
@@ -133,7 +35,7 @@
           "module": "stock_explorer",
           "status": "stub",
           "blurb": "Search any listed company, chart it over 1/5/10 years or all time, and compare it against others and gold.",
-          "source": "Yahoo Finance, live \u2014 rendered natively by the hub",
+          "source": "Yahoo Finance, live — rendered natively by the hub",
           "marts": [],
           "planned": [],
           "kind": "native"
@@ -144,8 +46,8 @@
           "module": "sectors",
           "status": "stub",
           "kind": "native",
-          "blurb": "Browse the market by industry, then by what actually moves together \u2014 constituents, performance and pairwise correlation.",
-          "source": "Yahoo Finance, live \u2014 rendered natively by the hub",
+          "blurb": "Browse the market by industry, then by what actually moves together — constituents, performance and pairwise correlation.",
+          "source": "Yahoo Finance, live — rendered natively by the hub",
           "marts": [],
           "planned": []
         },
@@ -214,10 +116,123 @@
       ]
     },
     {
+      "slug": "companies",
+      "name": "Companies",
+      "accent": "#CFD8DE",
+      "metal": "silver",
+      "tagline": "Issuer Fundamentals",
+      "description": "Company financials as filed and as converted, normalised for cross-border comparison.",
+      "layout": "workspace",
+      "dashboards": [
+        {
+          "id": "company-explorer",
+          "title": "Company Explorer",
+          "module": "company_explorer",
+          "status": "stub",
+          "kind": "native",
+          "blurb": "Open any company for its price history, valuation, income statement, balance sheet and cash flow — with the filed figures beside them for the names Kubera holds.",
+          "source": "Yahoo Finance, live — rendered natively by the hub, plus fact_financials for held names",
+          "marts": [
+            "fact_financials",
+            "dim_company"
+          ],
+          "planned": []
+        },
+        {
+          "id": "fundamentals",
+          "title": "Fundamentals",
+          "module": "fundamentals",
+          "status": "stub",
+          "port": 8512,
+          "blurb": "Revenue growth, profitability and leverage, USD-normalized.",
+          "marts": [
+            "fact_financials",
+            "dim_company"
+          ],
+          "planned": [
+            "Revenue and net income by fiscal year",
+            "Revenue growth YoY and EBITDA margin",
+            "Net debt / EBITDA leverage trend"
+          ]
+        },
+        {
+          "id": "fx-impact",
+          "title": "FX Impact",
+          "module": "fx_impact",
+          "status": "stub",
+          "port": 8513,
+          "blurb": "How much of a USD figure is the business and how much is the rate.",
+          "marts": [
+            "fact_financials",
+            "dim_currency"
+          ],
+          "planned": [
+            "USD-normalized revenue for non-USD reporters",
+            "Applied year-end FX rate per reporting currency",
+            "Business growth split from translation effect"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "portfolio",
+      "name": "Portfolio",
+      "accent": "#CD7F32",
+      "metal": "bronze",
+      "tagline": "Positions & Exposure",
+      "description": "Composition, concentration and the mandate screens applied to the book.",
+      "dashboards": [
+        {
+          "id": "allocation",
+          "title": "Portfolio Allocation",
+          "module": "portfolio_allocation",
+          "status": "stub",
+          "port": 8511,
+          "blurb": "Diversification across country, sector, currency and region.",
+          "marts": [
+            "dim_company",
+            "dim_country",
+            "dim_currency"
+          ],
+          "planned": [
+            "Allocation breakdown by country, sector, currency and region",
+            "Holdings table with reporting currency and domicile",
+            "Holding / country / currency count KPIs"
+          ]
+        },
+        {
+          "id": "risk",
+          "title": "Risk & Concentration",
+          "module": "risk",
+          "status": "planned",
+          "blurb": "Concentration limits, correlation and downside exposure.",
+          "marts": [],
+          "planned": [
+            "Country and sector concentration against limits",
+            "Cross-holding correlation matrix",
+            "Value-at-risk and stress scenarios"
+          ]
+        },
+        {
+          "id": "esg",
+          "title": "ESG Exposure",
+          "module": "esg",
+          "status": "planned",
+          "blurb": "Environmental, social and governance screening across the book.",
+          "marts": [],
+          "planned": [
+            "Portfolio-weighted emissions intensity",
+            "Governance flags by holding",
+            "Screening exclusions and coverage gaps"
+          ]
+        }
+      ]
+    },
+    {
       "slug": "warehouse",
       "name": "Warehouse",
-      "accent": "#93A2AE",
-      "metal": "steel",
+      "accent": "#CFD8DE",
+      "metal": "silver",
       "tagline": "Data Integrity",
       "description": "Provenance, freshness and test coverage behind every figure in this hub.",
       "dashboards": [

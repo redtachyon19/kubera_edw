@@ -13,9 +13,9 @@ export default function HomePage() {
           <h1 className="home__title">{org.product}</h1>
           <div className="home__hairline" />
           <p className="home__standfirst">
-            A single desk for the firm&rsquo;s research and analytics. Every dashboard runs as its
-            own service against the same governed warehouse, so a figure means the same thing
-            whichever page you read it on.
+            An investment research terminal: markets and issuers read live, the book read from a
+            governed warehouse. Every view runs as its own service against the same marts, so a
+            figure means the same thing whichever page you read it on.
           </p>
           <dl className="home__facts">
             <div>

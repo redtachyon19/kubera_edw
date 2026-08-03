@@ -1,0 +1,111 @@
+.pick {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 190px;
+}
+
+/* The closed control is a hairline field, not a raised box — the same rule
+   weight as the switches beside it. */
+.pick__field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  width: 100%;
+  padding: 9px 12px;
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--rule-strong);
+  border-radius: 0;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.pick__field:hover,
+.pick__field.is-open {
+  border-color: var(--ink);
+}
+
+.pick__field:focus-visible {
+  outline: 1px solid var(--accent, var(--gold));
+  outline-offset: 2px;
+}
+
+.pick__value {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.pick__caret {
+  width: 9px;
+  height: 6px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-width: 1.4;
+  transition: transform 0.16s ease;
+}
+
+.pick__field.is-open .pick__caret {
+  transform: rotate(180deg);
+}
+
+.pick__list {
+  position: absolute;
+  z-index: 30;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin: 3px 0 0;
+  padding: 0;
+  list-style: none;
+  max-height: 320px;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--ink);
+}
+
+.pick__option {
+  display: block;
+  width: 100%;
+  padding: 9px 12px;
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  color: var(--ink-2);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  cursor: pointer;
+}
+
+.pick__list li:last-child .pick__option {
+  border-bottom: 0;
+}
+
+/* Hover and keyboard highlight are the same state, so arrowing and pointing
+   look identical. The chosen option is marked by ink weight, not a tick. */
+.pick__option.is-active {
+  background: var(--surface-sunk);
+  color: var(--ink);
+}
+
+.pick__option.is-on {
+  color: var(--ink);
+}
+
+.pick__option.is-on::before {
+  content: '—';
+  margin-right: 8px;
+  color: var(--accent, var(--gold));
+}

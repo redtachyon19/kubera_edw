@@ -1,0 +1,563 @@
+.co {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  transition: opacity 0.2s ease;
+}
+
+.co.is-loading {
+  opacity: 0.55;
+}
+
+/* The sector control carries a label above its field, so it is taller than the
+   switches beside it. Left to stretch, every button in the row grows to match
+   it; aligning to the bottom keeps them their own height and on one line. */
+.co .stock__switches {
+  align-items: flex-end;
+}
+
+/* ── Universe grid ─────────────────────────────────────────────────────────── */
+.co__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(232px, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--rule);
+  border-left: 1px solid var(--rule);
+}
+
+.company-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    'symbol return'
+    'name   name'
+    'foot   foot';
+  gap: 6px 12px;
+  align-items: baseline;
+  text-align: left;
+  padding: 16px 18px 13px;
+  background: var(--surface);
+  border: 0;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer;
+  transition: background 0.16s ease;
+}
+
+.company-card:hover {
+  background: var(--surface-sunk);
+}
+
+.company-card__symbol {
+  grid-area: symbol;
+  font-size: 0.86rem;
+  color: var(--ink);
+}
+
+.company-card__return {
+  grid-area: return;
+  font-size: 0.88rem;
+}
+
+/* Two lines, then clipped: the names run from "F" to a four-word conglomerate,
+   and a card that grows to fit the longest breaks the grid for all the others. */
+.company-card__name {
+  grid-area: name;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--ink-3);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.company-card__foot {
+  grid-area: foot;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 9px;
+  margin-top: 3px;
+  border-top: 1px solid var(--rule);
+  font-size: 0.66rem;
+  color: var(--ink-4);
+}
+
+.company-card__sector {
+  font-family: var(--font-display);
+  font-size: 0.52rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.company-card__held {
+  font-style: normal;
+  font-size: 0.6rem;
+  color: var(--accent, var(--gold));
+}
+
+/* ── Detail: masthead ──────────────────────────────────────────────────────── */
+.co__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 18px 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.co__name {
+  font-size: 1.3rem;
+  letter-spacing: 0.14em;
+  margin-top: 8px;
+}
+
+.co__meta {
+  margin: 8px 0 0;
+  font-size: 0.84rem;
+  color: var(--ink-3);
+}
+
+.co__last {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.co__price {
+  font-size: 1.5rem;
+  color: var(--ink);
+}
+
+.co__daymove {
+  font-size: 0.82rem;
+}
+
+.co__held {
+  padding: 4px 10px;
+  font-family: var(--font-display);
+  font-size: 0.52rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent, var(--gold));
+  border: 1px solid var(--accent, var(--gold));
+}
+
+/* ── Detail: valuation strip ───────────────────────────────────────────────── */
+.co__kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--rule);
+  border-left: 1px solid var(--rule);
+}
+
+.co__kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.co__kpi-value {
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.co__kpi--band {
+  grid-column: span 2;
+}
+
+/* The year's range as a rule, with the current price marked on it. */
+.co__band {
+  position: relative;
+  display: block;
+  height: 3px;
+  margin-top: 4px;
+  background: var(--surface-sunk);
+  border: 1px solid var(--rule);
+}
+
+.co__band-mark {
+  position: absolute;
+  top: -3px;
+  width: 2px;
+  height: 9px;
+  margin-left: -1px;
+  background: var(--accent, var(--gold));
+}
+
+/* A withheld figure needs its reason next to it, or it reads as a data outage. */
+.co__caveat {
+  margin: 0;
+  padding: 12px 16px;
+  max-width: 92ch;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: var(--ink-3);
+  background: var(--surface-sunk);
+  border-left: 2px solid var(--accent, var(--gold));
+}
+
+.co__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 34px;
+  margin: 0;
+  padding-bottom: 4px;
+}
+
+.co__stats span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.co__stats i {
+  font-style: normal;
+  font-size: 0.94rem;
+  color: var(--ink);
+}
+
+/* ── Detail: statements ────────────────────────────────────────────────────── */
+.co__revenue,
+.co__financials,
+.co__filed,
+.co__peers,
+.co__news {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.co__chart {
+  padding: 18px 20px 12px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+}
+
+/* Revenue in neutral ink, profit in green. The house rule is that hue carries
+   meaning only for direction — gains green, losses red — so the top line stays
+   colourless and the only coloured series is the one where the sign matters.
+   It also reads at any desk: the accent follows the desk's metal, and silver on
+   bone is too faint to carry the primary line. */
+.co__line {
+  fill: none;
+  stroke-width: 1.6;
+  vector-effect: non-scaling-stroke;
+}
+
+.co__line--revenue {
+  stroke: var(--ink-2);
+}
+
+.co__line--grossProfit {
+  stroke: var(--accent, var(--gold));
+}
+
+.co__line--netIncome {
+  stroke: var(--up);
+}
+
+/* Ending below zero takes the green away, whichever series it is. */
+.co__line--revenue.is-loss,
+.co__line--grossProfit.is-loss,
+.co__line--netIncome.is-loss {
+  stroke: var(--down);
+}
+
+/* Hollow against the panel stock, so a run of them reads as tick marks on the
+   line rather than as a second series. Sweeping fills the one under the
+   cursor — the only point being read is the only one carrying ink. */
+.co__marker {
+  fill: var(--surface);
+  stroke-width: 1.4;
+  transition: r 0.08s ease;
+}
+
+.co__marker--revenue {
+  stroke: var(--ink-2);
+}
+
+.co__marker--grossProfit {
+  stroke: var(--accent, var(--gold));
+}
+
+.co__marker--netIncome {
+  stroke: var(--up);
+}
+
+.co__marker--revenue.is-loss,
+.co__marker--grossProfit.is-loss,
+.co__marker--netIncome.is-loss {
+  stroke: var(--down);
+}
+
+.co__marker--revenue.is-on {
+  fill: var(--ink-2);
+}
+
+.co__marker--grossProfit.is-on {
+  fill: var(--accent, var(--gold));
+}
+
+.co__marker--netIncome.is-on {
+  fill: var(--up);
+}
+
+.co__marker--revenue.is-loss.is-on,
+.co__marker--grossProfit.is-loss.is-on,
+.co__marker--netIncome.is-loss.is-on {
+  fill: var(--down);
+}
+
+i.chart__swatch.co__swatch--revenue {
+  background: var(--ink-2);
+}
+
+i.chart__swatch.co__swatch--grossProfit {
+  background: var(--accent, var(--gold));
+}
+
+i.chart__swatch.co__swatch--netIncome {
+  background: var(--up);
+}
+
+i.chart__swatch.co__swatch--revenue.is-loss,
+i.chart__swatch.co__swatch--grossProfit.is-loss,
+i.chart__swatch.co__swatch--netIncome.is-loss {
+  background: var(--down);
+}
+
+.co__chartbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+}
+
+/* A window the series cannot fill is shown but inert, so the control still
+   says what is on offer rather than silently shrinking. */
+.stock__switch button:disabled {
+  color: var(--ink-4);
+  cursor: default;
+  opacity: 0.55;
+}
+
+.stock__switch button:disabled:hover {
+  color: var(--ink-4);
+}
+
+/* Growth sits above its bar, small enough to read as an annotation on the
+   column rather than as a second series. */
+.co__growth {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 11px;
+}
+
+.co__growth.up {
+  fill: var(--up);
+}
+
+.co__growth.down {
+  fill: var(--down);
+}
+
+.co__statement {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.co__more {
+  padding: 7px 14px;
+  font-family: var(--font-display);
+  font-size: 0.54rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  background: transparent;
+  border: 1px solid var(--rule-strong);
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.co__more:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.co__tablewrap {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.co__table {
+  min-width: 640px;
+}
+
+.co__caption {
+  padding-bottom: 12px;
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-align: left;
+}
+
+.co__caption-ccy {
+  margin-left: 10px;
+  font-size: 0.9em;
+  letter-spacing: 0;
+  color: var(--ink-4);
+}
+
+.co__table th[scope='row'] {
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-2);
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--rule);
+  border-top: 0;
+  white-space: nowrap;
+}
+
+.co__table td {
+  padding: 11px 14px;
+}
+
+/* A subtotal is ruled off above rather than emboldened — the same convention a
+   printed statement uses, and it survives a page set entirely in one weight. */
+.co__row--total th[scope='row'],
+.co__row--total td {
+  border-top: 1px solid var(--rule-strong);
+  color: var(--ink);
+}
+
+.co__row--sub th[scope='row'] {
+  padding-left: 28px;
+  color: var(--ink-3);
+}
+
+/* A capability that is switched off, said plainly in the footnote that would
+   otherwise just look like a thin dataset. */
+.co__flag {
+  font-weight: 400;
+  color: var(--down);
+}
+
+.co__provenance {
+  margin: 0;
+  font-size: 0.68rem;
+  color: var(--ink-4);
+}
+
+.co__filed-lead {
+  margin: 0;
+  max-width: 84ch;
+  font-size: 0.86rem;
+  color: var(--ink-3);
+}
+
+/* ── Detail: peers ─────────────────────────────────────────────────────────── */
+.co__peerlist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.co__peer {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 8px 13px;
+  max-width: 300px;
+  font-size: 0.8rem;
+  color: var(--ink-2);
+  background: transparent;
+  border: 1px solid var(--rule-strong);
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.co__peer:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.co__peer span:last-child {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 760px) {
+  .co__kpi--band {
+    grid-column: span 1;
+  }
+
+  .co__head {
+    align-items: flex-start;
+  }
+}
+
+/* ── Backfill request ──────────────────────────────────────────────────────── */
+.co__backfill {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+/* Something is happening elsewhere and will take minutes — the only honest
+   signal is that it is still turning. */
+.co__spin {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 9px;
+  border: 1px solid var(--rule-strong);
+  border-top-color: var(--accent, var(--gold));
+  border-radius: 50%;
+  animation: co-spin 0.9s linear infinite;
+}
+
+@keyframes co-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .co__spin {
+    animation: none;
+  }
+}
+
+.co__inline {
+  padding: 0;
+  font: inherit;
+  color: var(--accent, var(--gold));
+  background: none;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  cursor: pointer;
+}
