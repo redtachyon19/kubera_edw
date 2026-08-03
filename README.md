@@ -68,7 +68,7 @@ kubera_edw/
 │   └── config/companies.yml      #   THE COVERAGE UNIVERSE — single source of truth
 │
 ├── dbt/                          # TRANSFORM
-│   ├── models/staging/           #   6 views — cast, rename, clean. No business logic.
+│   ├── models/staging/           #   7 views — cast, rename, clean. No business logic.
 │   ├── models/intermediate/      #   3 views — the hard logic (concept pivot, FX fill, USD normalize)
 │   ├── models/marts/             #   8 tables — 4 conformed dimensions + 4 facts
 │   ├── snapshots/                #   company_snapshot — SCD2 history of the universe
@@ -86,6 +86,7 @@ kubera_edw/
 │   ├── dashboards.json           # single source of truth — nav, proxy, processes, palette
 │   ├── sectors.json              # editorial sector definitions behind the Sectors page
 │   ├── companies.json            # the browsable universe — generated, not hand-edited
+│   ├── countries.json            # every country + capital coordinates, behind the globe
 │   ├── registry.py               # reads dashboards.json (Python side)
 │   ├── run_local.py              # starts every dashboard service + the market API
 │   ├── market_api.py             # stdlib JSON endpoint behind the hub's native pages
@@ -95,6 +96,8 @@ kubera_edw/
 │   │   ├── warehouse.py          #   the same marts without Streamlit, for the market API
 │   │   ├── filings.py            #   long-run quarterly figures, read live from SEC EDGAR
 │   │   ├── market_data.py        #   live prices/search/financials (Yahoo) — no key
+│   │   ├── world.py              #   governments, currencies, gold, energy, news
+│   │   ├── trade.py              #   bilateral trade (WITS) + trade composition
 │   │   ├── theme.py              #   palette + Altair theme, both stocks
 │   │   └── ui.py                 #   page chrome, empty states, chart helpers
 │   ├── hub/                      # the website — Vite + React + TypeScript
@@ -105,9 +108,11 @@ kubera_edw/
 │   ├── pipeline.sh               # extract -> seeds -> load -> dbt build
 │   ├── verify.sh                 # environment health check
 │   ├── verify_universe.py        # re-validates every company against SEC EDGAR
+│   ├── generate_country_reference.py  # rebuilds dashboard_hub/countries.json
+│   ├── generate_land_outline.py  # rebuilds the globe's coastlines (Natural Earth)
 │   └── generate_screenshots.py   # renders dashboard charts to docs/screenshots/
 │
-├── tests/                        # 115 pytest tests (mocked HTTP via respx)
+├── tests/                        # 165 pytest tests (mocked HTTP via respx)
 ├── docs/                         # screenshots
 ├── data/                         # kubera_edw.duckdb + data/raw/ landing zone (gitignored)
 │
@@ -135,9 +140,11 @@ genuinely **E → L → T**: extract to files, load to `raw.*`, transform in dbt
 | Source | Purpose | Base URL | Key | Lands as |
 |---|---|---|---|---|
 | **SEC EDGAR** | XBRL company facts — every financial figure | `data.sec.gov` | none¹ | `companyfacts_CIK*.json` |
-| **World Bank** | Country-year macro (GDP, inflation, unemployment) | `api.worldbank.org/v2` | none | `<indicator>_<date>.json` |
+| **World Bank** | Country-year macro (GDP, inflation, unemployment) for **every country**, plus the country reference | `api.worldbank.org/v2` | none | `<indicator>_<date>.json`, `countries_<date>.json` |
 | **IMF DataMapper** | Independent cross-check on World Bank | `imf.org/external/datamapper/api/v1` | none | `<indicator>_<code>.json` |
 | **Frankfurter** | Daily FX rates, base USD | `api.frankfurter.dev/v1` | none | `timeseries_USD_*.json` |
+| **World Bank WITS** | Bilateral trade — who trades with whom, both directions | `wits.worldbank.org/API/V1` | none | read live by the hub, disk-cached |
+| **Google News RSS** | Per-country economy and market headlines | `news.google.com/rss` | none | read live by the hub, cached 30 min |
 | **Alpha Vantage** | Daily equity prices + gold proxy | `alphavantage.co` | `ALPHA_VANTAGE_API_KEY` | `av_<TICKER>.json` |
 | **FRED** | Gold benchmark (see note) | `api.stlouisfed.org/fred` | `FRED_API_KEY` | `gold_lbma_fixing.json` |
 
@@ -165,6 +172,24 @@ is the default. `PRICES_BACKEND` switches it if Stooq ever un-gates.
 - **Freshness cache** — a source already landed recently is skipped, so re-runs don't
   re-consume a daily quota
 - **Landing** — `_land(name, payload)` writes to `data/raw/<source_name>/<name>.<ext>`
+
+### Surviving a source that half-answers
+
+A feed that is simply down is easy — the retry handles it. The failures that cost real data are
+the ones that return HTTP 200 and less than you asked for, and the World Bank does all of them.
+What the client does about each:
+
+| Failure | What it looks like | Handling |
+|---|---|---|
+| Whole-world pull times out | `ReadTimeout` on a 16-year, 265-entity request | Paged at 1,000 rows with a 90s timeout; a page that fails after retries ends the walk and **keeps** what it collected rather than discarding the indicator |
+| One indicator retired or renamed | Exception mid-loop | Caught per indicator — the other three still land; the run only fails if *nothing* landed |
+| An entity is not a country | `countryiso3code: ""` on aggregates (world, income bands, regions) | Kept in the landed payload for audit, dropped in staging — the blank passes a `not_null` test, so the filter is explicit |
+| Indicator rejects a query shape | `NY.GDP.MKTP.KD.ZG` answers a flat **400** to `mrnev=1` | The live reader retries a different shape — a short date window — instead of retrying the rejected one, and reduces to the newest year per country |
+| A country has no series | Silent absence from the response | Recorded as `empty_countries` in the landed envelope and logged, so a gap is a fact about the source rather than a mystery |
+| Taiwan | Not a World Bank member; asking by code errors the whole request | Dropped from the request, added back by hand in the country reference |
+
+The same posture applies at read time: the desk that consumes this treats a warehouse covering
+13 countries as *no answer* rather than a small one, and goes to the source.
 
 ### Adding a new source
 
@@ -245,7 +270,7 @@ raw.*            loaded by Python, never written by dbt
 |---|---|---|
 | `dim_company` | one row per company **version** | SCD2 — `is_current` flags the live row |
 | `dim_date` | one row per calendar day | 2000-01-01 → 2031-01-01. **Calendar attributes only.** |
-| `dim_country` | one row per country | joined to region/sub-region reference |
+| `dim_country` | one row per country | **every country the World Bank publishes**, not only those holding an issuer; carries capital-city coordinates and `has_issuer` |
 | `dim_currency` | one row per currency | ISO code, name, minor-unit digits |
 
 **Facts:**
@@ -263,6 +288,14 @@ be wrong for most companies. Fiscal period travels on the fact instead.
 
 `fact_gold_price` joins only on `dim_date` by design — it is a single global series, a
 cross-cutting benchmark rather than a per-holding measure.
+
+**`dim_country` covers the world, not the portfolio.** It used to be built from the distinct
+country codes in `seed_companies`, which meant `fact_macro_indicators` held 13 countries and
+208 rows — enough to annotate a holding, not enough to answer *how does this government compare
+to its peers*, which is the only reason to carry macro data at all. It is now the union of the
+countries with an issuer and the countries the World Bank publishes: **211 countries, 3,376
+macro rows**. `has_issuer` narrows it back to the portfolio for anything that wants the old
+view, and the country_regions seed still wins on region naming where it has an opinion.
 
 ### Seeds
 
@@ -395,10 +428,12 @@ Navigation is two levels — the top bar holds **sections**, and each section ho
 
 | Desk | Metal | Dashboards |
 |---|---|---|
-| **Portfolio** | gold | Portfolio Allocation · Risk & Concentration · ESG Exposure |
-| **Companies** | bronze | Company Explorer (native) · Fundamentals · FX Impact |
-| **Markets** | silver | Stock Explorer (native) · Sectors (native) · Macro Overlay |
-| **Warehouse** | steel | Data Quality · Pipeline Health |
+| **Markets** | gold | Stock Explorer (native) · Sectors (native) · World (native) · Macro Overlay |
+
+The **World** desk carries four lenses — Governments, Trade, Sectors and Energy — described below.
+| **Companies** | silver | Company Explorer (native) · Fundamentals · FX Impact |
+| **Portfolio** | bronze | Portfolio Allocation · Risk & Concentration · ESG Exposure |
+| **Warehouse** | silver | Data Quality · Pipeline Health |
 
 Two of those desks are **workspaces** rather than indexes. A report desk holds sheets you
 open, read and leave, so a list is right for it. Companies and Markets are live and stateful —
@@ -419,8 +454,8 @@ localhost:5173  hub (Vite)
 
 `/d/*` is reserved for the proxy, so the hub's own routes live under `/s/*` and the two never
 collide. A dashboard marked `"kind": "native"` is a React page the hub renders itself rather
-than a service it embeds — **Stock Explorer**, **Sectors** and **Company Explorer** are the
-three. They read `/api/market/*`, served by
+than a service it embeds — **Stock Explorer**, **Sectors**, **World** and **Company Explorer**
+are the four. They read `/api/market/*`, served by
 [`market_api.py`](dashboard_hub/market_api.py) (stdlib HTTP, no web framework), because Yahoo
 rejects browser requests that lack a session cookie and crumb. Because each spoke is its own process, a dashboard can be rebuilt, restarted or
 swapped for a different framework without touching the hub or any sibling dashboard.
@@ -428,6 +463,125 @@ swapped for a different framework without touching the hub or any sibling dashbo
 The seven dashboards under **Portfolio**, **Companies** and **Markets** are built. The four
 under **Risk**, **ESG** and **Warehouse** are registry entries with no process behind them yet
 — their page says so and prints what it will take to wire them up.
+
+#### World
+
+Two lenses over one globe, on the Markets desk.
+
+**Governments** puts every country the World Bank publishes — 212 of them — on a rotatable
+globe and in one table, coloured by whichever of five metrics you pick: equity market, CPI
+inflation, GDP growth, unemployment, or the currency against the dollar. The point is the
+disagreement between them. Japan's last inflation print is 3.17% and its GDP grew 1.19%, while
+the yen lost 6.2% against the dollar and the Nikkei returned +59.7% — four numbers about one
+country that a single chart cannot hold.
+
+**Sectors** ranks the ten iShares global sector funds. Each holds names from every listed
+market rather than one, which is what makes it a world league table and not a second reading of
+the S&P; the regional funds beside it are all USD-denominated so both tables sit on one scale.
+
+The globe is an **orthographic projection drawn in SVG**, not a 3D library and not a rotated
+`<div>`. Every frame recomputes each country's position from its capital-city latitude and
+longitude, culls the hemisphere facing away (`z < 0`), and paints what is left back to front.
+That is what keeps the markers crisp, clickable and data-bearing while it turns. It spins on
+its own until you take hold of it, then stays where you leave it, and honours
+`prefers-reduced-motion`.
+
+#### The four lenses
+
+**Governments** is the globe and the comparison table — inflation, growth, unemployment, currency
+and equity market, for 212 countries. Opening a country (click the globe, or a row) replaces the
+table with its full detail: purchasing power, what it trades, who with, and its news.
+
+**Trade** answers *who buys from whom*. Pick a reporting country and the world recolours around
+it — green where that country sells more than it buys, red where it buys more — with marker size
+carrying how much trade there is at all. Bilateral flows come from **World Bank WITS**, which
+republishes UN Comtrade: one request returns a reporter's trade with all 222 partners in a year,
+both directions. WITS mixes aggregates (`WLD`, `EAS`, `NAC`) into the same ISO3 namespace as real
+countries, so `countries.json` is used as the allow-list — otherwise "the world" tops every
+ranking. Values arrive in thousands of USD.
+
+> The United States sold $2.06T and bought $3.37T in 2022 — a $422bn deficit with China, $135bn
+> with Mexico, and a $37bn surplus with the Netherlands.
+
+**Sectors** ranks the ten iShares global sector funds, plus the same window by region.
+
+**Energy** carries crude, both gas benchmarks (Henry Hub and Dutch TTF price the same molecule
+either side of the Atlantic and rarely agree), refined products, the metals, and the GSCI. The
+chart is **rebased to 100** rather than absolute: crude trades near $80 a barrel and gas near $3
+an MMBtu, so on a shared price axis the gas line lies flat and hides the fact that it is the one
+moving differently. Levels are in the table underneath, which is where a price belongs.
+
+#### Gold as the unit of account
+
+Every figure on this desk is quoted in dollars, and the dollar is not a fixed rule — it is one of
+the things being measured. A market "up 20%" against a currency that lost ground has not
+necessarily bought its holders anything.
+
+So opening a country draws its currency three ways, all rebased to 100: **in gold**, **against
+the dollar**, and **the dollar in gold** — so the benchmark is shown as a measured thing rather
+than as the ruler. Gold is used because it is the one asset with a continuous price in every
+currency going back further than any of these governments' current monetary regimes. This is not
+a claim that gold is stable; it is that gold is *independent* — no country being compared issues
+it, so it cannot flatter or punish one of them.
+
+> Over five years the yen fell 31.8% against the dollar — and 69.5% against gold, because the
+> dollar itself fell 55.3%. Two of those three numbers are invisible on a USD-denominated page.
+
+#### What a country trades
+
+Composition comes from five World Bank indicators per direction — manufactures, fuel, food, ores
+and metals, agricultural raw. Not a full commodity breakdown, but it answers the question people
+actually ask of a country: does it sell things it makes, or things it digs up?
+
+> Saudi Arabia: 79.4% fuel. Brazil: 40.7% food. Germany: 84.1% manufactures. Japan sells 80.6%
+> manufactures and buys 19.6% fuel — which is why Australia and the UAE are among its largest
+> suppliers.
+
+Ten indicators for **one** country took eleven minutes of small, slow round trips; ten indicators
+for **every** country takes about a minute and then answers instantly for all of them. Since the
+desk lets a reader click any country on a globe, that cost is paid once — in a background thread
+at API start — not per click. It caches to `data/trade_cache/` for a week.
+
+**Coastlines** come from Natural Earth's 110m land layer (public domain), thinned with
+Ramer–Douglas–Peucker from 5,143 points to 1,492 and bundled as
+[`land.json`](dashboard_hub/hub/src/components/land.json) — 22 KB. They are **stroked, not
+filled**: a filled landmass would have to be closed along the limb wherever a continent runs
+off the edge, and it would put a slab of tone on a page built out of hairlines. Where a coast
+crosses the horizon the path is cut at the exact crossing, found by bisecting on the same
+`project` the rest of the globe uses, so the clip can never disagree with the projection. Long
+segments are subdivided first, because a straight line in lon/lat is not a straight line on a
+sphere — and a segment with both ends on the near face can still pass behind the globe in
+between, which would otherwise draw a chord across the visible disc.
+
+```bash
+python -m scripts.generate_land_outline    # only to change the tolerance
+```
+
+Three feeds meet on this page and they reach different distances, so the desk says which is
+which rather than blending them:
+
+| Layer | Source | Cadence | Covers |
+|---|---|---|---|
+| Macro | Warehouse (`fact_macro_indicators`), else World Bank live | Annual, 1–2 years behind | 212 countries |
+| FX | Yahoo, live | Live | 38 currencies |
+| Equity markets | Yahoo, live | Live | 29 local benchmarks |
+| Geography | [`countries.json`](dashboard_hub/countries.json) | Static | 212 countries |
+
+**Why macro can come from two places.** `fact_macro_indicators` is the right source and the
+fast one. But a warehouse built before the ingestion went worldwide — or a deployment still on
+the previous prod schema — carries only the dozen countries that hold an issuer, and a globe
+with thirteen dots on it is not a world view. So the desk checks: fewer than 40 countries in
+the marts and it reads the World Bank live instead, caching the result to
+`data/world_macro_cache.json` so a restart does not re-pull it. The caption under the table
+names whichever answered.
+
+The geography is a bundled file rather than a warehouse query for the same reason `sectors.json`
+and `companies.json` are — the page has to draw on a clean checkout with no dbt run behind it.
+Regenerate it with:
+
+```bash
+python -m scripts.generate_country_reference
+```
 
 #### Company Explorer
 
@@ -452,6 +606,7 @@ the way through, all in [`lib/filings.py`](dashboard_hub/lib/filings.py):
 |---|---|---|
 | Periods are unlabelled | `frame` is sparse — NVIDIA has 12 framed quarters against 66 real ones — and revenue tags change over a filer's life | Classify by how long the period actually ran |
 | No fourth quarter | A 10-K filer publishes three 10-Qs and an annual report | Derive it: the year less the three |
+| Banks have no top line | JPMorgan tags `Revenues` only to 2014; a bank earns interest and fees, not sales | Compose it: net interest income + noninterest income, filling gaps only |
 | Two currencies | Toyota carries 27 years of revenue in JPY **and** 4 years of the same line in USD | Pick the currency the most recent filings use, once for the whole series |
 | Lines tagged apart | Revenue and net income often carry start dates a day apart | Join them on the period end |
 

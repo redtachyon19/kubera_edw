@@ -1,0 +1,566 @@
+.world {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.world__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+/* Lens and metric switches share the house segmented-control shape; the lens is
+   the louder of the two because it changes what the page is about. */
+.world__lens,
+.world__metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  border: 1px solid var(--rule-strong);
+}
+
+.world__lens button,
+.world__metrics button {
+  padding: 0.36rem 0.9rem;
+  border: none;
+  border-right: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-3);
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.world__lens button:last-child,
+.world__metrics button:last-child {
+  border-right: none;
+}
+
+.world__lens button:hover,
+.world__metrics button:hover {
+  color: var(--ink);
+  background: var(--surface-sunk);
+}
+
+.world__lens button.is-on,
+.world__metrics button.is-on {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.world__metrics {
+  align-self: flex-start;
+}
+
+/* ── Stage: globe beside the pinned country ──────────────────────────────── */
+
+/* The globe is the page, not an illustration beside it. The detail card is
+   sized to what it holds — six lines and a heading — and the globe takes
+   everything else. */
+.world__stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(17rem, 22rem);
+  gap: 2rem;
+  align-items: start;
+}
+
+.world__globe {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.world__legend {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  color: var(--ink-3);
+}
+
+.world__swatch {
+  width: 1.6rem;
+  height: 0.42rem;
+  display: inline-block;
+}
+
+.world__swatch.is-up {
+  background: var(--up);
+}
+
+.world__swatch.is-mid {
+  background: var(--ink-4);
+}
+
+.world__swatch.is-down {
+  background: var(--down);
+}
+
+.world__card {
+  border: 1px solid var(--rule-strong);
+  padding: 1rem 1.1rem;
+  background: var(--surface);
+  min-height: 16rem;
+}
+
+.world__card-idle {
+  margin: 0;
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 0.86rem;
+  color: var(--ink-3);
+}
+
+.world__card-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.world__card-meta {
+  margin: 0.2rem 0 0.9rem;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--ink-3);
+}
+
+.world__card-lines {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.world__card-lines > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.34rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.world__card-lines > div:last-child {
+  border-bottom: none;
+}
+
+.world__card-lines dt {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--ink-3);
+}
+
+.world__card-lines dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.world__card-held {
+  margin: 0.8rem 0 0;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--gold);
+}
+
+/* ── Country table ───────────────────────────────────────────────────────── */
+
+.world__tablewrap {
+  overflow-x: auto;
+  max-height: 30rem;
+  overflow-y: auto;
+  border: 1px solid var(--rule);
+}
+
+.world__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.world__caption {
+  caption-side: bottom;
+  padding: 0.6rem 0.4rem 0;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  font-style: italic;
+  color: var(--ink-4);
+}
+
+.world__table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule-strong);
+  padding: 0.45rem 0.6rem;
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.world__table thead th button {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.world__table thead th.is-sorted {
+  color: var(--ink);
+}
+
+.world__table thead th.is-sorted button::after {
+  content: ' ▾';
+}
+
+.world__table thead th.is-sorted.is-reversed button::after {
+  content: ' ▴';
+}
+
+.world__table tbody tr {
+  cursor: pointer;
+  border-bottom: 1px solid var(--rule);
+}
+
+.world__table tbody tr:hover {
+  background: var(--surface-sunk);
+}
+
+.world__table tbody tr.is-pinned {
+  background: color-mix(in oklab, var(--gold) 12%, var(--surface));
+}
+
+.world__table td,
+.world__table tbody th {
+  padding: 0.36rem 0.6rem;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.world__table tbody th {
+  text-align: left;
+  font-family: var(--font-body);
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.world__table .is-numeric {
+  text-align: right;
+}
+
+.world__table .up {
+  color: var(--up);
+}
+
+.world__table .down {
+  color: var(--down);
+}
+
+.world__ccy {
+  color: var(--ink-4);
+  margin-right: 0.4rem;
+  font-size: 0.72rem;
+}
+
+.world__bench {
+  font-family: var(--font-body);
+  color: var(--ink-3);
+}
+
+.world__held {
+  color: var(--gold);
+  font-size: 0.6rem;
+  margin-left: 0.35rem;
+  vertical-align: middle;
+}
+
+/* ── Sector lens ─────────────────────────────────────────────────────────── */
+
+.world__sectors {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+  gap: 2rem;
+}
+
+.world__ranking-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 0.86rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.world__ranking-note {
+  margin: 0.3rem 0 1rem;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--ink-3);
+  max-width: 34rem;
+}
+
+.world__bars {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.world__bars li {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr) 4.2rem 3rem;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.world__bar-name {
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  color: var(--ink);
+}
+
+/* The centre line is the zero axis — bars grow out from it in both directions,
+   which is the only way a table holding gains and losses can be read at a
+   glance without the reader checking every sign. */
+.world__bar-track {
+  position: relative;
+  height: 0.7rem;
+  background: var(--surface-sunk);
+  border-left: 1px solid var(--rule-strong);
+  border-right: 1px solid var(--rule-strong);
+}
+
+.world__bar-track::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -0.15rem;
+  bottom: -0.15rem;
+  width: 1px;
+  background: var(--rule-strong);
+}
+
+.world__bar-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.world__bars li.up .world__bar-fill {
+  background: var(--up);
+}
+
+.world__bars li.down .world__bar-fill {
+  background: var(--down);
+}
+
+.world__bar-value {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.world__bars li.up .world__bar-value {
+  color: var(--up);
+}
+
+.world__bars li.down .world__bar-value {
+  color: var(--down);
+}
+
+.world__bar-symbol {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ink-4);
+}
+
+/* ── States ──────────────────────────────────────────────────────────────── */
+
+.world__loading,
+.world__error {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  font-style: italic;
+  color: var(--ink-3);
+}
+
+.world__error {
+  color: var(--down);
+}
+
+@media (max-width: 1000px) {
+  .world__stage {
+    grid-template-columns: 1fr;
+  }
+
+  .world__bars li {
+    grid-template-columns: 8rem minmax(0, 1fr) 4rem;
+  }
+
+  .world__bar-symbol {
+    display: none;
+  }
+}
+
+/* ── Trade lens ──────────────────────────────────────────────────────────── */
+
+.world__trade,
+.world__energy {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.world__tradebar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1.2rem;
+}
+
+.world__tradesum {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 62rem;
+}
+
+/* On the trade lens the list beside the globe is the readout, so it gets more
+   room than the governments card did — twelve counterparties with two bars each. */
+.world__tradelist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.world__tradelist .cpanel__partners li {
+  cursor: pointer;
+}
+
+.world__tradelist .cpanel__partners li:hover {
+  background: var(--surface-sunk);
+}
+
+.world__tradelist .cpanel__partners li.is-pinned {
+  background: color-mix(in oklab, var(--gold) 14%, transparent);
+}
+
+.world__tradepin {
+  margin: 0.4rem 0 0;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+/* ── Country hint ────────────────────────────────────────────────────────── */
+
+.world__hint {
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  font-style: italic;
+  color: var(--ink-3);
+}
+
+/* ── Energy prices ───────────────────────────────────────────────────────── */
+
+.world__prices {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.world__prices li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 7rem 6rem 5rem;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.world__prices li:last-child {
+  border-bottom: none;
+}
+
+.world__pricename {
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  color: var(--ink);
+}
+
+.world__priceunit {
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.world__pricelast,
+.world__pricechg {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.world__pricechg.up {
+  color: var(--up);
+}
+
+.world__pricechg.down {
+  color: var(--down);
+}
+
+@media (max-width: 760px) {
+  .world__prices li {
+    grid-template-columns: minmax(0, 1fr) 5rem 4.5rem;
+  }
+
+  .world__priceunit {
+    display: none;
+  }
+}

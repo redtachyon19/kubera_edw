@@ -19,6 +19,11 @@ to Yahoo directly.
     GET /api/market/revenue?symbol=AAPL
     GET /api/market/news?slug=ai
     GET /api/market/news?symbol=AAPL
+    GET /api/market/world?period=1Y
+    GET /api/market/world-sectors?period=1Y
+    GET /api/market/world-energy?period=1Y
+    GET /api/market/world-country?iso3=JPN&period=5Y
+    GET /api/market/world-trade?iso3=JPN
 """
 
 from __future__ import annotations
@@ -46,7 +51,7 @@ try:
 except ImportError:  # pragma: no cover — python-dotenv ships with the project
     pass
 
-from dashboard_hub.lib import filings, market_data  # noqa: E402
+from dashboard_hub.lib import filings, market_data, trade, world  # noqa: E402
 
 PORT = 8600
 
@@ -99,6 +104,43 @@ class Handler(BaseHTTPRequestHandler):
             if parsed.path == "/api/market/companies":
                 period = (params.get("period") or ["1Y"])[0]
                 self._send({"companies": market_data.companies_overview(period)})
+                return
+
+            if parsed.path == "/api/market/world":
+                period = (params.get("period") or ["1Y"])[0]
+                self._send(world.snapshot(period))
+                return
+
+            if parsed.path == "/api/market/world-sectors":
+                period = (params.get("period") or ["1Y"])[0]
+                self._send(world.sectors(period))
+                return
+
+            if parsed.path == "/api/market/world-energy":
+                period = (params.get("period") or ["1Y"])[0]
+                self._send(world.energy(period))
+                return
+
+            if parsed.path == "/api/market/world-country":
+                iso3 = (params.get("iso3") or [""])[0]
+                if len(iso3) != 3:
+                    self._send({"error": "a three-letter country code is required"}, status=400)
+                    return
+                period = (params.get("period") or ["5Y"])[0]
+                self._send(world.country(iso3, period))
+                return
+
+            if parsed.path == "/api/market/world-trade":
+                iso3 = (params.get("iso3") or [""])[0]
+                if len(iso3) != 3:
+                    self._send({"error": "a three-letter country code is required"}, status=400)
+                    return
+                self._send(
+                    {
+                        **trade.partners(iso3),
+                        "composition": trade.composition(iso3),
+                    }
+                )
                 return
 
             if parsed.path == "/api/market/revenue":
@@ -223,6 +265,16 @@ def _backfill_worker() -> None:
         time.sleep(WORKER_INTERVAL)
 
 
+def _warm_trade() -> None:
+    """Fill the trade-composition cache in the background, quietly."""
+    try:
+        countries = len(trade.composition_world())
+        if countries:
+            print(f"[market-api] trade composition ready — {countries} countries")
+    except Exception as exc:  # noqa: BLE001 — a cold cache is a slow panel, not a failure
+        print(f"[market-api] trade composition warm-up failed: {exc!r}", file=sys.stderr)
+
+
 def serve(port: int = PORT) -> None:
     server = ThreadingHTTPServer(("localhost", port), Handler)
     print(f"[market-api] listening on http://localhost:{port}")
@@ -230,6 +282,11 @@ def serve(port: int = PORT) -> None:
     if os.environ.get("KUBERA_BACKFILL_WORKER", "1") != "0":
         threading.Thread(target=_backfill_worker, daemon=True, name="backfill").start()
         print("[market-api] backfill worker running — queued companies build here")
+
+    # The world's trade composition is ten World Bank walks — about a minute,
+    # once a week. Doing it here means the first reader to open a country gets it
+    # from the cache instead of waiting for it.
+    threading.Thread(target=_warm_trade, daemon=True, name="trade-warm").start()
     # Say which sources are actually available, because the difference between
     # them is twenty years of history and it is otherwise invisible.
     if filings.available():

@@ -58,6 +58,10 @@ CONCEPTS: dict[str, tuple[tuple[str, str], ...]] = {
         ("us-gaap", "GrossProfit"),
         ("ifrs-full", "GrossProfit"),
     ),
+    # A bank's two halves. Neither is revenue on its own; added together they are
+    # what a bank calls total net revenue. See `_bank_revenue`.
+    "netInterestIncome": (("us-gaap", "InterestIncomeExpenseNet"),),
+    "noninterestIncome": (("us-gaap", "NoninterestIncome"),),
 }
 
 # A "quarter" and a "year" as reported: filers close on a 13-week or 52/53-week
@@ -292,6 +296,36 @@ def _with_fourth_quarters(
     return filled, derived
 
 
+def _bank_revenue(facts: dict, unit: str | None) -> tuple[dict[tuple, float], dict[tuple, float]]:
+    """Total net revenue for a bank, which no single tag carries.
+
+    A bank does not sell anything, so it has no top line in the ordinary sense.
+    It earns interest on what it lends, pays interest on what it holds, and
+    charges fees; what it calls revenue is those netted and added:
+
+        net interest income + noninterest income
+
+    JPMorgan tags that sum as `Revenues` only up to 2014 and then stops, which
+    is why its chart used to die there. Taking either half alone would be worse
+    than the gap — net interest income is about half the total, so the line
+    would halve overnight in 2015 and look like a collapse.
+
+    Verified against the periods where JPMorgan does tag `Revenues`: the sum
+    matches its own figure exactly.
+
+    Returns:
+        `(quarters, years)` keyed by `(start, end)`, holding only periods where
+        both halves are published. A company that is not a bank has neither and
+        gets nothing back.
+    """
+    interest_q, interest_y, _ = _collect(facts, "netInterestIncome", unit=unit)
+    fees_q, fees_y, _ = _collect(facts, "noninterestIncome", unit=unit)
+    return (
+        {key: interest_q[key] + fees_q[key] for key in interest_q.keys() & fees_q.keys()},
+        {key: interest_y[key] + fees_y[key] for key in interest_y.keys() & fees_y.keys()},
+    )
+
+
 def _spaced(keys: list[tuple], minimum: int) -> list[tuple]:
     """Periods of one cadence, oldest first, without overlaps.
 
@@ -379,7 +413,19 @@ def series(ticker: str, cik: str | None = None) -> dict:
             return {**blank, "cik": resolved, "answered": False}
 
         revenue_q, revenue_y, currency = _collect(facts, "revenue")
-        # Both lines share an axis, so both are held to the revenue currency.
+        # A bank may never tag a revenue line at all, so the currency has to come
+        # from the halves instead.
+        currency = currency or _reporting_unit(facts, "netInterestIncome")
+
+        # Gaps only. A bank that does tag its own total — Bank of America does —
+        # keeps that figure, so two definitions never land on one line.
+        bank_q, bank_y = _bank_revenue(facts, currency or None)
+        for key, value in bank_q.items():
+            revenue_q.setdefault(key, value)
+        for key, value in bank_y.items():
+            revenue_y.setdefault(key, value)
+
+        # Every line shares an axis, so all are held to the revenue currency.
         income_q, income_y, _ = _collect(facts, "netIncome", unit=currency or None)
         gross_q, gross_y, _ = _collect(facts, "grossProfit", unit=currency or None)
         revenue_q, derived = _with_fourth_quarters(revenue_q, revenue_y)

@@ -22,6 +22,12 @@ data/raw/*
 
 # Backfill request queue — runtime state, rebuilt as companies are asked for
 data/backfill_queue.json
+
+# World Bank macro read live by the world desk — a cache, re-fetchable in a minute
+data/world_macro_cache.json
+
+# WITS bilateral trade and World Bank trade composition — same story, weekly TTL
+data/trade_cache/
 *.duckdb
 *.duckdb.wal
 

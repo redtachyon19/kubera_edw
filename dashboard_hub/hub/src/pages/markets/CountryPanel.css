@@ -1,0 +1,314 @@
+.cpanel {
+  border: 1px solid var(--rule-strong);
+  background: var(--surface);
+  padding: 1.1rem 1.2rem 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.cpanel__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.cpanel__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.cpanel__meta {
+  margin: 0.2rem 0 0;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--ink-3);
+}
+
+.cpanel__close {
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-3);
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 0.1rem 0.45rem 0.22rem;
+  cursor: pointer;
+}
+
+.cpanel__close:hover {
+  color: var(--ink);
+  border-color: var(--rule-strong);
+}
+
+/* ── Headline strip ──────────────────────────────────────────────────────── */
+
+.cpanel__strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 0.9rem;
+  margin: 0;
+}
+
+.cpanel__strip dt {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.cpanel__strip dd {
+  margin: 0.2rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+/* ── Blocks ──────────────────────────────────────────────────────────────── */
+
+.cpanel__block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cpanel__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--ink);
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.cpanel__note,
+.cpanel__verdict {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+
+.cpanel__verdict {
+  color: var(--ink-2);
+  padding-top: 0.2rem;
+}
+
+.cpanel__verdict strong {
+  font-family: var(--font-mono);
+  font-weight: 400;
+}
+
+.up {
+  color: var(--up);
+}
+
+.down {
+  color: var(--down);
+}
+
+/* ── Trade mix ───────────────────────────────────────────────────────────── */
+
+.cpanel__mix {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 1.4rem;
+}
+
+.cpanel__mixside h5 {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.cpanel__mixside ul,
+.cpanel__partners,
+.cpanel__news {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cpanel__mixside li {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr) 3rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.22rem 0;
+}
+
+.cpanel__mixlabel {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--ink-2);
+}
+
+.cpanel__mixbar,
+.cpanel__pbar {
+  position: relative;
+  height: 0.55rem;
+  background: var(--surface-sunk);
+  border-left: 1px solid var(--rule-strong);
+}
+
+.cpanel__mixfill {
+  display: block;
+  height: 100%;
+}
+
+/* Sells and buys are the same two colours everywhere on this panel — the mix
+   above and the partner list below read as one statement, not two charts. */
+.cpanel__mixfill.is-exports,
+.cpanel__pfill.is-exports {
+  background: var(--ink);
+}
+
+.cpanel__mixfill.is-imports,
+.cpanel__pfill.is-imports {
+  background: var(--gold);
+}
+
+.cpanel__mixvalue,
+.cpanel__pbal {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+}
+
+.cpanel__none {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-style: italic;
+  color: var(--ink-4);
+  display: block !important;
+}
+
+/* ── Partners ────────────────────────────────────────────────────────────── */
+
+.cpanel__partners li {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr) 5rem;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.cpanel__partners li:last-child {
+  border-bottom: none;
+}
+
+/* Two stacked bars per partner rather than one — the question is not how big the
+   relationship is but which way it runs. */
+.cpanel__pbar {
+  height: auto;
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cpanel__pfill {
+  display: block;
+  height: 0.42rem;
+  min-width: 1px;
+}
+
+.cpanel__pname {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cpanel__key {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.1rem 0 0;
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  color: var(--ink-4);
+}
+
+.cpanel__swatch {
+  width: 1rem;
+  height: 0.4rem;
+  display: inline-block;
+}
+
+.cpanel__swatch.is-exports {
+  background: var(--ink);
+}
+
+.cpanel__swatch.is-imports {
+  background: var(--gold);
+  margin-left: 0.7rem;
+}
+
+/* ── News ────────────────────────────────────────────────────────────────── */
+
+.cpanel__news li {
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.cpanel__news li:last-child {
+  border-bottom: none;
+}
+
+.cpanel__news a {
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  line-height: 1.4;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.cpanel__news a:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.cpanel__source {
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.cpanel__loading,
+.cpanel__error {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  font-style: italic;
+  color: var(--ink-3);
+}
+
+.cpanel__error {
+  color: var(--down);
+}

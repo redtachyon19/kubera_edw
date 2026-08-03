@@ -177,6 +177,54 @@ def test_tags_are_merged_across_a_filers_history() -> None:
     assert sorted(quarters.values()) == [5, 10]
 
 
+def test_a_banks_revenue_is_composed_from_its_two_halves() -> None:
+    """A bank has no top line; what it calls revenue is two tags added."""
+    facts = {
+        "us-gaap": {
+            "InterestIncomeExpenseNet": {
+                "units": {
+                    "USD": [{"start": "2024-01-01", "end": "2024-03-31", "val": 25, "filed": "x"}]
+                }
+            },
+            "NoninterestIncome": {
+                "units": {
+                    "USD": [{"start": "2024-01-01", "end": "2024-03-31", "val": 24, "filed": "x"}]
+                }
+            },
+        }
+    }
+    quarters, _ = filings._bank_revenue(facts, "USD")
+    assert quarters == {("2024-01-01", "2024-03-31"): 49}
+
+
+def test_only_one_half_of_a_bank_is_not_revenue() -> None:
+    """Net interest income alone is about half the total — worse than a gap."""
+    facts = {
+        "us-gaap": {
+            "InterestIncomeExpenseNet": {
+                "units": {
+                    "USD": [{"start": "2024-01-01", "end": "2024-03-31", "val": 25, "filed": "x"}]
+                }
+            }
+        }
+    }
+    assert filings._bank_revenue(facts, "USD") == ({}, {})
+
+
+def test_a_filer_that_tags_its_own_total_keeps_it() -> None:
+    """Bank of America publishes `Revenues`; the composite must not overwrite it.
+
+    Mixing a filer's own definition with a computed one across periods would put
+    a step in the line that no filing accounts for.
+    """
+    revenue = {("2024-01-01", "2024-03-31"): 31.0}
+    composite = {("2024-01-01", "2024-03-31"): 30.5, ("2024-04-01", "2024-06-30"): 32.0}
+    for key, value in composite.items():
+        revenue.setdefault(key, value)
+    assert revenue[("2024-01-01", "2024-03-31")] == 31.0, "the filer's own figure wins"
+    assert revenue[("2024-04-01", "2024-06-30")] == 32.0, "the gap is filled"
+
+
 def test_the_unfiled_fourth_quarter_is_derived_from_the_year() -> None:
     """Three 10-Qs and a 10-K is the whole year; the fourth quarter is the remainder."""
     quarters = {

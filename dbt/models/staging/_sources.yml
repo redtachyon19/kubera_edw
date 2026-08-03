@@ -11,6 +11,10 @@ sources:
           taxonomy/concept per unit per reported period. Both us-gaap and ifrs-full appear.
       - name: world_bank_macro
         description: Country-year macro indicators, carrying loaded_at for revision auditing.
+      - name: world_bank_countries
+        description: >
+          Country reference — name, region, income band, capital city and its coordinates.
+          One row per country, deduplicated to the most recent landing.
       - name: fx_rates
         description: Daily FX rates unpivoted to (rate_date, currency, rate_per_base), base USD.
       - name: gold_prices

@@ -52,6 +52,20 @@
           "planned": []
         },
         {
+          "id": "world",
+          "title": "World",
+          "module": "world",
+          "status": "stub",
+          "kind": "native",
+          "blurb": "Every government on one globe — inflation, growth and unemployment against what each currency and stock market is actually doing — and the sectors leading across all of them.",
+          "source": "World Bank macro via the warehouse, FX and indices live from Yahoo — rendered natively by the hub",
+          "marts": [
+            "fact_macro_indicators",
+            "dim_country"
+          ],
+          "planned": []
+        },
+        {
           "id": "macro-overlay",
           "title": "Macro Overlay",
           "module": "macro_overlay",

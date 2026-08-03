@@ -24,6 +24,22 @@ models:
       - name: calendar_year
         tests: [not_null]
 
+  - name: stg_world_bank__countries
+    description: >
+      The World Bank country reference — one row per member country, carrying its region,
+      income band and capital-city coordinates. Aggregates (the world, income bands, regional
+      groupings) are dropped at ingestion; only entities with a real region and a published
+      latitude/longitude survive.
+    columns:
+      - name: country_iso3
+        tests: [not_null, unique]
+      - name: country_name
+        tests: [not_null]
+      - name: capital_latitude
+        tests: [not_null]
+      - name: capital_longitude
+        tests: [not_null]
+
   - name: stg_fx__rates
     description: Daily USD-base FX rates.
     tests:

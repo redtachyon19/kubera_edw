@@ -41,7 +41,16 @@ models:
       - name: iso3_code
         tests: [not_null, unique]
       - name: region
-        description: Sourced from the country_regions seed; null would mean an unseeded country.
+        description: >
+          The country_regions seed where it has an opinion, otherwise the World Bank region
+          folded onto the same house vocabulary. Null would mean a country reached the
+          dimension from neither source.
+        tests: [not_null]
+      - name: has_issuer
+        description: >
+          True for the countries that hold a company in seed_companies. The dimension covers
+          every country the macro feed publishes, so this is what narrows it back to the
+          portfolio when a model wants only those.
         tests: [not_null]
 
   - name: dim_date

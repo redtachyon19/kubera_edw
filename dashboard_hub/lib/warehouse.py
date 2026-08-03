@@ -141,6 +141,46 @@ def holdings() -> dict[str, dict]:
     return {str(row["ticker"]): row for row in rows}
 
 
+def countries() -> list[dict]:
+    """Every country the warehouse knows, with the coordinates the globe draws at.
+
+    Covers the world rather than the portfolio: `dim_country` is built from the
+    World Bank's member list, and `has_issuer` marks the handful Kubera holds a
+    company in.
+    """
+    return _rows(
+        """
+        select iso3_code, country_name, region, income_level, capital_city,
+               capital_latitude, capital_longitude, has_issuer
+        from marts.dim_country
+        where capital_latitude is not null and capital_longitude is not null
+        order by country_name
+        """
+    )
+
+
+def macro(years: int = 6) -> list[dict]:
+    """Recent macro observations per country, oldest first.
+
+    A window rather than a single latest row: inflation only means something
+    against where it was, and the desk draws a sparkline from these.
+    """
+    marker = ":0" if _postgres() else "?"
+    return _rows(
+        f"""
+        select country_iso3, calendar_year, region, domestic_currency,
+               gdp, gdp_growth_pct, cpi_inflation_pct, unemployment_pct,
+               fx_rate_to_usd, imf_cpi_inflation_pct, imf_gdp_growth_pct
+        from marts.fact_macro_indicators
+        where calendar_year >= (
+            select max(calendar_year) - {marker} from marts.fact_macro_indicators
+        )
+        order by country_iso3, calendar_year
+        """,
+        [years],
+    )
+
+
 def quarterly(ticker: str) -> list[dict]:
     """Filed quarterly revenue and result for one holding, oldest first.
 

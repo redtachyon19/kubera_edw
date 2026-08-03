@@ -1,0 +1,105 @@
+.tchart {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.tchart__svg {
+  width: 100%;
+  display: block;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.tchart__grid {
+  stroke: var(--rule);
+  stroke-width: 0.7;
+}
+
+/* The rebase line — 100 on an indexed series, zero on a change. Everything above
+   it gained and everything below it lost, which is the whole reading. */
+.tchart__baseline {
+  stroke: var(--rule-strong);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+}
+
+.tchart__line {
+  fill: none;
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.tchart__cursor {
+  stroke: var(--ink-4);
+  stroke-width: 0.8;
+}
+
+.tchart__dot {
+  stroke: var(--paper);
+  stroke-width: 1.2;
+}
+
+.tchart__ylabel,
+.tchart__xlabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--ink-4);
+}
+
+.tchart__ylabel {
+  text-anchor: end;
+}
+
+.tchart__xlabel {
+  text-anchor: middle;
+}
+
+.tchart__legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 1.1rem;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--ink-3);
+}
+
+.tchart__key {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.tchart__swatch {
+  width: 0.85rem;
+  height: 2px;
+  display: inline-block;
+  transform: translateY(-0.2em);
+}
+
+.tchart__reading {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  /* Reserved so the legend does not reflow as the cursor moves across. */
+  min-width: 3.6rem;
+}
+
+.tchart__when {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-4);
+}
+
+.tchart__empty {
+  margin: 0;
+  padding: 1.5rem 0;
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 0.84rem;
+  color: var(--ink-3);
+}

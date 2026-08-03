@@ -6,6 +6,7 @@ import type { Dashboard, Section } from '../../config/dashboards';
 import StockExplorer from '../stock/StockExplorer';
 import WorkspaceShell from '../WorkspaceShell';
 import Sectors from './Sectors';
+import World from './World';
 
 /**
  * The Markets desk: search, sweep, anchor, compare.
@@ -28,6 +29,7 @@ export default function MarketsWorkspace({ section }: { section: Section }) {
     }
 
     if (dashboard.id === 'sectors') return <Sectors onCompare={chart} />;
+    if (dashboard.id === 'world') return <World />;
     if (isNative(dashboard)) {
       return <StockExplorer symbols={basket} onSymbolsChange={setBasket} />;
     }

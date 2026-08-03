@@ -78,6 +78,10 @@ def parse_world_bank() -> pd.DataFrame:
     rows: list[dict[str, Any]] = []
     for path in sorted((raw_root() / "world_bank").glob("*.json")):
         env = json.loads(path.read_text())
+        # The country reference lands in the same folder but is not an indicator
+        # series; `parse_world_bank_countries` handles it.
+        if "indicator" not in env:
+            continue
         for r in env.get("data", []) or []:
             rows.append(
                 {
@@ -92,6 +96,50 @@ def parse_world_bank() -> pd.DataFrame:
                 }
             )
     return pd.DataFrame(rows)
+
+
+_COUNTRY_COLUMNS = [
+    "country_iso3",
+    "country_iso2",
+    "country_name",
+    "wb_region",
+    "income_level",
+    "capital_city",
+    "latitude",
+    "longitude",
+    "loaded_at",
+    "source_file",
+]
+
+
+def parse_world_bank_countries() -> pd.DataFrame:
+    """The country reference — one row per country, latest landing wins."""
+    rows: list[dict[str, Any]] = []
+    for path in sorted((raw_root() / "world_bank").glob("countries_*.json")):
+        env = json.loads(path.read_text())
+        for r in env.get("data", []) or []:
+            rows.append(
+                {
+                    "country_iso3": r.get("id"),
+                    "country_iso2": r.get("iso2Code"),
+                    "country_name": r.get("name"),
+                    # Trailing spaces are in the upstream values, not a typo here.
+                    "wb_region": ((r.get("region") or {}).get("value") or "").strip(),
+                    "income_level": ((r.get("incomeLevel") or {}).get("value") or "").strip(),
+                    "capital_city": r.get("capitalCity"),
+                    "latitude": r.get("latitude"),
+                    "longitude": r.get("longitude"),
+                    "loaded_at": env.get("loaded_at"),
+                    "source_file": path.name,
+                }
+            )
+
+    if not rows:
+        return _empty(_COUNTRY_COLUMNS)
+
+    frame = pd.DataFrame(rows)
+    # Sorted ascending by landing date, so the last row per country is the newest.
+    return frame.drop_duplicates(subset=["country_iso3"], keep="last").reset_index(drop=True)
 
 
 def parse_fx() -> pd.DataFrame:
@@ -276,6 +324,7 @@ def load_all(target: str | None = None) -> dict[str, int]:
         "companies": parse_companies(),
         "sec_edgar_facts": parse_sec_facts(),
         "world_bank_macro": parse_world_bank(),
+        "world_bank_countries": parse_world_bank_countries(),
         "fx_rates": parse_fx(),
         "gold_prices": parse_gold(),
         "market_prices": parse_prices(),

@@ -1,0 +1,136 @@
+/* The globe is drawn, not modelled: an orthographic projection onto a flat SVG,
+   spun by recomputing the projection rather than by a CSS 3D transform. That is
+   what lets the markers stay crisp, stay clickable and carry data — a rotated
+   <div> can do none of those. */
+
+.globe {
+  /* The sphere has to sit clearly above the page, not blend into it: on paper
+     the two are only a few percent apart otherwise, and the globe reads as a
+     smudge rather than an object. The gradient runs from a lit upper-left to a
+     markedly darker limb, which is most of what sells the curvature. */
+  --globe-face-lit: color-mix(in oklab, var(--surface) 84%, var(--ink) 16%);
+  --globe-face-dim: color-mix(in oklab, var(--surface-sunk) 52%, var(--ink) 48%);
+  --globe-neutral: var(--ink-3);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  user-select: none;
+  /* The parent centres its children, which makes this box shrink to its
+     contents — and the SVG's `width: 100%` then resolves against nothing. */
+  width: 100%;
+}
+
+.globe__svg {
+  width: 100%;
+  /* No fixed pixel ceiling — the globe takes its column, and scales with the
+     screen rather than stopping at a size chosen for someone else's laptop. The
+     viewport bound is what keeps the whole sphere in view at once, which matters
+     for something the reader is meant to take hold of and turn. */
+  max-width: min(100%, 68vh);
+  height: auto;
+  cursor: grab;
+  touch-action: none;
+  overflow: visible;
+}
+
+.globe.is-dragging .globe__svg {
+  cursor: grabbing;
+}
+
+.globe__ocean {
+  stroke: none;
+}
+
+.globe__limb {
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-width: 1.25;
+}
+
+/* Hairline, so the coast is drawn rather than blocked in. The grid steps back
+   behind it — the graticule is scaffolding, the coastline is the map. */
+.globe__coast {
+  fill: none;
+  stroke: color-mix(in oklab, var(--ink) 72%, transparent);
+  stroke-width: 1.15;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+.globe__grid path {
+  fill: none;
+  stroke: color-mix(in oklab, var(--ink) 17%, transparent);
+  stroke-width: 0.7;
+}
+
+/* The equator and the prime meridian carry no more information than any other
+   line, but a sphere with an even grid reads as a ball of wire. Two darker lines
+   give the eye something to orient against as it turns. */
+.globe__grid path:nth-child(3),
+.globe__grid path:nth-child(11) {
+  stroke: color-mix(in oklab, var(--ink) 32%, transparent);
+  stroke-width: 0.9;
+}
+
+.globe__dot {
+  stroke: var(--paper);
+  stroke-width: 0.75;
+  cursor: pointer;
+  transition: r 120ms ease;
+}
+
+.globe__dot.is-empty {
+  stroke: none;
+}
+
+.globe__dot.is-active {
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+
+.globe__readout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  min-height: 3.4rem;
+  text-align: center;
+}
+
+.globe__readout-name {
+  font-family: var(--font-display);
+  font-size: 0.86rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.globe__readout-value {
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.globe__readout-idle {
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  font-style: italic;
+  color: var(--ink-3);
+}
+
+.globe__readout-caption {
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .globe__dot {
+    transition: none;
+  }
+}

@@ -18,7 +18,11 @@ renamed as (
         source_file
 
     from source
+    -- Whole-world pulls include aggregates (the world, income bands, regional
+    -- groupings). They come back with a blank ISO3 rather than a null one, so
+    -- the not_null test alone would let them through into the country grain.
     where country_iso3 is not null
+      and country_iso3 <> ''
 
 )
 
