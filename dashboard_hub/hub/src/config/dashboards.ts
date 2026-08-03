@@ -24,9 +24,15 @@ export function dashboardRoute(section: Section, dashboard: Dashboard): string {
   return `/s/${section.slug}/${dashboard.id}`;
 }
 
-/** Where the spoke is served, or `undefined` when nothing is running behind it yet. */
+/** True when the hub renders this dashboard itself rather than embedding a service. */
+export function isNative(dashboard: Dashboard): boolean {
+  return dashboard.kind === 'native';
+}
+
+/** Where the service is served, or `undefined` for native and not-yet-commissioned pages. */
 export function embedPathFor(dashboard: Dashboard): string | undefined {
-  return dashboard.status === 'stub' ? `${basePrefix}/${dashboard.id}/` : undefined;
+  if (isNative(dashboard) || dashboard.status !== 'stub') return undefined;
+  return `${basePrefix}/${dashboard.id}/`;
 }
 
 export function countLive(section: Section): number {

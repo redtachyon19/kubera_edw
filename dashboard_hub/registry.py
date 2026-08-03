@@ -48,8 +48,17 @@ def dashboards() -> list[dict[str, Any]]:
 
 
 def servable() -> list[dict[str, Any]]:
-    """Dashboards with their own Streamlit process — the rest are nav slots for now."""
-    return [entry for entry in dashboards() if entry.get("status") == "stub"]
+    """Dashboards that need their own Streamlit process.
+
+    A `kind: "native"` dashboard is a page the hub renders itself, so it has no
+    port and nothing to launch; anything still `planned` has nothing to launch yet
+    either.
+    """
+    return [
+        entry
+        for entry in dashboards()
+        if entry.get("status") == "stub" and entry.get("kind") != "native" and entry.get("port")
+    ]
 
 
 def get(dashboard_id: str) -> dict[str, Any]:

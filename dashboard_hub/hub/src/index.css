@@ -35,6 +35,15 @@
   --bronze: #97561d;
   --steel: #5f676c;
 
+  /* Direction. Gains green, losses red — the only place hue carries meaning.
+     Each has a second, deeper shade so two rising series stay distinguishable. */
+  --up: #0f7a3d;
+  --up-2: #57913f;
+  --up-3: #1f6f6a;
+  --down: #b3261e;
+  --down-2: #8f3d2a;
+  --down-3: #a3255c;
+
   --accent: var(--gold);
 
   color-scheme: light;
@@ -57,6 +66,13 @@
   --silver: #cfd8de;
   --bronze: #cd7f32;
   --steel: #93a2ae;
+
+  --up: #3fbf74;
+  --up-2: #8cc152;
+  --up-3: #35b0a7;
+  --down: #f0645a;
+  --down-2: #d2864f;
+  --down-3: #e0619b;
 
   color-scheme: dark;
 }
@@ -144,4 +160,14 @@ code {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* Direction is stated in colour and never only in colour — the figures keep
+   their sign, so this reads the same to a colour-blind user. */
+.up {
+  color: var(--up);
+}
+
+.down {
+  color: var(--down);
 }

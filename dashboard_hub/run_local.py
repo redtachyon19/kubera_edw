@@ -137,6 +137,19 @@ def main() -> int:
     procs: list[tuple[str, subprocess.Popen]] = []
     warned: set[str] = set()
     try:
+        # The market API backs the hub's own native pages — not a dashboard
+        # process, but it has to be up for them to have anything to draw.
+        procs.append(
+            (
+                "Market API",
+                subprocess.Popen(
+                    [sys.executable, "-u", str(registry.ROOT_DIR / "market_api.py")],
+                    cwd=str(registry.ROOT_DIR),
+                    env=os.environ.copy(),
+                ),
+            )
+        )
+
         for entry in entries:
             app_dir = registry.dashboard_dir(entry)
             app_py = app_dir / "app.py"

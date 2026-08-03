@@ -30,14 +30,17 @@ const prefix = (registry.basePrefix ?? '/d').replace(/\/$/, '');
 //
 // This prefix is reserved for the dashboards — the hub's own client routes live
 // under /s/* so the proxy never swallows them.
-const proxy = Object.fromEntries(
-  allDashboards
+const proxy = Object.fromEntries([
+  ...allDashboards
     .filter((entry) => entry.status === 'stub' && entry.port)
     .map((entry) => [
       `${prefix}/${entry.id}`,
       { target: `http://localhost:${entry.port}`, changeOrigin: true, ws: true },
     ]),
-);
+  // Data for the hub's own native pages. Yahoo rejects direct browser calls, so
+  // this goes through the Python market API rather than out from the client.
+  ['/api/market', { target: 'http://localhost:8600', changeOrigin: true }],
+]);
 
 export default defineConfig({
   plugins: [react()],

@@ -1,0 +1,341 @@
+.stock {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+/* ── Controls ──────────────────────────────────────────────────────────────── */
+.stock__controls {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 26px 28px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+}
+
+.stock__search {
+  position: relative;
+}
+
+.stock__input {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px 2px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--rule-strong);
+  border-radius: 0;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.stock__input::placeholder {
+  color: var(--ink-4);
+}
+
+.stock__input:focus {
+  border-bottom-color: var(--gold);
+}
+
+.stock__results {
+  position: absolute;
+  z-index: 20;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.stock__result {
+  display: grid;
+  grid-template-columns: 110px 1fr auto;
+  gap: 14px;
+  align-items: baseline;
+  width: 100%;
+  padding: 11px 16px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  cursor: pointer;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+}
+
+.stock__result:hover:not(:disabled) {
+  background: var(--surface-sunk);
+}
+
+.stock__result:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.stock__result--note {
+  display: block;
+  color: var(--ink-3);
+  font-style: italic;
+  cursor: default;
+}
+
+.stock__result-symbol {
+  font-size: 0.85rem;
+  color: var(--ink);
+}
+
+.stock__result-meta {
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.stock__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.stock__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--rule-strong);
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.stock__chip:hover {
+  border-color: var(--ink);
+}
+
+.stock__chip--gold {
+  color: var(--ink-4);
+  border-style: dashed;
+}
+
+.stock__chip--gold.is-on {
+  color: var(--gold);
+  border-color: var(--gold);
+  border-style: solid;
+}
+
+.stock__switches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 26px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+}
+
+.stock__switch {
+  display: inline-flex;
+  border: 1px solid var(--rule-strong);
+}
+
+.stock__switch button {
+  padding: 9px 16px;
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  background: transparent;
+  border: 0;
+  border-right: 1px solid var(--rule);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.stock__switch button:last-child {
+  border-right: 0;
+}
+
+.stock__switch button:hover {
+  color: var(--ink);
+}
+
+.stock__switch button.is-on {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ── Chart ─────────────────────────────────────────────────────────────────── */
+.stock__chart {
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  padding: 20px 22px 14px;
+  transition: opacity 0.2s ease;
+}
+
+.stock__chart.is-loading {
+  opacity: 0.45;
+}
+
+.chart {
+  margin: 0;
+}
+
+.chart__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.chart__grid {
+  stroke: var(--rule);
+  stroke-width: 1;
+}
+
+.chart__zero {
+  stroke: var(--rule-strong);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+.chart__crosshair {
+  stroke: var(--rule-strong);
+  stroke-width: 1;
+}
+
+.chart__line {
+  fill: none;
+  stroke-width: 1.6;
+  vector-effect: non-scaling-stroke;
+}
+
+.chart__ylabel,
+.chart__xlabel {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 11px;
+  fill: var(--ink-4);
+}
+
+.chart__readout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 20px;
+  padding-top: 14px;
+  margin-top: 10px;
+  border-top: 1px solid var(--rule);
+  font-size: 0.82rem;
+  color: var(--ink-3);
+}
+
+.chart__readout-date {
+  font-size: 0.74rem;
+  color: var(--ink-4);
+  min-width: 92px;
+}
+
+.chart__readout-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.chart__readout-item b {
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.chart__swatch,
+.stock__swatch {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
+  margin-right: 2px;
+}
+
+/* ── Table & notes ─────────────────────────────────────────────────────────── */
+.stock__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+}
+
+.stock__table th {
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  text-align: left;
+  padding: 0 14px 10px;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.stock__table td {
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink-2);
+}
+
+.stock__table tbody tr:hover td {
+  background: var(--surface);
+}
+
+.stock__table .ta-r {
+  text-align: right;
+}
+
+.stock__note,
+.stock__footnote,
+.stock__error,
+.stock__warn {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.75;
+  color: var(--ink-3);
+}
+
+.stock__footnote {
+  font-size: 0.78rem;
+  color: var(--ink-4);
+}
+
+.stock__error {
+  color: var(--down);
+}
+
+.stock__warn {
+  color: var(--ink-3);
+}
+
+@media (max-width: 760px) {
+  .stock__controls {
+    padding: 18px 16px;
+  }
+
+  .stock__table {
+    display: block;
+    overflow-x: auto;
+  }
+}

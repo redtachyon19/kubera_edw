@@ -85,11 +85,13 @@ kubera_edw/
 ├── dashboard_hub/                # BI — hub & spoke, one front door for every dashboard
 │   ├── dashboards.json           # single source of truth — nav, proxy, processes, palette
 │   ├── registry.py               # reads dashboards.json (Python side)
-│   ├── run_local.py              # one Streamlit process per dashboard
-│   ├── lib/                      # shared by every dashboard
+│   ├── run_local.py              # starts every dashboard service + the market API
+│   ├── market_api.py             # stdlib JSON endpoint behind the hub's native pages
+│   ├── lib/                      # shared code
 │   │   ├── db.py                 #   read-only warehouse connection, 5-min cache
 │   │   ├── queries.py            #   SQL against marts -> pandas
-│   │   ├── theme.py              #   metallic chart palette + Altair theme
+│   │   ├── market_data.py        #   live prices/search (Yahoo) — no warehouse, no key
+│   │   ├── theme.py              #   palette + Altair theme, both stocks
 │   │   └── ui.py                 #   page chrome, empty states, chart helpers
 │   ├── hub/                      # the website — Vite + React + TypeScript
 │   └── dashboards/<module>/app.py  # one independent Streamlit dashboard each
@@ -391,7 +393,7 @@ Navigation is two levels — the top bar holds **sections**, and each section ho
 |---|---|---|
 | **Portfolio** | gold | Portfolio Allocation · Risk & Concentration · ESG Exposure |
 | **Companies** | bronze | Fundamentals · FX Impact |
-| **Markets** | silver | Stock Explorer · Market Performance · Macro Overlay |
+| **Markets** | silver | Stock Explorer (native) · Market Performance · Macro Overlay |
 | **Warehouse** | steel | Data Quality · Pipeline Health |
 
 ```
@@ -408,7 +410,10 @@ localhost:5173  hub (Vite)
 ```
 
 `/d/*` is reserved for the proxy, so the hub's own routes live under `/s/*` and the two never
-collide. Because each spoke is its own process, a dashboard can be rebuilt, restarted or
+collide. A dashboard marked `"kind": "native"` is a React page the hub renders itself rather
+than a service it embeds — the **Stock Explorer** is one. It reads `/api/market/*`, served by
+[`market_api.py`](dashboard_hub/market_api.py) (stdlib HTTP, no web framework), because Yahoo
+rejects browser requests that lack a session cookie and crumb. Because each spoke is its own process, a dashboard can be rebuilt, restarted or
 swapped for a different framework without touching the hub or any sibling dashboard.
 
 The five dashboards under **Portfolio**, **Companies** and **Markets** are built and read the

@@ -131,3 +131,16 @@
     height: 72vh;
   }
 }
+
+/* Marks a dashboard the hub renders itself rather than embedding. */
+.dash__badge {
+  flex-shrink: 0;
+  align-self: center;
+  padding: 7px 14px;
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border: 1px solid var(--rule);
+}

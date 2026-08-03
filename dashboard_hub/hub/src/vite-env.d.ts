@@ -8,6 +8,8 @@ declare module '@registry' {
     module: string;
     /** `stub` has its own Streamlit process; `planned` is a slot with nothing behind it yet. */
     status: 'stub' | 'planned';
+    /** `native` is a page the hub renders itself; anything else is embedded. */
+    kind?: 'native';
     port?: number;
     blurb: string;
     marts: string[];

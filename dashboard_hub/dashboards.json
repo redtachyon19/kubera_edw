@@ -132,11 +132,11 @@
           "title": "Stock Explorer",
           "module": "stock_explorer",
           "status": "stub",
-          "port": 8516,
           "blurb": "Search any listed company, chart it over 1/5/10 years or all time, and compare it against others and gold.",
-          "source": "Yahoo Finance, live \u2014 self-contained, no warehouse or API key",
+          "source": "Yahoo Finance, live \u2014 rendered natively by the hub",
           "marts": [],
-          "planned": []
+          "planned": [],
+          "kind": "native"
         },
         {
           "id": "market-performance",

@@ -1,7 +1,8 @@
 import type { CSSProperties } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import { embedPathFor, getSectionBySlug, sectionRoute } from '../config/dashboards';
+import { embedPathFor, getSectionBySlug, isNative, sectionRoute } from '../config/dashboards';
+import StockExplorer from './stock/StockExplorer';
 import { useThemeMode } from '../ThemeContext';
 import './DashboardPage.css';
 
@@ -24,6 +25,12 @@ export default function DashboardPage() {
   }
 
   const embedPath = embedPathFor(dashboard);
+  const native = isNative(dashboard);
+
+  // Native dashboards are hub pages, so they inherit the stock automatically and
+  // there is no separate service to open in a tab.
+  const NATIVE: Record<string, () => JSX.Element> = { 'stock-explorer': StockExplorer };
+  const NativeView = native ? NATIVE[dashboard.id] : undefined;
 
   return (
     <div className="dash" style={{ '--accent': `var(--${section.metal})` } as CSSProperties}>
@@ -47,9 +54,12 @@ export default function DashboardPage() {
             Open full view &#8599;
           </a>
         )}
+        {native && <span className="dash__badge">Native</span>}
       </header>
 
-      {embedPath ? (
+      {NativeView ? (
+        <NativeView />
+      ) : embedPath ? (
         // `embed=true` strips Streamlit's own chrome; `theme` makes the dashboard
         // render on the same stock as the hub. The key remounts the frame on a
         // theme change so the embedded page re-renders rather than going stale.
