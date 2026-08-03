@@ -1,15 +1,26 @@
 import registry from '@registry';
-import type { RegistryDashboard, RegistryOrg, RegistrySection } from '@registry';
+import type {
+  RegistryDashboard,
+  RegistryOrg,
+  RegistrySection,
+  RegistryTapeEntry,
+} from '@registry';
 
 export type Dashboard = RegistryDashboard;
 export type Section = RegistrySection;
 export type Org = RegistryOrg;
+export type TapeEntry = RegistryTapeEntry;
 
 export const org: Org = registry.org;
 export const sections: Section[] = registry.sections;
 
 /** URL prefix the Vite proxy forwards to the Streamlit dashboards. */
 export const basePrefix: string = (registry.basePrefix ?? '/d').replace(/\/$/, '');
+
+/** True when this desk is a live workspace rather than an index of reports. */
+export function isWorkspace(section: Section): boolean {
+  return section.layout === 'workspace';
+}
 
 export function getSectionBySlug(slug: string | undefined): Section | undefined {
   return slug ? sections.find((section) => section.slug === slug) : undefined;

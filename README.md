@@ -393,7 +393,7 @@ Navigation is two levels — the top bar holds **sections**, and each section ho
 |---|---|---|
 | **Portfolio** | gold | Portfolio Allocation · Risk & Concentration · ESG Exposure |
 | **Companies** | bronze | Fundamentals · FX Impact |
-| **Markets** | silver | Stock Explorer (native) · Market Performance · Macro Overlay |
+| **Markets** | silver | Stock Explorer (native) · Macro Overlay |
 | **Warehouse** | steel | Data Quality · Pipeline Health |
 
 ```
@@ -405,7 +405,6 @@ localhost:5173  hub (Vite)
         ──proxy──▶  /d/allocation          ──▶ localhost:8511
                     /d/fundamentals        ──▶ localhost:8512
                     /d/fx-impact           ──▶ localhost:8513
-                    /d/market-performance  ──▶ localhost:8514
                     /d/macro-overlay       ──▶ localhost:8515
 ```
 
@@ -464,7 +463,6 @@ table, so an analyst can sanity-check any figure they don't believe.
 | **Portfolio Allocation** | Portfolio | Equal-weighted diversification by country, sector, currency, region |
 | **Fundamentals** | Companies | Revenue growth, margins and leverage — all USD-normalized |
 | **FX Impact** | Companies | What currency movement did to reported results for non-USD reporters |
-| **Market Performance** | Markets | Cumulative USD total return, volatility and drawdown |
 | **Macro Overlay** | Markets | GDP growth, inflation, unemployment, and the gold benchmark |
 
 Every mart has an **empty state** — if a table has zero rows the dashboard explains why and
@@ -474,8 +472,6 @@ prints the command that fixes it, rather than crashing.
 |---|---|
 | ![Allocation](docs/screenshots/01_portfolio_allocation.png) | ![Fundamentals](docs/screenshots/02_fundamentals.png) |
 | ![FX impact](docs/screenshots/03_fx_impact.png) | ![Macro overlay](docs/screenshots/04_macro_overlay.png) |
-
-![Market performance](docs/screenshots/05_market_performance.png)
 
 These are **rendered, not screenshotted**. `scripts/generate_screenshots.py` queries the live
 warehouse, rebuilds each chart with Altair, and rasterizes the Vega-Lite spec via `vl_convert` —

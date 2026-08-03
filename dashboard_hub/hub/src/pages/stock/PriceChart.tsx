@@ -1,17 +1,19 @@
-import { useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import { elapsedBetween, formatStamp } from './api';
 import type { Series } from './api';
 
-export type Scale = 'rebased' | 'growth' | 'price';
+export type Scale = 'price' | 'rebased' | 'growth';
 
 export interface PriceChartProps {
   dates: string[];
   series: Series[];
   colours: Record<string, string>;
   scale: Scale;
+  intraday: boolean;
 }
 
-const PAD = { top: 16, right: 74, bottom: 30, left: 10 };
+const PAD = { top: 16, right: 84, bottom: 30, left: 10 };
 const WIDTH = 1000;
 const HEIGHT = 400;
 
@@ -25,6 +27,7 @@ function project(closes: number[], scale: Scale): number[] {
     : closes.map((v) => (v / base - 1) * 100);
 }
 
+/** Round values a reader recognises — 20, 25, 50 — not 23.7143. */
 function niceTicks(min: number, max: number, count = 5): number[] {
   if (!isFinite(min) || !isFinite(max) || min === max) return [min];
   const raw = (max - min) / count;
@@ -35,51 +38,101 @@ function niceTicks(min: number, max: number, count = 5): number[] {
   return ticks;
 }
 
+/** Decade ticks — 100, 200, 500, 1000 — rather than five points evenly spaced in log space. */
+function logTicks(min: number, max: number): number[] {
+  if (!(min > 0) || !(max > min)) return [min, max].filter((v) => isFinite(v));
+  const out: number[] = [];
+  for (let e = Math.floor(Math.log10(min)); e <= Math.ceil(Math.log10(max)); e++) {
+    for (const m of [1, 2, 5]) {
+      const value = m * Math.pow(10, e);
+      if (value >= min && value <= max) out.push(value);
+    }
+  }
+  return out.length >= 2 ? out : niceTicks(min, max);
+}
+
+function padded(values: number[], log: boolean): [number, number] {
+  const finite = values.filter((v) => isFinite(v));
+  let lo = Math.min(...finite);
+  let hi = Math.max(...finite);
+  if (!isFinite(lo) || !isFinite(hi)) return [0, 1];
+  if (lo === hi) return [lo - 1, hi + 1];
+  if (log && lo > 0) {
+    const factor = Math.pow(hi / lo, 0.05);
+    return [lo / factor, hi * factor];
+  }
+  const pad = (hi - lo) * 0.06;
+  return [lo - pad, hi + pad];
+}
+
 /**
  * Hand-drawn SVG so the chart carries the same hairlines and engraved labels as
  * the rest of the hub — a charting library would bring its own visual language.
- * A log scale is used for growth and price, where a single large winner would
- * otherwise flatten every other line.
+ *
+ * The three scales answer different questions and are drawn differently:
+ *
+ *   price    linear, anchored at zero — true to scale. Height is proportional to
+ *            price, so a $4,100 instrument sits ~13x above a $300 one. Cheap
+ *            series compress near the axis; that is the real proportion.
+ *   rebased  linear, shared, zero line — every series starts level, for comparing
+ *            movement rather than level.
+ *   growth   log — an indexed scale where one large winner would otherwise
+ *            flatten the rest.
+ *
+ * Click anchors a point; sweeping then draws a chord from the anchor to the
+ * cursor and the readout reports the move between those two moments.
  */
-export default function PriceChart({ dates, series, colours, scale }: PriceChartProps) {
+export default function PriceChart({ dates, series, colours, scale, intraday }: PriceChartProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const [hover, setHover] = useState<number | null>(null);
+  const [pinned, setPinned] = useState<number | null>(null);
+
+  useEffect(() => setPinned(null), [dates, scale]);
+
+  useEffect(() => {
+    function onKey(event: KeyboardEvent) {
+      if (event.key === 'Escape') setPinned(null);
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  const plotW = WIDTH - PAD.left - PAD.right;
+  const plotH = HEIGHT - PAD.top - PAD.bottom;
 
   const model = useMemo(() => {
     const projected = series.map((s) => ({ ...s, values: project(s.closes, scale) }));
-    const flat = projected.flatMap((s) => s.values).filter((v) => isFinite(v));
-    const useLog = scale !== 'rebased' && flat.every((v) => v > 0);
 
-    let min = Math.min(...flat);
-    let max = Math.max(...flat);
-    if (min === max) {
-      min -= 1;
-      max += 1;
-    }
-    const pad = (max - min) * 0.06;
-    min -= pad;
-    max += pad;
-    if (useLog && min <= 0) min = Math.min(...flat.filter((v) => v > 0)) * 0.9;
+    const all = projected.flatMap((s) => s.values);
 
-    const plotW = WIDTH - PAD.left - PAD.right;
-    const plotH = HEIGHT - PAD.top - PAD.bottom;
-    const toY = (v: number) => {
-      const t = useLog
-        ? (Math.log(Math.max(v, 1e-9)) - Math.log(min)) / (Math.log(max) - Math.log(min))
-        : (v - min) / (max - min);
+    // Price is drawn true to scale: one linear axis anchored at zero, so twice
+    // the height means twice the price and $4,100 gold sits ~13x above a $300
+    // share. Neither log nor a min-anchored axis preserves that — both make the
+    // picture easier to read by making the proportions wrong. A cheap series
+    // will look flat down at the bottom; that is the honest shape of it, and
+    // Rebased % is the scale for reading its movement.
+    const log = scale === 'growth' && all.every((v) => v > 0);
+
+    const shared: [number, number] =
+      scale === 'price'
+        ? [0, Math.max(...all.filter(isFinite)) * 1.04]
+        : padded(all, log);
+
+    const toY = (value: number) => {
+      const [lo, hi] = shared;
+      const t = log
+        ? (Math.log(Math.max(value, 1e-9)) - Math.log(lo)) / (Math.log(hi) - Math.log(lo))
+        : (value - lo) / (hi - lo);
       return PAD.top + plotH - t * plotH;
     };
-    const toX = (i: number) =>
-      PAD.left + (dates.length < 2 ? 0 : (i / (dates.length - 1)) * plotW);
+    const toX = (i: number) => PAD.left + (dates.length < 2 ? 0 : (i / (dates.length - 1)) * plotW);
 
-    const ticks = useLog
-      ? Array.from({ length: 5 }, (_, k) =>
-          Math.exp(Math.log(min) + ((Math.log(max) - Math.log(min)) * k) / 4),
-        )
-      : niceTicks(min, max);
+    const ticks = (log ? logTicks(shared[0], shared[1]) : niceTicks(shared[0], shared[1])).map(
+      (v) => ({ value: v, y: toY(v) }),
+    );
 
-    return { projected, toX, toY, ticks, plotW, plotH, useLog };
-  }, [dates, series, scale]);
+    return { projected, toX, toY, ticks, log };
+  }, [dates, series, scale, plotW, plotH]);
 
   const xTicks = useMemo(() => {
     const count = Math.min(7, dates.length);
@@ -89,57 +142,81 @@ export default function PriceChart({ dates, series, colours, scale }: PriceChart
     );
   }, [dates]);
 
-  function onMove(event: React.MouseEvent<SVGSVGElement>) {
-    const rect = svgRef.current?.getBoundingClientRect();
-    if (!rect || dates.length < 2) return;
-    const ratio = (event.clientX - rect.left) / rect.width;
-    const x = ratio * WIDTH - PAD.left;
-    const index = Math.round((x / model.plotW) * (dates.length - 1));
-    setHover(Math.max(0, Math.min(dates.length - 1, index)));
-  }
+  const inRange = useCallback(
+    (index: number | null): number | null => {
+      if (index === null || !Number.isFinite(index)) return null;
+      return Math.max(0, Math.min(dates.length - 1, Math.round(index)));
+    },
+    [dates.length],
+  );
 
+  const indexAt = useCallback(
+    (clientX: number) => {
+      const rect = svgRef.current?.getBoundingClientRect();
+      // A zero-width box makes the ratio 0/0 — and `Math.max(0, Math.min(n, NaN))`
+      // is NaN, not a clamp, so an unguarded NaN would index past the array.
+      if (!rect || !rect.width || dates.length < 2) return null;
+      const x = ((clientX - rect.left) / rect.width) * WIDTH - PAD.left;
+      return inRange((x / plotW) * (dates.length - 1));
+    },
+    [dates.length, plotW, inRange],
+  );
+
+  const pin = inRange(pinned);
+  const cur = inRange(hover);
+  const comparing = pin !== null && cur !== null && cur !== pin;
+
+  const money = (v: number) => {
+    if (v === 0) return '0';
+    const decimals = v < 10 ? 2 : v < 1000 ? 2 : 0;
+    return v.toLocaleString(undefined, {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    });
+  };
   const fmt = (v: number) =>
-    scale === 'rebased'
-      ? `${v >= 0 ? '+' : ''}${v.toFixed(0)}%`
-      : v.toLocaleString(undefined, { maximumFractionDigits: v < 10 ? 2 : 0 });
+    scale === 'rebased' ? `${v >= 0 ? '+' : ''}${v.toFixed(0)}%` : money(v);
 
   return (
     <figure className="chart">
       <svg
         ref={svgRef}
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-        className="chart__svg"
-        onMouseMove={onMove}
+        className={`chart__svg${pin !== null ? ' is-pinned' : ''}`}
+        onMouseMove={(event) => setHover(indexAt(event.clientX))}
         onMouseLeave={() => setHover(null)}
+        onClick={(event) => {
+          const index = indexAt(event.clientX);
+          setPinned((current) => (current === index ? null : index));
+        }}
         role="img"
         aria-label="Price comparison chart"
       >
         {model.ticks.map((tick) => (
-          <g key={tick}>
+          <g key={tick.value}>
             <line
               className="chart__grid"
               x1={PAD.left}
-              x2={PAD.left + model.plotW}
-              y1={model.toY(tick)}
-              y2={model.toY(tick)}
+              x2={PAD.left + plotW}
+              y1={tick.y}
+              y2={tick.y}
             />
             <text
               className="chart__ylabel"
-              x={PAD.left + model.plotW + 8}
-              y={model.toY(tick)}
+              x={PAD.left + plotW + 8}
+              y={tick.y}
               dominantBaseline="middle"
             >
-              {fmt(tick)}
+              {fmt(tick.value)}
             </text>
           </g>
         ))}
 
-        {/* Zero line only means something on the rebased scale. */}
         {scale === 'rebased' && (
           <line
             className="chart__zero"
             x1={PAD.left}
-            x2={PAD.left + model.plotW}
+            x2={PAD.left + plotW}
             y1={model.toY(0)}
             y2={model.toY(0)}
           />
@@ -153,7 +230,7 @@ export default function PriceChart({ dates, series, colours, scale }: PriceChart
             y={HEIGHT - 10}
             textAnchor={index === 0 ? 'start' : index === dates.length - 1 ? 'end' : 'middle'}
           >
-            {dates[index]?.slice(0, 7)}
+            {formatStamp(dates[index], intraday, true)}
           </text>
         ))}
 
@@ -163,26 +240,61 @@ export default function PriceChart({ dates, series, colours, scale }: PriceChart
             className="chart__line"
             stroke={colours[s.symbol]}
             d={s.values
-              .map((v, i) => `${i === 0 ? 'M' : 'L'}${model.toX(i)},${model.toY(v)}`)
+              .map((v, k) => `${k === 0 ? 'M' : 'L'}${model.toX(k)},${model.toY(v)}`)
               .join(' ')}
           />
         ))}
 
-        {hover !== null && (
+        {comparing &&
+          model.projected.map((s) => (
+            <line
+              key={`chord-${s.symbol}`}
+              className="chart__chord"
+              stroke={colours[s.symbol]}
+              x1={model.toX(pin!)}
+              y1={model.toY(s.values[pin!])}
+              x2={model.toX(cur!)}
+              y2={model.toY(s.values[cur!])}
+            />
+          ))}
+
+        {pin !== null && (
           <>
             <line
-              className="chart__crosshair"
-              x1={model.toX(hover)}
-              x2={model.toX(hover)}
+              className="chart__anchor"
+              x1={model.toX(pin)}
+              x2={model.toX(pin)}
               y1={PAD.top}
-              y2={PAD.top + model.plotH}
+              y2={PAD.top + plotH}
             />
             {model.projected.map((s) => (
               <circle
-                key={s.symbol}
+                key={`pin-${s.symbol}`}
+                className="chart__anchor-dot"
+                r={4}
+                cx={model.toX(pin)}
+                cy={model.toY(s.values[pin])}
+                fill={colours[s.symbol]}
+              />
+            ))}
+          </>
+        )}
+
+        {cur !== null && (
+          <>
+            <line
+              className="chart__crosshair"
+              x1={model.toX(cur)}
+              x2={model.toX(cur)}
+              y1={PAD.top}
+              y2={PAD.top + plotH}
+            />
+            {model.projected.map((s) => (
+              <circle
+                key={`hov-${s.symbol}`}
                 r={3.5}
-                cx={model.toX(hover)}
-                cy={model.toY(s.values[hover])}
+                cx={model.toX(cur)}
+                cy={model.toY(s.values[cur])}
                 fill={colours[s.symbol]}
               />
             ))}
@@ -191,23 +303,62 @@ export default function PriceChart({ dates, series, colours, scale }: PriceChart
       </svg>
 
       <figcaption className="chart__readout">
-        <span className="chart__readout-date num">
-          {hover !== null ? dates[hover] : `${dates[0]} — ${dates[dates.length - 1]}`}
-        </span>
-        {model.projected.map((s) => {
-          const value = hover !== null ? s.values[hover] : s.values[s.values.length - 1];
-          const direction = scale === 'price' ? 0 : value - (scale === 'growth' ? 100 : 0);
-          return (
-            <span key={s.symbol} className="chart__readout-item">
-              <i className="chart__swatch" style={{ background: colours[s.symbol] }} />
-              {s.label}
-              <b className={`num ${direction > 0 ? 'up' : direction < 0 ? 'down' : ''}`}>
-                {fmt(value)}
-              </b>
+        {comparing ? (
+          <>
+            <span className="chart__readout-date num">
+              {formatStamp(dates[pin!], intraday)} → {formatStamp(dates[cur!], intraday)}
+              <em> · {elapsedBetween(dates[pin!], dates[cur!])}</em>
             </span>
-          );
-        })}
+            {model.projected.map((s) => {
+              const from = s.closes[pin!];
+              const to = s.closes[cur!];
+              const change = from ? (to / from - 1) * 100 : 0;
+              return (
+                <span key={s.symbol} className="chart__readout-item">
+                  <i className="chart__swatch" style={{ background: colours[s.symbol] }} />
+                  {s.label}
+                  <b className={`num ${change > 0 ? 'up' : change < 0 ? 'down' : ''}`}>
+                    {change >= 0 ? '+' : ''}
+                    {change.toFixed(2)}%
+                  </b>
+                </span>
+              );
+            })}
+          </>
+        ) : (
+          <>
+            <span className="chart__readout-date num">
+              {cur !== null
+                ? formatStamp(dates[cur], intraday)
+                : `${formatStamp(dates[0], intraday)} — ${formatStamp(dates[dates.length - 1], intraday)}`}
+            </span>
+            {model.projected.map((s) => {
+              const value = cur !== null ? s.values[cur] : s.values[s.values.length - 1];
+              const direction = scale === 'price' ? 0 : value - (scale === 'growth' ? 100 : 0);
+              return (
+                <span key={s.symbol} className="chart__readout-item">
+                  <i className="chart__swatch" style={{ background: colours[s.symbol] }} />
+                  {s.label}
+                  <b className={`num ${direction > 0 ? 'up' : direction < 0 ? 'down' : ''}`}>
+                    {fmt(value)}
+                  </b>
+                </span>
+              );
+            })}
+          </>
+        )}
       </figcaption>
+
+      <p className="chart__hint">
+        {pin !== null ? (
+          <>
+            Anchored at <b className="num">{formatStamp(dates[pin], intraday)}</b> — sweep to
+            measure from it. Click again or press <kbd>Esc</kbd> to release.
+          </>
+        ) : (
+          <>Click any point to anchor it, then sweep to compare against it.</>
+        )}
+      </p>
     </figure>
   );
 }

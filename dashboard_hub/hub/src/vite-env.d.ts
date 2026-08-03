@@ -18,6 +18,14 @@ declare module '@registry' {
     source?: string;
   }
 
+  /** One entry on the live ticker tape. */
+  export interface RegistryTapeEntry {
+    symbol: string;
+    label: string;
+    /** `rate` shows a yield level and a move in percentage points, not a % change. */
+    format?: 'rate';
+  }
+
   /** A top-bar tab, holding the dashboards that belong to it. */
   export interface RegistrySection {
     slug: string;
@@ -26,6 +34,9 @@ declare module '@registry' {
     metal: string;
     tagline: string;
     description: string;
+    /** `workspace` desks are live and interactive; the rest are an index of reports. */
+    layout?: 'workspace';
+    tape?: RegistryTapeEntry[];
     dashboards: RegistryDashboard[];
   }
 

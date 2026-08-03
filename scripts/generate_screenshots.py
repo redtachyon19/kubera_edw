@@ -132,36 +132,6 @@ def macro_chart() -> alt.Chart:
     )
 
 
-def market_chart() -> alt.Chart | None:
-    df = queries.market_prices()
-    if df.empty:
-        return None
-    top = sorted(df["ticker"].unique())[:MAX_SERIES]
-    df = df[df["ticker"].isin(top)].copy()
-    df["cumulative_return"] = df.groupby("ticker")["daily_return"].transform(
-        lambda s: (1 + s.fillna(0)).cumprod() - 1
-    )
-    palette = theme.colors_for(top)
-    return (
-        alt.Chart(df)
-        .mark_line(strokeWidth=2)
-        .encode(
-            x=alt.X("trade_date:T", title=None),
-            y=alt.Y(
-                "cumulative_return:Q",
-                title="Cumulative USD return",
-                axis=alt.Axis(format=".0%"),
-            ),
-            color=alt.Color(
-                "ticker:N",
-                scale=alt.Scale(domain=list(palette), range=list(palette.values())),
-                title="Company",
-            ),
-        )
-        .properties(title="Cumulative USD total return", width=560, height=300)
-    )
-
-
 def main() -> None:
     alt.themes.register("kubera", theme.chart_theme)
     alt.themes.enable("kubera")
@@ -170,11 +140,6 @@ def main() -> None:
     save(fundamentals_chart(), "02_fundamentals")
     save(fx_chart(), "03_fx_impact")
     save(macro_chart(), "04_macro_overlay")
-    market = market_chart()
-    if market is not None:
-        save(market, "05_market_performance")
-    else:
-        print("  (market performance skipped — no price data)")
 
 
 if __name__ == "__main__":

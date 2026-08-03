@@ -1,11 +1,18 @@
 import type { CSSProperties } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 
-import { org, sectionRoute, sections } from '../config/dashboards';
+import { getSectionBySlug, isWorkspace, org, sectionRoute, sections } from '../config/dashboards';
 import ThemeToggle from './ThemeToggle';
 import './TopBar.css';
 
 export default function TopBar() {
+  const { pathname } = useLocation();
+
+  // A workspace desk puts its own live strip in this slot, so the engraved
+  // strapline stands down there rather than stacking two bands of chrome.
+  const desk = getSectionBySlug(pathname.match(/^\/s\/([^/]+)/)?.[1]);
+  const showDescriptor = !(desk && isWorkspace(desk));
+
   return (
     <header className="topbar">
       <div className="topbar__inner">
@@ -32,7 +39,7 @@ export default function TopBar() {
 
         <ThemeToggle />
       </div>
-      <div className="topbar__descriptor">{org.descriptor}</div>
+      {showDescriptor && <div className="topbar__descriptor">{org.descriptor}</div>}
     </header>
   );
 }

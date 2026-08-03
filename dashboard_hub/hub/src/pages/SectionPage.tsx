@@ -1,7 +1,8 @@
 import type { CSSProperties } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import { dashboardRoute, getSectionBySlug } from '../config/dashboards';
+import { dashboardRoute, getSectionBySlug, isWorkspace } from '../config/dashboards';
+import MarketsWorkspace from './markets/MarketsWorkspace';
 import './SectionPage.css';
 
 export default function SectionPage() {
@@ -19,6 +20,10 @@ export default function SectionPage() {
       </div>
     );
   }
+
+  // Live desks get a workspace; report desks stay an index. The rule lives in
+  // the registry so a desk's shape is declared, not special-cased here.
+  if (isWorkspace(section)) return <MarketsWorkspace section={section} />;
 
   return (
     <div className="section" style={{ '--accent': `var(--${section.metal})` } as CSSProperties}>

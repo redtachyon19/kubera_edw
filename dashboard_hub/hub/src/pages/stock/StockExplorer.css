@@ -339,3 +339,66 @@
     overflow-x: auto;
   }
 }
+
+/* ── Anchored comparison ───────────────────────────────────────────────────── */
+.chart__svg {
+  cursor: crosshair;
+}
+
+.chart__svg.is-pinned {
+  cursor: pointer;
+}
+
+/* The anchored moment: solid, heavier than the crosshair that follows the mouse. */
+.chart__anchor {
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+
+.chart__anchor-dot {
+  stroke: var(--paper);
+  stroke-width: 1.5;
+}
+
+/* The chord from anchor to cursor — dashed, so it never reads as price history. */
+.chart__chord {
+  stroke-width: 1.2;
+  stroke-dasharray: 4 3;
+  opacity: 0.85;
+}
+
+.chart__readout-date em {
+  font-style: normal;
+  color: var(--ink-4);
+}
+
+.chart__hint {
+  margin: 10px 0 0;
+  font-size: 0.74rem;
+  color: var(--ink-4);
+}
+
+.chart__hint b {
+  font-weight: 400;
+  color: var(--ink-2);
+}
+
+.chart__hint kbd {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  padding: 1px 5px;
+  border: 1px solid var(--rule);
+  background: var(--surface-sunk);
+}
+
+/* Nine periods is a wide control — let it wrap rather than overflow. */
+.stock__switch {
+  flex-wrap: wrap;
+}
+
+/* Level at the end of each line, in that series' colour — used when every series
+   carries its own scale and a shared axis number would belong to only one. */
+.chart__endlabel {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 11px;
+}

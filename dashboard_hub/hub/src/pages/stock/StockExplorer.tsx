@@ -7,13 +7,17 @@ import type { Scale } from './PriceChart';
 import './StockExplorer.css';
 
 const SCALES: { id: Scale; label: string; hint: string }[] = [
-  { id: 'rebased', label: 'Rebased %', hint: 'Every series starts at 0%.' },
+  {
+    id: 'price',
+    label: 'Price',
+    hint: 'Actual close in each listing’s own currency, each series on its own scale.',
+  },
+  { id: 'rebased', label: 'Rebased %', hint: 'Every series starts at 0%, so they compare.' },
   {
     id: 'growth',
     label: 'Growth of 100',
     hint: 'Log axis — use this over ten years, where one big winner flattens the rest.',
   },
-  { id: 'price', label: 'Price', hint: 'Actual close, in each listing’s own currency.' },
 ];
 
 const UP_SHADES = ['var(--up)', 'var(--up-2)', 'var(--up-3)'];
@@ -44,7 +48,7 @@ const sign = (value: number | null) => (value === null ? '' : value > 0 ? 'up' :
 export default function StockExplorer() {
   const [symbols, setSymbols] = useState<string[]>(['AAPL', 'MSFT']);
   const [period, setPeriod] = useState<Period>('5Y');
-  const [scale, setScale] = useState<Scale>('rebased');
+  const [scale, setScale] = useState<Scale>('price');
   const [withGold, setWithGold] = useState(true);
 
   const [query, setQuery] = useState('');
@@ -233,11 +237,14 @@ export default function StockExplorer() {
               series={series}
               colours={colours}
               scale={scale}
+              intraday={history!.intraday}
             />
           </div>
 
           <p className="stock__note">
-            Window starts <span className="num">{history!.start}</span>
+            Window starts <span className="num">{history!.start}</span> ·{' '}
+            <span className="num">{history!.interval}</span> bars
+            {history!.intraday && ', times UTC'}
             {history!.limiting && series.length > 1 && (
               <>
                 {' '}
@@ -274,7 +281,9 @@ export default function StockExplorer() {
                   <td className="num ta-r">{row.endPrice.toFixed(2)}</td>
                   <td className={`num ta-r ${sign(row.totalReturn)}`}>{pct(row.totalReturn)}</td>
                   <td className={`num ta-r ${sign(row.cagr)}`}>{pct(row.cagr)}</td>
-                  <td className="num ta-r">{pct(row.annualisedVol).replace('+', '')}</td>
+                  <td className="num ta-r">
+                    {row.annualisedVol === null ? '—' : pct(row.annualisedVol).replace('+', '')}
+                  </td>
                   <td className="num ta-r down">{pct(row.maxDrawdown)}</td>
                 </tr>
               ))}
@@ -284,6 +293,8 @@ export default function StockExplorer() {
           <p className="stock__footnote">
             Prices are split- and dividend-adjusted. Returns are in each security’s own listing
             currency, so a non-USD listing mixes business performance with the exchange rate.
+            CAGR and annualised volatility are left blank on windows too short to annualise
+            without misleading — a three-month move is not an annual rate.
           </p>
         </>
       )}

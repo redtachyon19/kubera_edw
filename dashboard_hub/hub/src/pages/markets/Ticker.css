@@ -1,0 +1,88 @@
+/* A tape on a broadsheet, not a trading floor: hairline band, engraved labels,
+   colour only on the move. */
+.tape {
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  background: var(--paper);
+  padding: 9px 0;
+}
+
+.tape__note {
+  display: block;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 0.56rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.tape--down .tape__note {
+  color: var(--down);
+}
+
+.tape__track {
+  display: flex;
+  width: max-content;
+  animation: tape-scroll 90s linear infinite;
+}
+
+/* The run is rendered twice; shifting by half the track is one full cycle, so
+   the second copy is exactly where the first began. */
+@keyframes tape-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.tape:hover .tape__track {
+  animation-play-state: paused;
+}
+
+.tape__run {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.tape__item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 9px;
+  padding: 0 22px;
+  border-right: 1px solid var(--rule);
+  white-space: nowrap;
+}
+
+.tape__label {
+  font-family: var(--font-display);
+  font-size: 0.56rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.tape__price {
+  font-size: 0.78rem;
+  color: var(--ink);
+}
+
+.tape__move {
+  font-size: 0.72rem;
+  color: var(--ink-4);
+}
+
+/* Reading a moving figure is hard; stop for anyone who asked us to. */
+@media (prefers-reduced-motion: reduce) {
+  .tape__track {
+    animation: none;
+  }
+
+  .tape {
+    overflow-x: auto;
+  }
+}

@@ -139,22 +139,6 @@
           "kind": "native"
         },
         {
-          "id": "market-performance",
-          "title": "Market Performance",
-          "module": "market_performance",
-          "status": "stub",
-          "port": 8514,
-          "blurb": "Cumulative USD total return, volatility and drawdown.",
-          "marts": [
-            "fact_market_prices"
-          ],
-          "planned": [
-            "Cumulative USD total return per holding",
-            "Annualised volatility and max drawdown",
-            "Performance relative to the SPY / ACWI benchmarks"
-          ]
-        },
-        {
           "id": "macro-overlay",
           "title": "Macro Overlay",
           "module": "macro_overlay",
@@ -171,6 +155,50 @@
             "IMF vs World Bank divergence as a data-quality check",
             "Gold safe-haven benchmark overlay"
           ]
+        }
+      ],
+      "layout": "workspace",
+      "tape": [
+        {
+          "symbol": "^GSPC",
+          "label": "S&P 500"
+        },
+        {
+          "symbol": "^IXIC",
+          "label": "Nasdaq"
+        },
+        {
+          "symbol": "^DJI",
+          "label": "Dow"
+        },
+        {
+          "symbol": "^FTSE",
+          "label": "FTSE 100"
+        },
+        {
+          "symbol": "^N225",
+          "label": "Nikkei 225"
+        },
+        {
+          "symbol": "GC=F",
+          "label": "Gold"
+        },
+        {
+          "symbol": "CL=F",
+          "label": "WTI Crude"
+        },
+        {
+          "symbol": "EURUSD=X",
+          "label": "EUR/USD"
+        },
+        {
+          "symbol": "^TNX",
+          "label": "US 10Y",
+          "format": "rate"
+        },
+        {
+          "symbol": "BTC-USD",
+          "label": "Bitcoin"
         }
       ]
     },

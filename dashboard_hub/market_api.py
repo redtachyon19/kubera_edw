@@ -11,6 +11,7 @@ to Yahoo directly.
 
     GET /api/market/search?q=apple
     GET /api/market/history?symbols=AAPL,MSFT,GC=F&period=5Y
+    GET /api/market/quotes?symbols=^GSPC,GC=F
 """
 
 from __future__ import annotations
@@ -55,6 +56,12 @@ class Handler(BaseHTTPRequestHandler):
                 symbols = [s.strip() for s in raw.split(",") if s.strip()]
                 period = (params.get("period") or ["5Y"])[0]
                 self._send(market_data.history(symbols, period))
+                return
+
+            if parsed.path == "/api/market/quotes":
+                raw = (params.get("symbols") or [""])[0]
+                wanted = tuple(s.strip() for s in raw.split(",") if s.strip())
+                self._send({"quotes": market_data.quotes(wanted)})
                 return
 
             if parsed.path == "/api/market/health":
