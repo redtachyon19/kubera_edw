@@ -1,0 +1,214 @@
+{
+  "org": {
+    "name": "Kubera Global Asset Management",
+    "short": "KUBERA",
+    "product": "Finance Dashboard Hub",
+    "descriptor": "Research \u00b7 Analytics \u00b7 Capital Markets",
+    "tagline": "Fictional firm; real public data. Nothing here is investment advice or a claim of ownership."
+  },
+  "basePrefix": "/d",
+  "theme": {
+    "streamlit": {
+      "base": "light",
+      "primaryColor": "#8a6a12",
+      "backgroundColor": "#faf9f5",
+      "secondaryBackgroundColor": "#ffffff",
+      "textColor": "#0a0a0a",
+      "font": "serif"
+    },
+    "surface": "#ffffff",
+    "border": "#dedad0",
+    "muted": "#6f6c63"
+  },
+  "sections": [
+    {
+      "slug": "portfolio",
+      "name": "Portfolio",
+      "accent": "#E2B84F",
+      "metal": "gold",
+      "tagline": "Positions & Exposure",
+      "description": "Composition, concentration and the mandate screens applied to the book.",
+      "dashboards": [
+        {
+          "id": "allocation",
+          "title": "Portfolio Allocation",
+          "module": "portfolio_allocation",
+          "status": "stub",
+          "port": 8511,
+          "blurb": "Diversification across country, sector, currency and region.",
+          "marts": [
+            "dim_company",
+            "dim_country",
+            "dim_currency"
+          ],
+          "planned": [
+            "Allocation breakdown by country, sector, currency and region",
+            "Holdings table with reporting currency and domicile",
+            "Holding / country / currency count KPIs"
+          ]
+        },
+        {
+          "id": "risk",
+          "title": "Risk & Concentration",
+          "module": "risk",
+          "status": "planned",
+          "blurb": "Concentration limits, correlation and downside exposure.",
+          "marts": [],
+          "planned": [
+            "Country and sector concentration against limits",
+            "Cross-holding correlation matrix",
+            "Value-at-risk and stress scenarios"
+          ]
+        },
+        {
+          "id": "esg",
+          "title": "ESG Exposure",
+          "module": "esg",
+          "status": "planned",
+          "blurb": "Environmental, social and governance screening across the book.",
+          "marts": [],
+          "planned": [
+            "Portfolio-weighted emissions intensity",
+            "Governance flags by holding",
+            "Screening exclusions and coverage gaps"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "companies",
+      "name": "Companies",
+      "accent": "#CD7F32",
+      "metal": "bronze",
+      "tagline": "Issuer Fundamentals",
+      "description": "Company financials as filed and as converted, normalised for cross-border comparison.",
+      "dashboards": [
+        {
+          "id": "fundamentals",
+          "title": "Fundamentals",
+          "module": "fundamentals",
+          "status": "stub",
+          "port": 8512,
+          "blurb": "Revenue growth, profitability and leverage, USD-normalized.",
+          "marts": [
+            "fact_financials",
+            "dim_company"
+          ],
+          "planned": [
+            "Revenue and net income by fiscal year",
+            "Revenue growth YoY and EBITDA margin",
+            "Net debt / EBITDA leverage trend"
+          ]
+        },
+        {
+          "id": "fx-impact",
+          "title": "FX Impact",
+          "module": "fx_impact",
+          "status": "stub",
+          "port": 8513,
+          "blurb": "How much of a USD figure is the business and how much is the rate.",
+          "marts": [
+            "fact_financials",
+            "dim_currency"
+          ],
+          "planned": [
+            "USD-normalized revenue for non-USD reporters",
+            "Applied year-end FX rate per reporting currency",
+            "Business growth split from translation effect"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "markets",
+      "name": "Markets",
+      "accent": "#CFD8DE",
+      "metal": "silver",
+      "tagline": "Markets & Macro",
+      "description": "Price action, realised risk and the macroeconomic backdrop behind it.",
+      "dashboards": [
+        {
+          "id": "stock-explorer",
+          "title": "Stock Explorer",
+          "module": "stock_explorer",
+          "status": "stub",
+          "port": 8516,
+          "blurb": "Search any listed company, chart it over 1/5/10 years or all time, and compare it against others and gold.",
+          "source": "Yahoo Finance, live \u2014 self-contained, no warehouse or API key",
+          "marts": [],
+          "planned": []
+        },
+        {
+          "id": "market-performance",
+          "title": "Market Performance",
+          "module": "market_performance",
+          "status": "stub",
+          "port": 8514,
+          "blurb": "Cumulative USD total return, volatility and drawdown.",
+          "marts": [
+            "fact_market_prices"
+          ],
+          "planned": [
+            "Cumulative USD total return per holding",
+            "Annualised volatility and max drawdown",
+            "Performance relative to the SPY / ACWI benchmarks"
+          ]
+        },
+        {
+          "id": "macro-overlay",
+          "title": "Macro Overlay",
+          "module": "macro_overlay",
+          "status": "stub",
+          "port": 8515,
+          "blurb": "The economic backdrop behind every country in the portfolio.",
+          "marts": [
+            "fact_macro_indicators",
+            "fact_gold_price",
+            "dim_country"
+          ],
+          "planned": [
+            "GDP growth, CPI inflation and unemployment by country",
+            "IMF vs World Bank divergence as a data-quality check",
+            "Gold safe-haven benchmark overlay"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "warehouse",
+      "name": "Warehouse",
+      "accent": "#93A2AE",
+      "metal": "steel",
+      "tagline": "Data Integrity",
+      "description": "Provenance, freshness and test coverage behind every figure in this hub.",
+      "dashboards": [
+        {
+          "id": "data-quality",
+          "title": "Data Quality",
+          "module": "data_quality",
+          "status": "planned",
+          "blurb": "dbt test results, freshness and source coverage.",
+          "marts": [],
+          "planned": [
+            "dbt test pass / fail history",
+            "Source freshness and last successful extract",
+            "Row-count drift by mart"
+          ]
+        },
+        {
+          "id": "pipeline-health",
+          "title": "Pipeline Health",
+          "module": "pipeline_health",
+          "status": "planned",
+          "blurb": "Dagster run outcomes, timings and failure patterns.",
+          "marts": [],
+          "planned": [
+            "Asset materialisation timeline",
+            "Run duration and failure rate by asset",
+            "Which extractors are blocked on a missing API key"
+          ]
+        }
+      ]
+    }
+  ]
+}

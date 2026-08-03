@@ -1,0 +1,40 @@
+/* Two paper chips — bone and black. The current stock is the one ringed in gold. */
+.stock-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 7px;
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.15s ease;
+}
+
+.stock-toggle:hover {
+  border-color: var(--rule-strong);
+}
+
+.stock-toggle__chip {
+  width: 11px;
+  height: 11px;
+  border: 1px solid var(--rule-strong);
+  box-shadow: 0 0 0 0 transparent;
+  transition:
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.stock-toggle__chip:first-child {
+  background: #faf9f5;
+}
+
+.stock-toggle__chip:last-child {
+  background: #0a0a0a;
+}
+
+.stock-toggle__chip.is-on {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px var(--gold);
+}

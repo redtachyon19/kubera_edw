@@ -20,6 +20,7 @@ dagster-dbt>=0.29
 
 streamlit>=1.36
 altair>=5.0
+yfinance>=0.2
 vl-convert-python>=1.0
 
 pytest>=8.2

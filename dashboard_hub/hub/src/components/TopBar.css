@@ -1,0 +1,147 @@
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+}
+
+.topbar__inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  min-height: 74px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 0 32px;
+}
+
+.topbar__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-decoration: none;
+  flex-shrink: 0;
+  padding-right: 32px;
+  border-right: 1px solid var(--rule);
+}
+
+/* The wordmark is the whole identity — engraved caps, very wide tracking. */
+.topbar__mark {
+  font-family: var(--font-display);
+  font-size: 1.16rem;
+  letter-spacing: 0.34em;
+  text-indent: 0.34em;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.topbar__product {
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  line-height: 1;
+}
+
+.topbar__nav {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex: 1;
+}
+
+.topbar__nav::-webkit-scrollbar {
+  display: none;
+}
+
+/* Recessive until reached for: the rule beneath an active tab is the only mark. */
+.topbar__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  height: 74px;
+  padding: 0 20px;
+  font-family: var(--font-display);
+  font-size: 0.71rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.topbar__link::after {
+  content: '';
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 0;
+  height: 2px;
+  background: var(--accent, var(--gold));
+  transform: scaleX(0);
+  transition:
+    transform 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.topbar__link:hover {
+  color: var(--ink);
+}
+
+.topbar__link:hover::after {
+  transform: scaleX(1);
+  opacity: 0.35;
+}
+
+.topbar__link--active {
+  color: var(--ink);
+}
+
+.topbar__link--active::after {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+/* The engraved strapline beneath the bar, the way a letterhead carries one. */
+.topbar__descriptor {
+  border-top: 1px solid var(--rule);
+  background: var(--paper);
+  font-family: var(--font-display);
+  font-size: 0.54rem;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--ink-4);
+  padding: 7px 16px;
+}
+
+@media (max-width: 900px) {
+  .topbar__inner {
+    gap: 16px;
+    padding: 0 16px;
+  }
+
+  .topbar__brand {
+    padding-right: 16px;
+  }
+
+  .topbar__mark {
+    font-size: 1rem;
+    letter-spacing: 0.24em;
+    text-indent: 0.24em;
+  }
+
+  .topbar__link {
+    padding: 0 12px;
+    font-size: 0.65rem;
+  }
+
+  .topbar__descriptor {
+    letter-spacing: 0.24em;
+  }
+}

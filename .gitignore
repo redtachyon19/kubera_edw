@@ -33,6 +33,11 @@ tmp_dagster_home/
 dagster_home/*
 !dagster_home/dagster.yaml
 
+# --- Dashboard hub (Vite) ---
+node_modules/
+dashboard_hub/hub/dist/
+*.tsbuildinfo
+
 # --- OS / editor / tooling ---
 .DS_Store
 .idea/

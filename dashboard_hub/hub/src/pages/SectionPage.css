@@ -1,0 +1,172 @@
+.section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 44px 32px 104px;
+}
+
+.section__back {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  text-decoration: none;
+  margin-bottom: 44px;
+  transition: color 0.15s ease;
+}
+
+.section__back:hover {
+  color: var(--ink);
+}
+
+.section__header {
+  margin-bottom: 40px;
+}
+
+.section__name {
+  font-size: clamp(1.5rem, 3.4vw, 2.3rem);
+  letter-spacing: 0.16em;
+  margin: 18px 0 0;
+}
+
+.section__hairline {
+  width: 76px;
+  height: 2px;
+  background: var(--accent, var(--gold));
+  margin: 24px 0;
+}
+
+.section__tagline {
+  max-width: 660px;
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.85;
+  color: var(--ink-2);
+}
+
+.section__list-rule {
+  height: 1px;
+  background: var(--rule);
+  margin: 14px 0 0;
+}
+
+/* Each dashboard is a ruled sheet: engraved plate on the left, entry on the right. */
+.sheet {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 40px;
+  align-items: center;
+  padding: 32px 4px;
+  border-bottom: 1px solid var(--rule);
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.18s ease;
+}
+
+.sheet:hover {
+  background: var(--surface);
+}
+
+/* The preview plate — 16:10, the shape of the screenshot that will replace it. */
+.sheet__plate {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: var(--surface-sunk);
+  border: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease;
+}
+
+.sheet__plate::after {
+  content: '';
+  position: absolute;
+  inset: 9px;
+  border: 1px solid var(--rule);
+  pointer-events: none;
+}
+
+.sheet:hover .sheet__plate {
+  border-color: var(--accent, var(--gold));
+}
+
+.sheet__plate-no {
+  font-size: 2rem;
+  color: var(--ink-4);
+  letter-spacing: 0.06em;
+  transition: color 0.18s ease;
+}
+
+.sheet:hover .sheet__plate-no {
+  color: var(--accent, var(--gold));
+}
+
+.sheet--planned .sheet__plate {
+  border-style: dashed;
+}
+
+.sheet--planned {
+  opacity: 0.62;
+}
+
+.sheet__status {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--accent, var(--gold));
+  margin-bottom: 14px;
+}
+
+.sheet--planned .sheet__status {
+  color: var(--ink-4);
+}
+
+.sheet__title {
+  font-size: 1.05rem;
+  letter-spacing: 0.15em;
+  margin-bottom: 14px;
+}
+
+.sheet__desc {
+  margin: 0 0 20px;
+  max-width: 560px;
+  font-size: 0.92rem;
+  line-height: 1.75;
+  color: var(--ink-3);
+}
+
+.sheet__cta {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  transition: color 0.18s ease;
+}
+
+.sheet:hover .sheet__cta {
+  color: var(--ink);
+}
+
+.section--missing {
+  text-align: center;
+  padding-top: 88px;
+}
+
+@media (max-width: 780px) {
+  .section {
+    padding: 32px 20px 72px;
+  }
+
+  .sheet {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+}
