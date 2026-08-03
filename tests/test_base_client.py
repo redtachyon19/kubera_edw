@@ -1,5 +1,3 @@
-"""Tests for the shared ingestion.base_client plumbing (landing, caching, retry policy)."""
-
 from __future__ import annotations
 
 import os
@@ -22,7 +20,6 @@ def test_land_text_writes_verbatim() -> None:
         path = client._land_text("x", "a,b\n1,2")
 
     assert path.suffix == ".csv"
-    # No JSON quoting/escaping — the bytes must round-trip exactly.
     assert path.read_text() == "a,b\n1,2"
 
 
@@ -44,7 +41,7 @@ def test_is_fresh_semantics(tmp_path) -> None:
 
     empty = tmp_path / "empty.csv"
     empty.write_text("")
-    assert not BaseClient._is_fresh(empty)  # zero-byte landings are not valid cache hits
+    assert not BaseClient._is_fresh(empty)
 
     fresh = tmp_path / "fresh.csv"
     fresh.write_text("data")
@@ -65,7 +62,6 @@ def test_retry_policy_distinguishes_transient_from_permanent() -> None:
             "boom", request=request, response=httpx.Response(code, request=request)
         )
 
-    # Retrying a 404 just burns the retry budget (and rate-limited quota) for the same answer.
     assert not _is_retryable(status_error(404))
     assert not _is_retryable(status_error(400))
     assert _is_retryable(status_error(429))

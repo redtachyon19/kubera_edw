@@ -1,8 +1,5 @@
-# Kubera_EDW — local, reproducible stack. One command: `docker compose up`.
-# Secrets come from .env (gitignored); see .env.example for required vars.
 
 services:
-  # --- Warehouse (containerized Postgres target) ---
   warehouse:
     image: postgres:16
     container_name: kubera_warehouse
@@ -20,10 +17,6 @@ services:
       timeout: 5s
       retries: 5
 
-  # --- Orchestration (Dagster webserver + daemon) ---
-  # OPTIONAL: Dagster is a plain Python package and runs natively without Docker —
-  #   dagster dev -f orchestration/dagster_pipeline.py
-  # This service exists so a reviewer with Docker can bring the whole stack up in one command.
   orchestrator:
     build:
       context: .
@@ -32,12 +25,9 @@ services:
     command: dagster dev -h 0.0.0.0 -p 3000 -f orchestration/dagster_pipeline.py
     env_file: .env
     environment:
-      # Target the containerized Postgres rather than the local DuckDB file.
       DBT_TARGET: prod
       POSTGRES_HOST: warehouse
       POSTGRES_PORT: 5432
-      # Keep the landing path identical inside and outside the container so cached raw data
-      # is shared rather than re-fetched against rate-limited APIs.
       RAW_DATA_DIR: /app/data/raw
       DAGSTER_HOME: /app/dagster_home
     depends_on:
@@ -48,7 +38,6 @@ services:
     volumes:
       - ./:/app
 
-  # --- BI layer (Metabase). Swap for the Streamlit app if preferred. ---
   bi:
     image: metabase/metabase:latest
     container_name: kubera_bi

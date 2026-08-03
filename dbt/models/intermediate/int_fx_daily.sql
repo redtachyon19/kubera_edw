@@ -1,17 +1,3 @@
--- int_fx_daily — FX rate for EVERY calendar date, forward-filled from the last published rate.
---
--- Why this exists: Frankfurter publishes on ECB business days only, but the dates we need to
--- convert on (fiscal period ends, trade dates) routinely fall on weekends and holidays —
--- Dec 31 lands on a weekend regularly, and that is a period end for five of nine companies.
--- A naive equi-join on rate_date would silently drop those conversions.
---
--- Forward-fill without IGNORE NULLS: Postgres does not support `last_value(... ignore nulls)`,
--- so this uses the portable running-count grouping trick — a running count of non-null rates
--- forms a group id that is constant across each gap, and max() within that group carries the
--- last observed rate forward. Works identically on DuckDB and Postgres.
---
--- USD is emitted explicitly at 1.0 so downstream models can join unconditionally instead of
--- branching on "is this already USD".
 
 with currencies as (
 
@@ -26,13 +12,6 @@ bounds as (
 
 ),
 
--- Every (date, currency) pair we could ever be asked to convert on.
---
--- The window extends fx_max_carry_forward_days PAST the last published quote. Without that,
--- a period ending just after the final quote gets no rate at all — Toyota's fiscal year closes
--- Sunday 2024-03-31 while the last ECB quote is Thursday, so its revenue would silently fail
--- to convert. The window is deliberately bounded rather than open-ended: carrying a rate
--- forward across a weekend is sound, carrying it forward for months is fabrication.
 scaffold as (
 
     select
@@ -52,7 +31,6 @@ observed as (
         s.rate_date,
         s.currency_iso,
         r.rate_per_usd,
-        -- Constant across each run of nulls; increments only on a published rate.
         count(r.rate_per_usd) over (
             partition by s.currency_iso
             order by s.rate_date
@@ -86,9 +64,6 @@ where rate_per_usd is not null
 
 union all
 
--- The normalization target itself: 1 USD is always 1 USD. Emitted across the FULL date spine,
--- not just the FX publication window — otherwise USD-reporting companies would lose their
--- pre-2015 history purely because Frankfurter has no quotes that far back.
 select
     full_date as rate_date,
     'USD'     as currency_iso,

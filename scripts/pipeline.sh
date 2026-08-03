@@ -1,21 +1,9 @@
 #!/usr/bin/env bash
-#
-# scripts/pipeline.sh — run the full pipeline: extract -> load -> transform -> test.
-#
-# Usage:
-#   bash scripts/pipeline.sh                 # DuckDB (local, default)
-#   bash scripts/pipeline.sh prod            # Neon / hosted Postgres
-#   SKIP_EXTRACT=1 bash scripts/pipeline.sh  # reuse landed data, just reload + rebuild
-#
-# Extraction is cached: sources already landed today are not re-fetched.
-#
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
-# Export .env so dbt sees POSTGRES_* / DUCKDB_PATH. The Python clients load it themselves via
-# python-dotenv, but the dbt CLI reads only the process environment.
 if [ -f .env ]; then set -a; . ./.env; set +a; fi
 
 TARGET="${1:-dev}"
@@ -49,8 +37,6 @@ step "2/4  Regenerate dbt seeds from companies.yml, then load raw -> ${LOAD_TARG
 "$PY" -m ingestion.load_raw
 
 step "3/4  Transform (dbt build --target ${TARGET})"
-# Seeds run first: dbt has no DAG edge from a source() to the seed that fills it, so a
-# single build could schedule staging models before the seeds finish.
 ( cd dbt && DBT_PROFILES_DIR=. "$DBT" deps -q && DBT_PROFILES_DIR=. "$DBT" seed --target "$TARGET"   && DBT_PROFILES_DIR=. "$DBT" build --target "$TARGET" )
 
 step "4/4  Done"

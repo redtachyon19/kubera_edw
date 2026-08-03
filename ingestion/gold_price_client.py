@@ -1,27 +1,3 @@
-"""Gold price client — the cross-cutting safe-haven benchmark (§9, §10).
-
-SOURCE CHANGE (verified 2026-07-24). The spec's primary source, FRED series
-GOLDAMGBD228NLBM (LBMA daily gold fixing), NO LONGER EXISTS: the API answers
-
-    400 {"error_code":400,"error_message":"Bad Request.  The series does not exist."}
-
-with a valid key, and a FRED series search for "gold price" returns only volatility indices
-(GVZCLS) and producer/import price INDICES — no spot USD/oz series at all. FRED appears to have
-dropped the precious-metals price series over licensing.
-
-Backends now, in order:
-  1. GLD (SPDR Gold Shares) via Alpha Vantage — DEFAULT. A tradeable gold proxy holding
-     physical bullion, roughly 1/10 troy oz per share. Uses the Alpha Vantage key already
-     configured for prices, so it needs no extra signup. It tracks gold rather than BEING the
-     fixing, which is the honest trade for a benchmark overlay.
-  2. A FRED series id — kept because the code path is still correct and FRED may restore a
-     series, or a different one may be wanted. Pass ``series_id`` explicitly.
-  3. metals-api.com — the spec's documented backup for true spot; needs METALS_API_KEY.
-
-Whatever the backend, the landed payload keeps FRED's ``{"observations": [{date, value}]}``
-shape so the Phase-2 staging model does not care which one produced it.
-"""
-
 from __future__ import annotations
 
 import logging
@@ -32,9 +8,7 @@ from .config_loader import bootstrap
 
 log = logging.getLogger(__name__)
 
-#: Retired by FRED — retained so the failure is self-documenting rather than mysterious.
 GOLD_SERIES_ID = "GOLDAMGBD228NLBM"
-#: Default backend: gold ETF proxy via Alpha Vantage.
 GOLD_PROXY_TICKER = "GLD"
 DEFAULT_START = "2010-01-01"
 
@@ -46,10 +20,6 @@ class GoldPriceClient(BaseClient):
     def fetch_gold_series(
         self, *, start: str | None = None, end: str | None = None, series_id: str | None = None
     ) -> dict:
-        """Fetch a FRED gold series. Requires FRED_API_KEY and a series that still exists.
-
-        Retained for completeness; ``GOLD_SERIES_ID`` itself is retired (see module docstring).
-        """
         api_key = get_api_key("FRED_API_KEY")
         if not api_key:
             raise RuntimeError(
@@ -72,11 +42,6 @@ class GoldPriceClient(BaseClient):
         return payload
 
     def fetch_gold_proxy(self, ticker: str = GOLD_PROXY_TICKER) -> dict:
-        """Fetch the gold ETF proxy and land it in the FRED observations shape.
-
-        Normalizing here rather than in staging keeps the backend swap invisible to dbt: the
-        staging model reads the same ``observations`` array whichever source produced it.
-        """
         from .prices_client import PricesClient
 
         with PricesClient() as prices:

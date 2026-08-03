@@ -1,5 +1,3 @@
-"""Tests for ingestion.gold_price_client."""
-
 from __future__ import annotations
 
 import json
@@ -38,7 +36,5 @@ def test_fetch_gold_series(sample_fred_observations: dict) -> None:
     observations = payload["observations"]
     assert len(observations) == 3
     assert observations[0] == {"date": "2023-01-03", "value": "1839.10"}
-    # Landing is raw-as-is: FRED's "." missing marker is preserved for stg_gold__prices to
-    # clean in Phase 2, not silently dropped at extraction time.
     assert observations[2]["value"] == "."
     assert json.loads(landed.read_text())["observations"][2]["value"] == "."

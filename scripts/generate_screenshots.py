@@ -1,13 +1,3 @@
-"""Render the dashboard's charts to committed PNGs for the README.
-
-Generated from the live warehouse rather than captured by hand: a script re-renders on demand
-and cannot silently drift from the data it claims to show, which a manually-cropped screenshot
-does the moment the model changes.
-
-Usage:
-    python scripts/generate_screenshots.py
-"""
-
 from __future__ import annotations
 
 import sys
@@ -21,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from dashboards.streamlit_app import queries, theme  # noqa: E402
 
 OUT = Path(__file__).resolve().parent.parent / "docs" / "screenshots"
-SCALE = 2  # retina
+SCALE = 2
 
 
 def save(chart: alt.Chart, name: str) -> None:
@@ -78,10 +68,6 @@ def fundamentals_chart() -> alt.Chart:
     )
 
 
-#: Hard cap on series in one chart. The palette has 8 slots assigned in fixed order; past that
-#: hues would CYCLE and two companies would share a colour, making identity ambiguous. 18
-#: companies now report in a non-USD currency, so this chart shows the largest and says so in
-#: the subtitle rather than drawing a rainbow.
 MAX_SERIES = 6
 
 
@@ -127,7 +113,7 @@ def fx_chart() -> alt.Chart:
 def macro_chart() -> alt.Chart:
     df = queries.macro()
     df = df[df["calendar_year"].between(2015, 2024)].dropna(subset=["gdp_growth_pct"])
-    keep = ["USA", "CHN", "IND", "JPN", "GBR", "DEU"]  # 6 <= MAX_SERIES
+    keep = ["USA", "CHN", "IND", "JPN", "GBR", "DEU"]
     df = df[df["country_iso3"].isin(keep)]
     palette = theme.colors_for(sorted(keep))
     return (

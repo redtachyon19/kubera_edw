@@ -1,5 +1,3 @@
-"""Tests for ingestion.load_raw — the parsers that turn landed files into warehouse tables."""
-
 from __future__ import annotations
 
 import json
@@ -25,7 +23,6 @@ def _write(rel: str, payload: object) -> Path:
 
 def test_parse_sec_facts_flattens_and_skips_dei(sample_sec_company_facts: dict) -> None:
     payload = dict(sample_sec_company_facts)
-    # dei is filing boilerplate (document type, entity name), not a financial fact.
     payload["facts"] = dict(payload["facts"])
     payload["facts"]["dei"] = {
         "EntityCommonStockSharesOutstanding": {
@@ -35,7 +32,7 @@ def test_parse_sec_facts_flattens_and_skips_dei(sample_sec_company_facts: dict) 
     _write("sec_edgar/companyfacts_CIK0000320193.json", payload)
 
     df = parse_sec_facts()
-    assert set(df["taxonomy"]) == {"us-gaap"}  # dei dropped
+    assert set(df["taxonomy"]) == {"us-gaap"}
     row = df.iloc[0]
     assert row["cik"] == "0000320193"
     assert row["concept"] == "Revenues"
@@ -45,8 +42,6 @@ def test_parse_sec_facts_flattens_and_skips_dei(sample_sec_company_facts: dict) 
 
 
 def test_parse_sec_facts_handles_duplicate_keys() -> None:
-    # Alibaba's companyfacts repeats a "Segment" key, which makes DuckDB's read_json_auto
-    # struct inference fail outright. Parsing in Python is what sidesteps that.
     raw_json = """
     {"cik": 1577552, "entityName": "Alibaba",
      "facts": {"us-gaap": {"Revenues": {"units": {"CNY": [
@@ -62,7 +57,6 @@ def test_parse_sec_facts_handles_duplicate_keys() -> None:
 def test_parse_fx_unpivots_nested_rates(sample_fx_timeseries: dict) -> None:
     _write("fx/timeseries_USD_2023-01-02_2023-01-03.json", sample_fx_timeseries)
     df = parse_fx()
-    # 2 dates x 2 currencies -> 4 tidy rows
     assert len(df) == 4
     assert set(df["currency"]) == {"GBP", "JPY"}
     assert set(df["base_currency"]) == {"USD"}
@@ -89,7 +83,6 @@ def test_parse_world_bank_carries_load_provenance() -> None:
     )
     df = parse_world_bank()
     assert len(df) == 1
-    # The load stamp is what makes a later World Bank revision visible rather than silent.
     assert df.iloc[0]["loaded_at"] == "2026-07-24T00:00:00+00:00"
     assert df.iloc[0]["country_iso3"] == "USA"
 
@@ -98,12 +91,10 @@ def test_parse_gold_preserves_missing_markers(sample_fred_observations: dict) ->
     _write("gold_price/gold_lbma_fixing.json", sample_fred_observations)
     df = parse_gold()
     assert len(df) == 3
-    # "." stays raw here; stg_gold__prices is what turns it into NULL.
     assert df[df.price_date == "2023-01-05"].iloc[0]["value_raw"] == "."
 
 
 def test_parse_imf_tolerates_null_country_series() -> None:
-    # IMF lists countries it has no series for, with a null body — must not crash the load.
     _write(
         "imf/gdp_growth_pct_NGDP_RPCH.json",
         {"values": {"NGDP_RPCH": {"USA": {"2023": 2.9}, "GBR": None}}},
@@ -114,6 +105,5 @@ def test_parse_imf_tolerates_null_country_series() -> None:
 
 
 def test_parsers_return_empty_frames_when_nothing_landed() -> None:
-    # Gold and prices are blocked on API keys; the loader must degrade, not explode.
     assert parse_gold().empty
     assert parse_prices().empty

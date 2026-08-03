@@ -1,8 +1,3 @@
--- dim_currency — one row per currency the warehouse touches.
---
--- Union of BOTH currency roles, which are genuinely different sets: a country's domestic
--- currency (GBP for AZN) and the currency a company actually reports in (USD for AZN). USD is
--- included explicitly since it is the normalization target every measure converts into.
 
 with universe as (
 
@@ -16,7 +11,7 @@ with universe as (
 
     union
 
-    select 'USD'                                -- normalization target, always present
+    select 'USD'
 
 ),
 

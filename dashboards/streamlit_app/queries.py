@@ -1,9 +1,3 @@
-"""KPI queries against the marts, mapped to the framework in docs/project_spec.md §10.
-
-Every query reads marts only — never staging, never raw. If a KPI needs logic beyond a
-select, that logic belongs in dbt where it is tested, not in the dashboard.
-"""
-
 from __future__ import annotations
 
 import pandas as pd
@@ -11,9 +5,7 @@ import pandas as pd
 from .db import query
 
 
-# --------------------------------------------------------------- portfolio allocation
 def holdings() -> pd.DataFrame:
-    """Current company versions with their classification attributes."""
     return query(
         """
         select ticker, legal_name, sector, country_iso3, domestic_currency,
@@ -26,13 +18,6 @@ def holdings() -> pd.DataFrame:
 
 
 def allocation(dimension: str) -> pd.DataFrame:
-    """Equal-weighted allocation by a classification dimension.
-
-    EQUAL WEIGHT IS AN EXPLICIT ASSUMPTION, not a measurement. Kubera's positions are a
-    simulation (§13) and the warehouse holds no share counts, so there are no real weights to
-    compute — and market-cap weighting is unavailable while prices are missing. Presenting
-    equal weight labelled as such is honest; inventing weights would not be.
-    """
     column = {
         "Country": "c.country_name",
         "Sector": "d.sector",
@@ -53,9 +38,7 @@ def allocation(dimension: str) -> pd.DataFrame:
     )
 
 
-# --------------------------------------------------------------- fundamentals
 def fundamentals(period_type: str = "FY") -> pd.DataFrame:
-    """Annual (or quarterly) fundamentals in USD with margins and growth."""
     return query(
         f"""
         with base as (
@@ -77,13 +60,7 @@ def fundamentals(period_type: str = "FY") -> pd.DataFrame:
     )
 
 
-# --------------------------------------------------------------- FX impact
 def fx_impact() -> pd.DataFrame:
-    """Companies whose financials genuinely require currency conversion.
-
-    Only TM (JPY) and BABA (CNY) report in a non-USD currency; AZN, SHEL and INFY are foreign
-    issuers that file with the SEC in USD, so for them conversion is a deliberate no-op.
-    """
     return query(
         """
         select ticker, fiscal_year, reporting_currency, rate_per_usd,
@@ -98,7 +75,6 @@ def fx_impact() -> pd.DataFrame:
 
 
 def fx_rate_history() -> pd.DataFrame:
-    """Year-end conversion rates actually applied to the financials."""
     return query(
         """
         select ticker, reporting_currency, fiscal_year, rate_per_usd
@@ -109,9 +85,7 @@ def fx_rate_history() -> pd.DataFrame:
     )
 
 
-# --------------------------------------------------------------- macro overlay
 def macro() -> pd.DataFrame:
-    """Country-year macro, with the IMF cross-check carried alongside World Bank."""
     return query(
         """
         select country_iso3, region, calendar_year,
@@ -124,9 +98,7 @@ def macro() -> pd.DataFrame:
     )
 
 
-# --------------------------------------------------------------- market performance
 def market_prices() -> pd.DataFrame:
-    """Daily USD prices and returns from Alpha Vantage (free tier: latest ~100 days)."""
     return query(
         """
         select ticker, trade_date, close_price_usd, daily_return, volume
@@ -137,7 +109,6 @@ def market_prices() -> pd.DataFrame:
 
 
 def gold_prices() -> pd.DataFrame:
-    """Daily gold benchmark (currently the GLD ETF proxy — see gold_price_client)."""
     return query(
         """
         select price_date, series_id, source, gold_price_usd, daily_change_pct

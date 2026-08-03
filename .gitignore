@@ -33,8 +33,9 @@ tmp_dagster_home/
 dagster_home/*
 !dagster_home/dagster.yaml
 
-# --- OS / editor ---
+# --- OS / editor / tooling ---
 .DS_Store
 .idea/
 .vscode/
+.claude/
 *.swp

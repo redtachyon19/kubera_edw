@@ -1,19 +1,5 @@
 version: 2
 
-# SCD Type 2 history for the company dimension.
-#
-# `check` strategy (not `timestamp`): companies.yml has no updated_at column, so dbt compares
-# the tracked columns against the stored snapshot and only writes a new version when one
-# actually changes — e.g. a sector reclassification, a filer-type change (20-F -> 10-K after
-# re-domestication), or a CIK repoint like XOM's.
-#
-# Columns deliberately NOT tracked: fiscal_year_end and country (near-static descriptors whose
-# change would not merit a new dimension version).
-#
-# Sourced from the COMMITTED seed, not from raw.companies: the dimension slice must build
-# with no landed data and no extraction run, so CI can build and test it on a fresh database.
-# The seed is generated from companies.yml (`python -m ingestion.generate_seeds`), so the YAML
-# remains the single source of truth.
 snapshots:
   - name: company_snapshot
     relation: ref('seed_companies')
@@ -22,11 +8,6 @@ snapshots:
       unique_key: ticker
       strategy: check
       check_cols:
-        # legal_name is deliberately NOT tracked. Company names arrive with inconsistent
-        # capitalisation and suffixes depending on the source ("AstraZeneca PLC" vs
-        # "AstraZeneca plc", "Infosys Ltd" vs "Infosys Ltd."), so tracking it manufactured five
-        # spurious versions during the Phase-8 scale-out from a pure formatting difference.
-        # A rename is not a change in what the company IS; the attributes below are.
         - sector
         - industry
         - filer_type
@@ -34,6 +15,3 @@ snapshots:
         - currency_iso
         - reporting_currency
         - xbrl_taxonomy
-        # cik deliberately EXCLUDED: a CIK correction (e.g. repointing XOM off the reorg
-        # holdco) is a fix to an identifier, not a new economic version of the company, so
-        # it should update in place (Type 1) rather than spawn a spurious history row.

@@ -1,6 +1,5 @@
 version: 2
 
-# Staging-layer tests: type/shape guarantees only. Business-rule tests live on the marts.
 models:
   - name: stg_sec_edgar__financials
     description: One row per company per taxonomy/concept per unit per reported period.
@@ -28,8 +27,6 @@ models:
   - name: stg_fx__rates
     description: Daily USD-base FX rates.
     tests:
-      # One rate per currency per day. Without this, an accumulated second landing file
-      # silently doubles rates and fans out every fact that joins to them.
       - dbt_utils.unique_combination_of_columns:
           arguments:
             combination_of_columns: [rate_date, currency_iso]

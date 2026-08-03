@@ -1,27 +1,17 @@
-# dbt connection profiles for Kubera_EDW.
-# dbt also looks in ~/.dbt/profiles.yml; a project-local copy keeps the repo self-contained.
-# Secrets are read from the environment (set via .env / docker-compose) — never hardcoded.
 
 kubera_edw:
   target: dev
   outputs:
-    # Local development — zero-infra DuckDB file.
     dev:
       type: duckdb
       path: "{{ env_var('DUCKDB_PATH', '../data/kubera_edw.duckdb') }}"
       threads: 4
 
-    # CI — ephemeral in-repo DuckDB built from committed seeds.
     ci:
       type: duckdb
       path: "target/ci.duckdb"
       threads: 4
 
-    # Hosted Postgres (Neon) — the production-style target.
-    # Credentials come from .env (gitignored); nothing here is ever a literal value.
-    # Neon requires TLS, hence sslmode. Load raw first:
-    #   LOAD_TARGET=postgres python -m ingestion.load_raw
-    #   cd dbt && dbt build --target prod --profiles-dir .
     prod:
       type: postgres
       host: "{{ env_var('POSTGRES_HOST') }}"
@@ -31,7 +21,6 @@ kubera_edw:
       dbname: "{{ env_var('POSTGRES_DB') }}"
       schema: "{{ env_var('POSTGRES_SCHEMA', 'public') }}"
       sslmode: "{{ env_var('PGSSLMODE', 'require') }}"
-      # Neon scales to zero; a cold start can exceed the default connect timeout.
       connect_timeout: 30
       keepalives_idle: 30
       threads: 4

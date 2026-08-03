@@ -11,32 +11,19 @@ macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 
 vars:
-  # dim_date spine bounds. Covers the earliest landed filing period (AstraZeneca, 2003)
-  # through a comfortable forward horizon; widen here rather than editing the model.
   date_spine_start: "2000-01-01"
   date_spine_end: "2031-01-01"
 
-  # How many days an FX rate may be carried past the last published quote. Covers weekends and
-  # holiday closures (a fiscal period ending Sunday still converts) without extrapolating a
-  # stale rate indefinitely. Rows using a carried rate are flagged is_carried_forward.
   fx_max_carry_forward_days: 7
 
 seeds:
   kubera_edw:
     seed_companies:
       +column_types:
-        # Forced explicitly: cik must not lose its leading zeros to numeric inference, and
-        # industry is entirely blank today, which would otherwise infer as a null-typed column.
         cik: varchar
         industry: varchar
         valid_from: date
 
-    # Committed fixtures standing in for landed data, so the FULL DAG (staging -> intermediate
-    # -> marts -> tests) builds offline in CI with no API keys and no extraction run.
-    #
-    # ENABLED ONLY ON THE ci TARGET. On dev/prod the raw schema is written by
-    # `python -m ingestion.load_raw` with real data; if these seeds ran there they would
-    # overwrite 172k real facts with a handful of fixtures.
     ci_raw:
       +schema: raw
       +enabled: "{{ target.name == 'ci' }}"
@@ -49,7 +36,7 @@ seeds:
           value: double precision
       gold_prices:
         +column_types:
-          value_raw: varchar      # keeps FRED's "." marker intact for staging to null out
+          value_raw: varchar
       market_prices:
         +column_types:
           ticker: varchar

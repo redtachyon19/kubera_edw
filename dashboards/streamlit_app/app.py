@@ -1,17 +1,3 @@
-"""Kubera_EDW — BI layer.
-
-Five dashboards mapped directly to the KPI framework in docs/project_spec.md §10, reading the
-modelled marts (never staging, never raw).
-
-Run:
-    streamlit run dashboards/streamlit_app/app.py
-
-Charts follow the project's viz rules: categorical colour assigned per ENTITY in fixed order
-(so filtering never repaints the survivors), one y-axis per chart, recessive grid, and — because
-the palette's lighter slots fall below 3:1 on this surface — visible direct labels plus a table
-view on every chart as the documented relief.
-"""
-
 from __future__ import annotations
 
 import sys
@@ -21,7 +7,6 @@ import altair as alt
 import pandas as pd
 import streamlit as st
 
-# Allow `streamlit run dashboards/streamlit_app/app.py` without installing the repo as a package.
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from dashboards.streamlit_app import queries, theme  # noqa: E402
@@ -38,10 +23,7 @@ alt.themes.enable("kubera")
 MONEY_FMT = "$,.0f"
 
 
-# --------------------------------------------------------------------------- helpers
 def table_view(df: pd.DataFrame, label: str = "View data") -> None:
-    """Every chart ships its underlying table — the palette's contrast relief, and the
-    fastest way for an analyst to sanity-check a number they don't believe."""
     with st.expander(label):
         st.dataframe(df, use_container_width=True, hide_index=True)
 
@@ -51,18 +33,11 @@ def empty_state(title: str, reason: str, fix: str) -> None:
 
 
 def bar_with_labels(df, x, y, color_field, title, x_title="", fmt=".0f"):
-    """Horizontal bars with direct value labels.
-
-    Row height is set with alt.Step (a per-band size) rather than a fixed pixel height on the
-    mark plus a fixed chart height — those two fight each other and collapse the bands into
-    overlapping bars once there are more than a couple of categories.
-    """
     base = alt.Chart(df).encode(
         y=alt.Y(f"{y}:N", sort="-x", title=None, axis=alt.Axis(labelLimit=180)),
         x=alt.X(f"{x}:Q", title=x_title, axis=alt.Axis(grid=True)),
     )
     bars = base.mark_bar(cornerRadiusEnd=4).encode(
-        # Colour by entity, in fixed slot order — never cycled, never by rank.
         color=alt.Color(f"{color_field}:N", scale=alt.Scale(range=theme.SERIES), legend=None),
         tooltip=list(df.columns),
     )
@@ -72,7 +47,6 @@ def bar_with_labels(df, x, y, color_field, title, x_title="", fmt=".0f"):
     return (bars + labels).properties(title=title, height=alt.Step(30))
 
 
-# --------------------------------------------------------------------------- shell
 st.title("Kubera Global Asset Management")
 st.caption(
     "Enterprise data warehouse & BI. Fictional firm; real public data — "
@@ -109,7 +83,6 @@ tabs = st.tabs(
     ]
 )
 
-# --------------------------------------------------------------------------- 1. allocation
 with tabs[0]:
     st.subheader("Portfolio allocation")
     st.caption(
@@ -145,7 +118,6 @@ with tabs[0]:
     st.markdown("##### Holdings")
     st.dataframe(holdings, use_container_width=True, hide_index=True)
 
-# --------------------------------------------------------------------------- 2. fundamentals
 with tabs[1]:
     st.subheader("Holding fundamentals")
     st.caption(
@@ -174,9 +146,6 @@ with tabs[1]:
         if view.empty:
             st.warning("No rows for that selection.")
         else:
-            # Colour follows the ENTITY: the mapping is built from the FULL ticker list, then
-            # subset to the selection. Each company therefore keeps its own colour no matter
-            # what else is on screen, while the legend shows only what is actually plotted.
             palette = theme.colors_for(tickers)
             shown = {t: palette[t] for t in picked}
             scale = alt.Scale(domain=list(shown), range=list(shown.values()))
@@ -221,7 +190,6 @@ with tabs[1]:
 
             table_view(view)
 
-# --------------------------------------------------------------------------- 3. market
 with tabs[2]:
     st.subheader("Market performance")
     prices = queries.market_prices()
@@ -244,8 +212,8 @@ with tabs[2]:
         tickers = sorted(prices["ticker"].unique())
         picked = st.multiselect("Companies", tickers, default=tickers[:4], key="mkt")
         view = prices[prices["ticker"].isin(picked)].copy()
-        palette = theme.colors_for(tickers)  # stable per company
-        shown = {t: palette[t] for t in picked}  # legend shows only what is plotted
+        palette = theme.colors_for(tickers)
+        shown = {t: palette[t] for t in picked}
         view["cumulative_return"] = view.groupby("ticker")["daily_return"].transform(
             lambda s: (1 + s.fillna(0)).cumprod() - 1
         )
@@ -271,7 +239,6 @@ with tabs[2]:
         )
         table_view(view)
 
-# --------------------------------------------------------------------------- 4. FX
 with tabs[3]:
     st.subheader("FX impact on reported financials")
     st.caption(
@@ -320,8 +287,6 @@ with tabs[3]:
                 .mark_line(point=alt.OverlayMarkDef(size=45), strokeWidth=2)
                 .encode(
                     x=alt.X("fiscal_year:O", title="Fiscal year"),
-                    # One axis per chart: JPY (~150/USD) and CNY (~7/USD) share a scale only
-                    # because they are faceted into separate rows, never dual-axed.
                     y=alt.Y("rate_per_usd:Q", title="Units per 1 USD"),
                     color=alt.Color("ticker:N", scale=scale, title="Company"),
                     tooltip=["ticker", "fiscal_year", alt.Tooltip("rate_per_usd:Q", format=".2f")],
@@ -338,7 +303,6 @@ with tabs[3]:
         )
         table_view(fx)
 
-# --------------------------------------------------------------------------- 5. macro
 with tabs[4]:
     st.subheader("Macro overlay")
     st.caption(
@@ -355,8 +319,8 @@ with tabs[4]:
         countries = sorted(macro["country_iso3"].unique())
         picked = st.multiselect("Countries", countries, default=countries, key="macro")
         view = macro[macro["country_iso3"].isin(picked)]
-        palette = theme.colors_for(countries)  # stable per country
-        shown = {c: palette[c] for c in picked}  # legend shows only the selection
+        palette = theme.colors_for(countries)
+        shown = {c: palette[c] for c in picked}
         scale = alt.Scale(domain=list(shown), range=list(shown.values()))
 
         def macro_line(field, title, fmt):

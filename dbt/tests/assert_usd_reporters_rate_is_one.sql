@@ -1,11 +1,3 @@
--- A USD-reporting company must never be "converted" — its rate must be exactly 1.0 and its
--- USD measures must equal its reported measures.
---
--- This is the guard against the subtle failure the FX join could produce: a missing rate row
--- silently nulling out revenue_usd for seven of nine companies, or a stray non-1.0 rate
--- rescaling figures that were already in USD. Both would look plausible in a dashboard.
---
--- A dbt test passes when it returns zero rows, so this selects violations.
 
 select
     ticker,

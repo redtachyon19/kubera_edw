@@ -1,25 +1,3 @@
-"""Verify a candidate coverage universe against the sources that actually feed the warehouse.
-
-Phase 0 established that three attributes must be READ FROM FILINGS, never inferred:
-
-  * reporting currency — AstraZeneca, Shell and Infosys are foreign issuers that nonetheless
-    file with the SEC in USD, so domicile does not imply reporting currency;
-  * XBRL taxonomy — Alibaba files a 20-F but tags under us-gaap, so filer type does not imply
-    taxonomy, and Toyota MIGRATED namespaces mid-history;
-  * CIK — the ticker map can point at a reorg successor holding no financial history, as it
-    does for XOM.
-
-Doing that by hand for ~40 names is not viable, so this script does it in one throttled pass and
-reports what each candidate would contribute — including whether its country has World Bank
-macro coverage and its currency is served by Frankfurter, the two gaps that removed Taiwan.
-
-It only REPORTS. It never edits companies.yml.
-
-Usage:
-    python scripts/verify_universe.py                 # verify the full spec universe (§6)
-    python scripts/verify_universe.py AAPL MSFT ...   # verify specific tickers
-"""
-
 from __future__ import annotations
 
 import json
@@ -38,7 +16,6 @@ from ingestion.sec_edgar_client import SecEdgarClient  # noqa: E402
 
 SPEC = Path(__file__).resolve().parent.parent / "docs" / "project_spec.md"
 
-#: Country name in the spec -> ISO-3166 alpha-3, for the macro/FX coverage checks.
 ISO3 = {
     "United States": "USA",
     "Mexico": "MEX",
@@ -56,7 +33,6 @@ ISO3 = {
     "Australia": "AUS",
     "Brazil": "BRA",
 }
-#: Domestic currency by ISO3.
 CURRENCY = {
     "USA": "USD",
     "MEX": "MXN",
@@ -76,7 +52,6 @@ CURRENCY = {
 
 
 def spec_universe() -> list[dict]:
-    """Parse the §6 coverage tables out of the specification."""
     text = SPEC.read_text()
     section = text[text.index("## 6. Company Universe") : text.index("## 7. Technology Stack")]
     rows = re.findall(
@@ -97,7 +72,6 @@ def spec_universe() -> list[dict]:
 
 
 def audit(client: SecEdgarClient, ticker: str) -> dict:
-    """Resolve a ticker and read its real filer type, currency, taxonomy and fiscal year end."""
     out: dict = {"ticker": ticker, "status": "ok", "notes": []}
     try:
         cik = client.resolve_cik(ticker)
@@ -119,7 +93,6 @@ def audit(client: SecEdgarClient, ticker: str) -> dict:
         if form in ("10-K", "20-F")
     ]
     if not annuals:
-        # The XOM pattern: the ticker resolves to an entity with no annual report at all.
         out["status"] = "NO_ANNUAL_FILING"
         out["notes"].append("ticker resolves to an entity with no 10-K/20-F")
         return out
@@ -132,7 +105,6 @@ def audit(client: SecEdgarClient, ticker: str) -> dict:
         out["notes"].append(str(exc)[:80])
         return out
 
-    # Reporting currency = the currency the monetary facts are actually denominated in.
     units: Counter = Counter()
     for taxonomy, concepts in facts.items():
         if taxonomy == "dei":
@@ -156,14 +128,10 @@ def audit(client: SecEdgarClient, ticker: str) -> dict:
 
 
 def coverage_checks(iso3s: set[str], currencies: set[str]) -> tuple[set[str], set[str]]:
-    """Which countries lack World Bank macro, and which currencies Frankfurter will not serve."""
     import httpx
 
     missing_macro = set()
     for iso3 in sorted(iso3s):
-        # Space the calls. Firing these back-to-back trips a World Bank rate limit that
-        # returns an empty body, which reads as "no coverage" — a FALSE NEGATIVE that
-        # wrongly condemned Australia and Germany on the first run of this script.
         time.sleep(0.6)
         try:
             r = httpx.get(
@@ -186,7 +154,7 @@ def coverage_checks(iso3s: set[str], currencies: set[str]) -> tuple[set[str], se
 
 def main() -> None:
     bootstrap()
-    BaseClient.min_interval_s = 0.11  # stay under SEC's ~10 req/s guidance
+    BaseClient.min_interval_s = 0.11
 
     wanted = sys.argv[1:]
     universe = spec_universe()

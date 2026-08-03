@@ -1,5 +1,3 @@
-"""Tests for ingestion.sec_edgar_client."""
-
 from __future__ import annotations
 
 import json
@@ -12,14 +10,11 @@ from ingestion.sec_edgar_client import CONCEPT_TAG_MAP, XBRL_NAMESPACES, SecEdga
 
 
 def test_concept_tag_map_has_core_concepts() -> None:
-    # Sanity check on the concept → XBRL tag mapping that staging relies on.
     assert "revenue" in CONCEPT_TAG_MAP
     assert CONCEPT_TAG_MAP["net_income"][0] == "NetIncomeLoss"
 
 
 def test_concept_map_covers_ifrs_for_foreign_filers() -> None:
-    # The four 20-F filers (AZN, SHEL, TM, TSM) tag under ifrs-full, not us-gaap — every
-    # core concept needs at least one IFRS parallel or those companies silently yield nothing.
     assert XBRL_NAMESPACES == ("us-gaap", "ifrs-full")
     assert "Revenue" in CONCEPT_TAG_MAP["revenue"]
     assert "ProfitLoss" in CONCEPT_TAG_MAP["net_income"]
@@ -28,7 +23,6 @@ def test_concept_map_covers_ifrs_for_foreign_filers() -> None:
 
 
 def test_missing_user_agent_raises(monkeypatch: pytest.MonkeyPatch) -> None:
-    # SEC requires a User-Agent — constructing the client without one must fail loudly.
     monkeypatch.delenv("SEC_EDGAR_USER_AGENT", raising=False)
     with pytest.raises(RuntimeError, match="SEC_EDGAR_USER_AGENT"):
         SecEdgarClient()
@@ -45,7 +39,6 @@ def test_parse_company_facts(sample_sec_company_facts: dict) -> None:
 
     assert route.called
     assert payload["entityName"] == "Apple Inc."
-    # The us-gaap Revenues fact survives landing intact for the Phase-2 staging model.
     fact = payload["facts"]["us-gaap"]["Revenues"]["units"]["USD"][0]
     assert fact["val"] == 383285000000
     assert fact["form"] == "10-K"
@@ -59,7 +52,7 @@ def test_fetch_company_facts_zero_pads_cik(sample_sec_company_facts: dict) -> No
             return_value=httpx.Response(200, json=sample_sec_company_facts)
         )
         with SecEdgarClient() as client:
-            client.fetch_company_facts("320193")  # unpadded input
+            client.fetch_company_facts("320193")
 
     assert "CIK0000320193.json" in str(route.calls[0].request.url)
 
@@ -71,11 +64,10 @@ def test_resolve_cik_zero_pads(sample_sec_ticker_map: dict) -> None:
         )
         with SecEdgarClient() as client:
             assert client.resolve_cik("AAPL") == "0000320193"
-            assert client.resolve_cik("msft") == "0000789019"  # case-insensitive
+            assert client.resolve_cik("msft") == "0000789019"
 
 
 def test_resolve_cik_raises_on_miss(sample_sec_ticker_map: dict) -> None:
-    # Guessing a CIK would silently pull the wrong company's financials — must fail loudly.
     with respx.mock:
         respx.get("https://www.sec.gov/files/company_tickers.json").mock(
             return_value=httpx.Response(200, json=sample_sec_ticker_map)
@@ -85,8 +77,6 @@ def test_resolve_cik_raises_on_miss(sample_sec_ticker_map: dict) -> None:
 
 
 def test_cik_for_company_prefers_pinned_value(sample_sec_ticker_map: dict) -> None:
-    # XOM's ticker resolves to a reorg holdco with no 10-K history, so the scope-locked CIK
-    # in companies.yml must win over ticker resolution.
     with respx.mock:
         ticker_route = respx.get("https://www.sec.gov/files/company_tickers.json").mock(
             return_value=httpx.Response(200, json=sample_sec_ticker_map)
@@ -95,11 +85,10 @@ def test_cik_for_company_prefers_pinned_value(sample_sec_ticker_map: dict) -> No
             cik = client.cik_for_company({"ticker": "XOM", "cik": "0000034088"})
 
     assert cik == "0000034088"
-    assert not ticker_route.called  # no lookup needed when a CIK is pinned
+    assert not ticker_route.called
 
 
 def test_concept_frame_falls_back_across_namespaces() -> None:
-    # us-gaap misses for an IFRS filer; the client must keep walking to ifrs-full.
     rows = {"data": [{"cik": 901832, "val": 1000}]}
     with respx.mock:
         respx.get(url__startswith="https://data.sec.gov/api/xbrl/frames/us-gaap/").mock(

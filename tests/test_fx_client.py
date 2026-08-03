@@ -1,5 +1,3 @@
-"""Tests for ingestion.fx_client."""
-
 from __future__ import annotations
 
 import json
@@ -47,8 +45,6 @@ def test_fetch_latest(sample_fx_timeseries: dict) -> None:
 
 
 def test_supported_currencies_excludes_twd() -> None:
-    # Frankfurter serves the ECB reference set, which has no TWD — the entrypoint filters
-    # unsupported symbols instead of failing the whole FX pull (known Phase-0 gap).
     with respx.mock:
         respx.get("https://api.frankfurter.dev/v1/currencies").mock(
             return_value=httpx.Response(200, json={"GBP": "British Pound", "JPY": "Japanese Yen"})

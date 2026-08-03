@@ -1,8 +1,5 @@
 version: 2
 
-# dbt-native tests on the warehouse (Phase 5). not_null / unique on keys, and relationships
-# (referential integrity) from every fact FK back to its conformed dimension.
-# Generic-test arguments are nested under `arguments:` per dbt 1.10+ conventions.
 models:
   - name: dim_company
     description: One row per company VERSION (SCD Type 2 on classification changes).

@@ -1,11 +1,6 @@
--- dim_country — one row per country in the coverage universe.
--- Conformed: joined by fact_macro_indicators, and reachable from fact_financials /
--- fact_market_prices through dim_company.country_iso3.
 
 with universe as (
 
-    -- Only countries the portfolio actually holds positions in — that is what makes the
-    -- referential-integrity tests on fact_macro_indicators meaningful.
     select distinct country_iso3
     from {{ ref('seed_companies') }}
 
