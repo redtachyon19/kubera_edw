@@ -61,13 +61,21 @@ _MIN_YEARS_FOR_VOL = 0.02
 _cache: dict[tuple, tuple[float, Any]] = {}
 
 
-def _cached(key: tuple, produce, ttl: int = _DEFAULT_TTL):
+def _cached(key: tuple, produce, ttl: int = _DEFAULT_TTL, keep=None):
+    """Memoise `produce` for `ttl` seconds.
+
+    `keep` guards against poisoning: Yahoo answers a throttled request with a
+    partial frame rather than an error, and caching that would serve a
+    half-empty sector list for the full TTL. A result that fails the predicate
+    is returned to this caller but not stored, so the next request retries.
+    """
     hit = _cache.get(key)
     now = time.monotonic()
     if hit and now - hit[0] < ttl:
         return hit[1]
     value = produce()
-    _cache[key] = (now, value)
+    if keep is None or keep(value):
+        _cache[key] = (now, value)
     return value
 
 
@@ -228,6 +236,7 @@ def history(symbols: list[str], period_label: str) -> dict:
         ("hist", wanted, period, interval, prepost),
         lambda: _closes(wanted, period, interval, prepost),
         ttl=_TTL_BY_PERIOD.get(period_label, _DEFAULT_TTL),
+        keep=lambda f: len(f.columns) >= len(wanted) * 0.9,
     )
     missing = [s for s in wanted if s not in frame.columns]
     aligned, start, limiting = _align(frame)
@@ -438,6 +447,7 @@ def sector_snapshot(symbols: list[str], period_label: str) -> dict:
         ("hist", wanted, period, interval, intraday),
         lambda: _closes(wanted, period, interval, intraday),
         ttl=_TTL_BY_PERIOD.get(period_label, _DEFAULT_TTL),
+        keep=lambda f: len(f.columns) >= len(wanted) * 0.9,
     )
     missing = [s for s in wanted if s not in frame.columns]
     aligned, start, _ = _align(frame)
@@ -512,6 +522,9 @@ def sectors_overview(period_label: str) -> list[dict]:
         ("overview", every, period, interval),
         lambda: _closes(every, period, interval, False),
         ttl=_TTL_BY_PERIOD.get(period_label, _DEFAULT_TTL),
+        # A throttled batch comes back with most columns missing; serve it once
+        # rather than pinning it for the next quarter of an hour.
+        keep=lambda f: len(f.columns) >= len(every) * 0.9,
     )
 
     out = []

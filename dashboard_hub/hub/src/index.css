@@ -3,48 +3,68 @@
    out to a font CDN. `swap` everywhere, so text paints immediately and reflows
    once the face lands rather than sitting invisible.
 
-   Copperplate Gothic is the display face — the real one, bundled from the OTFs
-   rather than relying on whatever Copperplate the reader's OS happens to have.
-   Two cuts: Regular for the engraved caps and 31 AB, the heaviest of the series,
-   so a bold is drawn rather than synthesised by the browser. Cinzel stays behind
-   it as an open-licence stand-in.
+   Copperplate is the display face, bundled in three real cuts — Light, Regular
+   and Bold — so weights are drawn rather than synthesised by the browser, and it
+   renders the same whatever the reader's OS has installed. Subset to Latin plus
+   the arrows and marks the interface actually draws, which takes each cut from
+   ~103KB to ~25KB.
+
+   Times is the reading face, in all four cuts. It is bundled rather than left to
+   a system stack because a stack falls through to Times New Roman on Windows —
+   a different typeface, and not the one this is set in.
    ───────────────────────────────────────────────────────────────────────── */
 @font-face {
-  font-family: 'Copperplate Gothic Web';
-  src: url('/fonts/copperplate-gothic.woff2') format('woff2');
+  font-family: 'Copperplate Web';
+  src: url('/fonts/copperplate-light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Copperplate Web';
+  src: url('/fonts/copperplate-regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Copperplate Gothic Web';
-  src: url('/fonts/copperplate-gothic-bold.woff2') format('woff2');
+  font-family: 'Copperplate Web';
+  src: url('/fonts/copperplate-bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Cinzel';
-  src: url('/fonts/cinzel-latin.woff2') format('woff2');
-  font-weight: 400 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'EB Garamond';
-  src: url('/fonts/ebgaramond-latin.woff2') format('woff2');
-  font-weight: 400 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'EB Garamond';
-  src: url('/fonts/ebgaramond-italic-latin.woff2') format('woff2');
+  font-family: 'Times Web';
+  src: url('/fonts/times-regular.woff2') format('woff2');
   font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Times Web';
+  src: url('/fonts/times-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Times Web';
+  src: url('/fonts/times-italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Times Web';
+  src: url('/fonts/times-bolditalic.woff2') format('woff2');
+  font-weight: 700;
   font-style: italic;
   font-display: swap;
 }
@@ -60,12 +80,11 @@
    ───────────────────────────────────────────────────────────────────────── */
 
 :root {
-  /* Copperplate Gothic and EB Garamond are bundled, so these render the same
-     everywhere. Cinzel and the system faces sit behind them as fallbacks. */
+  /* Both faces are bundled, so they render the same everywhere; the system
+     names behind them are only a paint-time fallback. */
   --font-display:
-    'Copperplate Gothic Web', 'Cinzel', 'Copperplate', 'Copperplate Gothic Light',
-    'Copperplate Gothic', 'Optima', 'Palatino Linotype', 'Times New Roman', serif;
-  --font-body: 'EB Garamond', 'Palatino Linotype', 'Palatino', Georgia, 'Times New Roman', serif;
+    'Copperplate Web', 'Copperplate', 'Copperplate Gothic Light', 'Copperplate Gothic', serif;
+  --font-body: 'Times Web', 'Times', 'Times New Roman', serif;
   --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
 
   /* Light — the default. Bone stock, black ink. */
@@ -130,6 +149,17 @@
 
 * {
   box-sizing: border-box;
+}
+
+/* Form controls take a UA font that does not inherit — without this a button
+   with no explicit family silently renders in Arial, which is how the sector
+   cards ended up off-house. */
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
 }
 
 html,
