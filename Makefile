@@ -36,7 +36,8 @@ hub-dashboards:  ## Run only the Streamlit dashboards the hub embeds (no hub UI)
 	$(VENV)/python dashboard_hub/run_local.py
 
 orchestrate:  ## Serve the Dagster UI at http://localhost:3000
-	DAGSTER_HOME=$(PWD)/dagster_home $(VENV)/dagster dev -f orchestration/dagster_pipeline.py
+	PATH="$(PWD)/$(VENV):$$PATH" DAGSTER_HOME=$(PWD)/orchestration/dagster_home \
+		$(VENV)/dagster dev -f orchestration/dagster_pipeline.py
 
 test:  ## Run the Python suite and every dbt test
 	$(VENV)/pytest tests/ -q

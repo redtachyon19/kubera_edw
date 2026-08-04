@@ -126,7 +126,7 @@ const CADENCE_LABEL: Record<Cadence, string> = { annual: 'Annual', quarterly: 'Q
  *
  * The price chart and the statements are deliberately adjacent — a multiple is
  * the ratio between them, and reading either alone is how a cheap company and a
- * shrinking one get confused. For the names Kubera holds, the filed figures sit
+ * shrinking one get confused. For an indexed issuer, the filed figures sit
  * below in their own panel rather than merged into these tables: they come from
  * a different source on a different basis, and blending them would hide that.
  */
@@ -167,20 +167,27 @@ export default function CompanyDetail({
   // history behind them, and a reader can always narrow it.
   const [span, setSpan] = useState<number | null>(null);
   const [shown, setShown] = useState<Cadence>('quarterly');
+  // Null means the listing's own trading currency, which is what a price is
+  // quoted in and therefore the honest default.
+  const [unit, setUnit] = useState<string | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true);
     setError(null);
     setCompany(null);
-    fetchCompany(symbol, controller.signal)
+    fetchCompany(symbol, unit ?? undefined, controller.signal)
       .then(setCompany)
       .catch((err: Error) => {
         if (err.name !== 'AbortError') setError(err.message);
       })
       .finally(() => setLoading(false));
     return () => controller.abort();
-  }, [symbol]);
+  }, [symbol, unit]);
+
+  // A different company has a different native currency, so a unit chosen for
+  // the last one should not follow the reader onto this one.
+  useEffect(() => setUnit(null), [symbol]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -230,9 +237,12 @@ export default function CompanyDetail({
   if (error) return <p className="stock__error">Could not open {symbol} — {error}</p>;
   if (!company) return null;
 
-  const { profile, kpis, statements, warehouse, sectors, peers } = company;
+  const { profile, kpis, money: unitInfo, statements, warehouse, sectors, peers } = company;
   const periods = statements[cadence];
   const reported = profile.reportingCurrency || profile.currency;
+  // One unit for the whole page: KPIs, statements and the chart all arrive
+  // already converted, so nothing here has to be labelled twice.
+  const shownCcy = unitInfo?.displayCurrency || profile.currency;
   const dayMove =
     kpis.price !== null && kpis.previousClose ? kpis.price / kpis.previousClose - 1 : null;
 
@@ -310,19 +320,38 @@ export default function CompanyDetail({
             {pct(dayMove, 2, true)} today
           </span>
           {profile.inWarehouse && (
-            <span className="co__held" title="Kubera holds this name; its filings are in the warehouse">
-              In the book
+            <span className="co__held" title="This issuer is indexed — its filings are modelled in the warehouse">
+              In the warehouse
             </span>
           )}
         </div>
       </header>
 
+      {unitInfo?.options?.length > 0 && (
+        <div className="co__unit" role="group" aria-label="Display currency">
+          <span className="eyebrow">Shown in</span>
+          {unitInfo.options.map((code) => (
+            <button
+              key={code}
+              type="button"
+              className={code === shownCcy ? 'is-on' : ''}
+              onClick={() => setUnit(code === unitInfo.tradingCurrency ? null : code)}
+            >
+              {code}
+              {code === unitInfo.tradingCurrency && <em>traded</em>}
+              {code === unitInfo.reportingCurrency &&
+                code !== unitInfo.tradingCurrency && <em>reported</em>}
+            </button>
+          ))}
+        </div>
+      )}
+
       <section className="co__kpis" aria-label="Valuation and market data">
-        {kpi('Market cap', money(kpis.marketCap, profile.currency))}
+        {kpi('Market cap', money(kpis.marketCap, shownCcy))}
         {kpi(
           'Enterprise value',
-          money(kpis.enterpriseValue, reported),
-          'Market cap plus net debt, denominated in the reporting currency.',
+          money(kpis.enterpriseValue, shownCcy),
+          'Market cap plus net debt, rebuilt in one currency rather than across two.',
         )}
         {kpi('P / E', times(kpis.trailingPe), 'Trailing twelve months')}
         {kpi('Forward P / E', times(kpis.forwardPe), 'On consensus forward earnings')}
@@ -349,10 +378,16 @@ export default function CompanyDetail({
 
       {kpis.mixedCurrency && (
         <p className="co__caveat">
-          This listing trades in <span className="num">{profile.currency}</span> and reports in{' '}
-          <span className="num">{reported}</span>. Price-to-book, price-to-sales and EV/EBITDA are
-          published across those two currencies without conversion, so they are withheld here
-          rather than shown as figures. Trailing P/E is kept — the earnings behind it are converted.
+          This listing trades in <span className="num">{unitInfo.tradingCurrency}</span> and reports
+          in <span className="num">{unitInfo.reportingCurrency}</span>. Yahoo publishes
+          price-to-book, price-to-sales and EV/EBITDA straight across those two without converting,
+          which inflates them by the exchange rate — so they are recomputed here from the
+          underlying figures with both sides in{' '}
+          <span className="num">{shownCcy}</span>. A ratio does not depend on the unit once its two
+          halves agree, so switching the currency above moves the levels and leaves the multiples
+          where they are.
+          {unitInfo.incomplete &&
+            ' One of the rates needed was unavailable, so the figures that depend on it are blank rather than unconverted.'}
         </p>
       )}
 
@@ -601,12 +636,15 @@ export default function CompanyDetail({
       </section>
 
       <p className="stock__footnote">
-        Prices are split- and dividend-adjusted and quoted in{' '}
-        {profile.currency || 'the listing currency'}; statements are as the issuer reports them, in{' '}
-        {reported || 'its reporting currency'}
-        {kpis.mixedCurrency
-          ? ' — two different currencies, so a figure built across them is not like-for-like'
-          : ''}
+        Prices are split- and dividend-adjusted. Every amount on this page is shown in{' '}
+        <span className="num">{shownCcy}</span>
+        {unitInfo?.converted
+          ? ` — converted at the spot rate from ${unitInfo.tradingCurrency}${
+              unitInfo.reportingCurrency !== unitInfo.tradingCurrency
+                ? ` for market figures and ${unitInfo.reportingCurrency} for filed ones`
+                : ''
+            }`
+          : ', the currency the issuer both trades and reports in'}
         . Amounts are shown to three significant figures. Nothing here is investment advice.
       </p>
     </div>

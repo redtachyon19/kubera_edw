@@ -1,10 +1,10 @@
 """Live market data — search, history and risk stats for any listed security.
 
 Mostly no warehouse, no `.env`, no API key: this reads Yahoo Finance at request
-time, so the Stock Explorer works on a clean checkout and is not limited to the
-38 names in `companies.yml`. The one exception is the Companies desk, which adds
-an as-filed panel for the names the warehouse does carry — and does without it,
-rather than failing, when there is no warehouse to read.
+time, so any listed security can be charted whether or not it has been indexed.
+The one exception is the Companies desk, which adds an as-filed panel for the
+issuers the warehouse does carry — and does without it, rather than failing,
+when there is no warehouse to read.
 
 Yahoo's JSON hosts reject plain requests without a session cookie and crumb,
 which is why this goes through `yfinance` (it impersonates a browser and manages
@@ -960,7 +960,56 @@ def _peers(symbol: str) -> tuple[list[dict], list[str]]:
     return memberships, peers
 
 
-def company(symbol: str) -> dict:
+# Currencies the detail page offers. The listing's own two are always added to
+# this at request time, so a Brazilian filer is readable in BRL even though BRL
+# is not on the standing list.
+DISPLAY_CURRENCIES = ("USD", "EUR", "GBP", "JPY", "CHF", "CNY", "INR", "AUD", "CAD")
+
+_FX_TTL = 900
+
+
+def fx_rate(source: str, target: str) -> float | None:
+    """How many units of `target` one unit of `source` buys.
+
+    Yahoo quotes most pairs against the dollar in one direction only, so a cross
+    like EUR→JPY is routed through USD rather than guessed at. A pair it does not
+    carry returns None, and the caller leaves the figure in the currency it
+    arrived in rather than inventing a conversion.
+    """
+    source, target = (source or "").upper(), (target or "").upper()
+    if not source or not target:
+        return None
+    if source == target:
+        return 1.0
+
+    def per_usd(code: str) -> float | None:
+        """Units of `code` per USD."""
+        if code == "USD":
+            return 1.0
+        frame = _closes((f"{code}=X",), "5d", "1d", False)
+        if frame is None or frame.empty or f"{code}=X" not in frame.columns:
+            return None
+        series = frame[f"{code}=X"].dropna()
+        return float(series.iloc[-1]) if len(series) else None
+
+    def run() -> float | None:
+        left, right = per_usd(source), per_usd(target)
+        if not left or not right:
+            return None
+        # source -> USD -> target.
+        return right / left
+
+    return _cached(("fx", source, target), run, ttl=_FX_TTL, keep=lambda v: v is not None)
+
+
+def _scale(value: float | None, rate: float | None) -> float | None:
+    """A monetary level moved into another currency, or None if it cannot be."""
+    if value is None or rate is None:
+        return None
+    return value * rate
+
+
+def company(symbol: str, display: str | None = None) -> dict:
     """Everything the detail page draws for one listing.
 
     Args:
@@ -998,36 +1047,106 @@ def company(symbol: str) -> dict:
     }
 
     # An ADR trades in one currency and files in another, and Yahoo builds some
-    # of its ratios across the two without converting: Toyota's US line comes
-    # back with a price/sales of 0.004 (USD price over JPY sales) and a
-    # price/book of 15.4 against the 1.0 its Tokyo line reports. Those are drawn
-    # from the same fields for every listing, so they cannot be trusted here and
-    # are withheld rather than printed as figures. Trailing P/E survives because
-    # Yahoo does convert the EPS behind it, and the enterprise value survives as
-    # a level — it is simply denominated in the reporting currency, not the
-    # trading one, which is what the panel labels it with.
-    mixed = bool(
-        profile["reportingCurrency"]
-        and profile["currency"]
-        and profile["reportingCurrency"] != profile["currency"]
+    # of its ratios across the two without converting. Ferrari's NYSE line comes
+    # back with a price/sales of 9.59 and an EV/EBITDA of 28.76 where its Milan
+    # line reports 8.29 and 24.93 — inflated by exactly the EUR/USD rate,
+    # because the numerator is dollars and the denominator is euros.
+    #
+    # These used to be withheld. They are now recomputed instead, from the
+    # underlying quantities with both sides put into one currency, which is the
+    # only way to print them honestly. A ratio is unit-invariant once numerator
+    # and denominator agree, so the results below do not depend on which display
+    # currency the reader picks — only the levels do.
+    trading = profile["currency"]
+    reporting = profile["reportingCurrency"] or trading
+    mixed = bool(reporting and trading and reporting != trading)
+
+    # Everything is expressed in the currency the reader asked for. Absent that,
+    # the listing's own trading currency, which is what its price is quoted in.
+    shown = (display or trading or "USD").upper()
+    from_trading = fx_rate(trading, shown)
+    from_reporting = fx_rate(reporting, shown)
+
+    price = _number(info.get("currentPrice") or info.get("regularMarketPrice"))
+    market_cap = _number(info.get("marketCap"))
+    book_per_share = _number(info.get("bookValue"))
+    revenue = _number(info.get("totalRevenue"))
+    ebitda = _number(info.get("ebitda"))
+    eps = _number(info.get("trailingEps"))
+
+    # Market cap and price are quoted in the trading currency; book value,
+    # revenue and EBITDA come off the statements. Both are pulled into `shown`
+    # before they are divided by each other.
+    cap_shown = _scale(market_cap, from_trading)
+    price_shown = _scale(price, from_trading)
+    book_shown = _scale(book_per_share, from_reporting)
+    revenue_shown = _scale(revenue, from_reporting)
+    ebitda_shown = _scale(ebitda, from_reporting)
+
+    # Yahoo's enterprise value is itself mixed for these listings — market cap in
+    # one currency plus net debt in another — so it is rebuilt rather than
+    # converted. Net debt is backed out of Yahoo's own EV against its own cap,
+    # which leaves it in the reporting currency.
+    yahoo_ev = _number(info.get("enterpriseValue"))
+    net_debt = None if yahoo_ev is None or market_cap is None else yahoo_ev - market_cap
+    ev_shown = (
+        None
+        if cap_shown is None or net_debt is None
+        else cap_shown + (_scale(net_debt, from_reporting) or 0.0)
     )
 
+    # Correcting a published ratio, for when the pieces to rebuild one are not in
+    # the response.
+    #
+    # Yahoo divides a trading-currency numerator by a reporting-currency
+    # denominator, so its figure is the true one multiplied by the rate between
+    # them; dividing it back out is exact. It needs only that rate, where
+    # rebuilding needs revenue, EBITDA and book value — any of which Yahoo's
+    # `info` will intermittently omit, which is what left this panel showing
+    # dashes on a live request while a direct call had the figures. Both routes
+    # agree to three figures on Ferrari, so the direct one leads and this backs
+    # it up.
+    cross = fx_rate(reporting, trading)
+
+    def corrected(published: Any) -> float | None:
+        value = _number(published)
+        return None if value is None or not cross else value / cross
+
+    def multiple(
+        numerator: float | None, denominator: float | None, published: Any
+    ) -> float | None:
+        return _ratio(numerator, denominator) or corrected(published)
+
     kpis = {
-        "price": _number(info.get("currentPrice") or info.get("regularMarketPrice")),
-        "previousClose": _number(info.get("regularMarketPreviousClose")),
-        "marketCap": _number(info.get("marketCap")),
-        "enterpriseValue": _number(info.get("enterpriseValue")),
+        "price": price_shown,
+        "previousClose": _scale(_number(info.get("regularMarketPreviousClose")), from_trading),
+        "marketCap": cap_shown,
+        "enterpriseValue": ev_shown,
+        # P/E is price over EPS, both quoted in the trading currency, so Yahoo's
+        # is already sound and the conversion cancels either way.
         "trailingPe": _number(info.get("trailingPE")),
         "forwardPe": _number(info.get("forwardPE")),
-        "priceToBook": None if mixed else _number(info.get("priceToBook")),
-        "priceToSales": None if mixed else _number(info.get("priceToSalesTrailing12Months")),
-        "evToEbitda": None if mixed else _number(info.get("enterpriseToEbitda")),
+        "priceToBook": (
+            multiple(price_shown, book_shown, info.get("priceToBook"))
+            if mixed
+            else _number(info.get("priceToBook"))
+        ),
+        "priceToSales": (
+            multiple(cap_shown, revenue_shown, info.get("priceToSalesTrailing12Months"))
+            if mixed
+            else _number(info.get("priceToSalesTrailing12Months"))
+        ),
+        "evToEbitda": (
+            multiple(ev_shown, ebitda_shown, info.get("enterpriseToEbitda"))
+            if mixed
+            else _number(info.get("enterpriseToEbitda"))
+        ),
         "dividendYield": None if dividend_yield is None else dividend_yield / 100,
         "payoutRatio": _number(info.get("payoutRatio")),
         "beta": _number(info.get("beta")),
-        "high52": _number(info.get("fiftyTwoWeekHigh")),
-        "low52": _number(info.get("fiftyTwoWeekLow")),
-        "eps": _number(info.get("trailingEps")),
+        "high52": _scale(_number(info.get("fiftyTwoWeekHigh")), from_trading),
+        "low52": _scale(_number(info.get("fiftyTwoWeekLow")), from_trading),
+        "eps": _scale(eps, from_trading),
         "profitMargin": _number(info.get("profitMargins")),
         "returnOnEquity": _number(info.get("returnOnEquity")),
         "revenueGrowth": _number(info.get("revenueGrowth")),
@@ -1036,14 +1155,91 @@ def company(symbol: str) -> dict:
         "mixedCurrency": mixed,
     }
 
+    # What the reader needs to audit the numbers above: which unit they are in,
+    # and what was applied to get them there.
+    money = {
+        "displayCurrency": shown,
+        "tradingCurrency": trading,
+        "reportingCurrency": reporting,
+        "fromTrading": from_trading,
+        "fromReporting": from_reporting,
+        "converted": shown != trading or (mixed and shown != reporting),
+        # True when a rate was wanted and Yahoo had no pair for it; the affected
+        # figures come back null rather than unconverted.
+        "incomplete": from_trading is None or from_reporting is None,
+        "options": sorted({*DISPLAY_CURRENCIES, trading, reporting} - {""}),
+    }
+
     return {
         "symbol": symbol,
         "profile": profile,
         "kpis": kpis,
-        "statements": _statements(symbol),
+        "money": money,
+        "statements": _restate(_statements(symbol), from_reporting),
         "warehouse": _filed(symbol),
         "sectors": memberships,
         "peers": peers,
+    }
+
+
+# Every field on a period that is an amount of money rather than a ratio, a
+# count or a per-share figure already handled elsewhere. Only these are scaled;
+# margins and multiples are dimensionless and must be left exactly as computed.
+_PERIOD_MONEY = (
+    "revenue",
+    "costOfRevenue",
+    "grossProfit",
+    "researchDevelopment",
+    "sellingGeneralAdmin",
+    "operatingExpense",
+    "operatingIncome",
+    "ebitda",
+    "interestExpense",
+    "pretaxIncome",
+    "taxProvision",
+    "netIncome",
+    "dilutedEps",
+    "cash",
+    "totalDebt",
+    "netDebt",
+    "totalAssets",
+    "totalLiabilities",
+    "equity",
+    "currentAssets",
+    "currentLiabilities",
+    "workingCapital",
+    "operatingCashFlow",
+    "investingCashFlow",
+    "financingCashFlow",
+    "capitalExpenditure",
+    "freeCashFlow",
+    "dividendsPaid",
+    "buybacks",
+)
+
+
+def _restate(statements: dict, rate: float | None) -> dict:
+    """Put every money line on every period into the display currency.
+
+    A no-op at rate 1.0, which is the common case — the reader is looking at the
+    issuer's own reporting currency and the statements are already in it.
+    """
+    if rate is None or rate == 1.0:
+        return statements
+
+    return {
+        cadence: [
+            {
+                key: (
+                    value * rate
+                    if key in _PERIOD_MONEY and isinstance(value, int | float)
+                    else value
+                )
+                for key, value in period.items()
+            }
+            for period in periods
+        ]
+        for cadence, periods in statements.items()
     }
 
 
@@ -1313,7 +1509,7 @@ def _filed(symbol: str) -> dict:
 
     This is the half of the page that is not Yahoo: figures parsed from the
     company's SEC filings and converted at the year-end rate. It covers only the
-    38 names Kubera holds, so most companies return `held: false` and the page
+    38 names are indexed in the warehouse, so most companies return `held: false` and the page
     simply does not draw the panel.
     """
     held = warehouse.holdings().get(symbol)

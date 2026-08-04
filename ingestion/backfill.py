@@ -1,8 +1,8 @@
 """Add one company to the warehouse on request.
 
-The warehouse carries 38 holdings because `companies.yml` names 38. The
+The warehouse carries whatever `companies.yml` names, and nothing else. The
 Companies desk browses ten times that, reading SEC live, so the obvious question
-from any name it opens is "why isn't this in the book?" — and the answer should
+from any name it opens is "why isn't this in the warehouse?" — and the answer should
 be a request rather than an edit to a YAML file and a full pipeline run.
 
 This is that request. A ticker goes on a queue; a worker resolves its universe
@@ -293,7 +293,7 @@ def _mark_held_in_hub_universe(ticker: str, entry: dict[str, Any]) -> None:
     `companies.json` carries a `warehouse` flag that draws the gold dot on the
     grid and decides whether the desk offers a backfill at all. Left alone it
     would still say no until someone re-ran `make company-universe`, so the
-    company would sit in the book while the page offered to add it.
+    company would already be indexed while the page offered to add it.
     """
     path = REPO_ROOT / "dashboard_hub" / "companies.json"
     try:

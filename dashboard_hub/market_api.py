@@ -15,7 +15,7 @@ to Yahoo directly.
     GET /api/market/sectors?period=1Y
     GET /api/market/sector?slug=ai&period=1Y
     GET /api/market/companies?period=1Y
-    GET /api/market/company?symbol=AAPL
+    GET /api/market/company?symbol=RACE&currency=USD
     GET /api/market/revenue?symbol=AAPL
     GET /api/market/news?slug=ai
     GET /api/market/news?symbol=AAPL
@@ -24,6 +24,8 @@ to Yahoo directly.
     GET /api/market/world-energy?period=1Y
     GET /api/market/world-country?iso3=JPN&period=5Y
     GET /api/market/world-trade?iso3=JPN
+    GET /api/market/logo?symbol=AAPL      -> image bytes
+    GET /api/market/flag?iso3=JPN         -> image bytes
 """
 
 from __future__ import annotations
@@ -51,7 +53,7 @@ try:
 except ImportError:  # pragma: no cover — python-dotenv ships with the project
     pass
 
-from dashboard_hub.lib import filings, market_data, trade, world  # noqa: E402
+from dashboard_hub.lib import filings, imagery, market_data, trade, world  # noqa: E402
 
 PORT = 8600
 
@@ -65,6 +67,22 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Type", "application/json")
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _send_image(self, found: tuple[bytes, str] | None) -> None:
+        """Serve image bytes, or 404 so the page can fall back to a lettermark."""
+        if not found:
+            self._send({"error": "no image"}, status=404)
+            return
+
+        body, content_type = found
+        self.send_response(200)
+        self.send_header("Content-Type", content_type)
+        self.send_header("Content-Length", str(len(body)))
+        # Unlike the JSON routes, these are worth caching in the browser: a logo
+        # is the same bytes for a month and the grid asks for 300 of them.
+        self.send_header("Cache-Control", "public, max-age=86400")
         self.end_headers()
         self.wfile.write(body)
 
@@ -104,6 +122,18 @@ class Handler(BaseHTTPRequestHandler):
             if parsed.path == "/api/market/companies":
                 period = (params.get("period") or ["1Y"])[0]
                 self._send({"companies": market_data.companies_overview(period)})
+                return
+
+            # Images are the one thing here that is not JSON. They are proxied
+            # rather than linked directly so the bytes can be cached on disk and
+            # the page is not making 300 cross-origin requests to a favicon
+            # service every time somebody opens the grid.
+            if parsed.path == "/api/market/logo":
+                self._send_image(imagery.logo((params.get("symbol") or [""])[0]))
+                return
+
+            if parsed.path == "/api/market/flag":
+                self._send_image(imagery.flag((params.get("iso3") or [""])[0]))
                 return
 
             if parsed.path == "/api/market/world":
@@ -150,7 +180,8 @@ class Handler(BaseHTTPRequestHandler):
 
             if parsed.path == "/api/market/company":
                 symbol = (params.get("symbol") or [""])[0]
-                payload = market_data.company(symbol)
+                currency = (params.get("currency") or [""])[0].upper() or None
+                payload = market_data.company(symbol, currency)
                 if not payload:
                     self._send({"error": "no symbol given"}, status=400)
                     return

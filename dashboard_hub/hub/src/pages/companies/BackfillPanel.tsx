@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 export interface BackfillRecord {
   ticker: string;
-  /** `held` is already in the book; `absent` has never been asked for. */
+  /** `held` is already in the warehouse; `absent` has never been asked for. */
   status: 'held' | 'absent' | 'queued' | 'running' | 'done' | 'failed' | 'unavailable';
   requestedAt?: string | null;
   startedAt?: string | null;
@@ -25,12 +25,14 @@ async function read(symbol: string, signal?: AbortSignal): Promise<BackfillRecor
 /**
  * Ask for a company to be built into the warehouse.
  *
- * This is the answer to the question every unheld company raises: the page in
- * front of you is drawn live from SEC, so why is this name not in the book?
- * Because the book is a curated file. This queues the work that changes that —
- * resolve the filer, add it to the universe, pull its filings, rebuild — and
- * what comes back is not more history for this page but the company's presence
- * in every cross-sectional view: allocation, FX impact, the macro joins.
+ * This is the answer to the question every unindexed company raises: the page
+ * in front of you is drawn live from SEC, so why is this name not in the
+ * warehouse? Because indexing is a deliberate act. This queues the work that
+ * performs it — resolve the filer, add it to the universe, pull its filings,
+ * rebuild — and what comes back is not more history for this page but the
+ * company's presence in every cross-sectional view: composition, FX impact,
+ * the macro joins. The index is not a fixed universe; it is whatever has been
+ * asked for.
  *
  * The build runs elsewhere. This only asks, then watches.
  */
@@ -96,15 +98,15 @@ export default function BackfillPanel({ symbol, name }: { symbol: string; name: 
   return (
     <section className="co__backfill" aria-label="Warehouse backfill">
       <div className="sectors__bar">
-        <p className="eyebrow">Not in the book</p>
+        <p className="eyebrow">Not in the warehouse</p>
       </div>
 
       <p className="co__filed-lead">
-        Everything above is read live from SEC and Yahoo. {name} is not one of the holdings the
-        warehouse carries, so there are no as-filed figures beneath it, and it appears in none of
-        the portfolio, FX or macro views. Building it in adds its filings to{' '}
+        Everything above is read live from SEC and Yahoo. {name} is not indexed in the warehouse,
+        so there are no as-filed figures beneath it and it appears in none of the cross-sectional,
+        FX or macro views. Indexing it adds its full filing history to{' '}
         <code>marts.fact_financials</code>, converted at each period-end rate and covered by the
-        same dbt tests as the rest of the book.
+        same dbt tests as every other issuer.
       </p>
 
       {status === 'absent' && (
@@ -125,7 +127,7 @@ export default function BackfillPanel({ symbol, name }: { symbol: string; name: 
 
       {status === 'done' && (
         <p className="stock__warn">
-          {symbol} is in the book. Reload to read its filed figures.{' '}
+          {symbol} is in the warehouse. Reload to read its filed figures.{' '}
           <button type="button" className="co__inline" onClick={() => window.location.reload()}>
             Reload
           </button>

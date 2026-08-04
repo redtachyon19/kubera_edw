@@ -13,7 +13,7 @@ export default function HomePage() {
           <h1 className="home__title">{org.product}</h1>
           <div className="home__hairline" />
           <p className="home__standfirst">
-            An investment research terminal: markets and issuers read live, the book read from a
+            An investment research terminal: markets and macro read live, filings read from a
             governed warehouse. Every view runs as its own service against the same marts, so a
             figure means the same thing whichever page you read it on.
           </p>

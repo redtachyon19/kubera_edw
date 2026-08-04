@@ -29,7 +29,7 @@ services:
       POSTGRES_HOST: warehouse
       POSTGRES_PORT: 5432
       RAW_DATA_DIR: /app/data/raw
-      DAGSTER_HOME: /app/dagster_home
+      DAGSTER_HOME: /app/orchestration/dagster_home
     depends_on:
       warehouse:
         condition: service_healthy

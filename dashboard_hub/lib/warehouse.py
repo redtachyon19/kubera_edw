@@ -7,7 +7,7 @@ assume a script run context.
 
 Everything here degrades rather than raises. The Companies desk is built on live
 Yahoo data and works on a clean checkout with no warehouse at all; the filed
-figures are an extra panel on the 38 names Kubera actually holds, so a missing or
+figures are an extra panel on the issuers actually indexed, so a missing or
 half-built warehouse costs that panel and nothing else.
 """
 
@@ -122,7 +122,11 @@ def available() -> bool:
 
 
 def holdings() -> dict[str, dict]:
-    """Every current holding, keyed by ticker.
+    """Every issuer indexed in the warehouse, keyed by ticker.
+
+    The name is historical — these were once a portfolio's holdings. They are
+    now simply the companies whose filings have been pulled in, which is
+    whatever anyone has asked for through a backfill.
 
     Returns:
         `{ticker: {legal_name, sector, industry, filer_type, ...}}`, empty when
@@ -144,9 +148,9 @@ def holdings() -> dict[str, dict]:
 def countries() -> list[dict]:
     """Every country the warehouse knows, with the coordinates the globe draws at.
 
-    Covers the world rather than the portfolio: `dim_country` is built from the
-    World Bank's member list, and `has_issuer` marks the handful Kubera holds a
-    company in.
+    Covers the world rather than only the indexed economies: `dim_country` is
+    built from the World Bank's member list, and `has_issuer` marks the ones that
+    have an issuer indexed in the warehouse.
     """
     return _rows(
         """

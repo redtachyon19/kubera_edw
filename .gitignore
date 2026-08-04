@@ -28,6 +28,9 @@ data/world_macro_cache.json
 
 # WITS bilateral trade and World Bank trade composition — same story, weekly TTL
 data/trade_cache/
+
+# Company logos and country flags, re-fetchable from the icon services
+data/image_cache/
 *.duckdb
 *.duckdb.wal
 
@@ -38,9 +41,13 @@ dbt/logs/
 .user.yml
 
 # --- Dagster ---
+# DAGSTER_HOME is the instance directory: run history, event logs and sensor
+# cursors, none of which belong in git. `dagster.yaml` is the exception — it is
+# the instance's configuration and Dagster requires it to sit inside the same
+# directory, which is why it is negated back in rather than kept elsewhere.
 tmp_dagster_home/
-dagster_home/*
-!dagster_home/dagster.yaml
+orchestration/dagster_home/*
+!orchestration/dagster_home/dagster.yaml
 
 # --- Dashboard hub (Vite) ---
 node_modules/

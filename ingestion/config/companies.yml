@@ -464,3 +464,26 @@ companies:
     fiscal_year_end: "12-31"
     xbrl_taxonomy: ifrs-full
 
+  - ticker: RACE
+    cik: "0001648416"
+    legal_name: Ferrari N.V.
+    country: Italy
+    country_iso3: ITA
+    currency: USD
+    reporting_currency: EUR
+    sector: Consumer Cyclical
+    filer_type: 20-F
+    fiscal_year_end: "12-31"
+    xbrl_taxonomy: ifrs-full
+
+  - ticker: NVDA
+    cik: "0001045810"
+    legal_name: NVIDIA Corporation
+    country: United States
+    country_iso3: USA
+    currency: USD
+    reporting_currency: USD
+    sector: Technology
+    filer_type: 10-K
+    fiscal_year_end: "01-31"
+    xbrl_taxonomy: us-gaap

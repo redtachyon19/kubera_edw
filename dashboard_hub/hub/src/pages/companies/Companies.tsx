@@ -1,23 +1,40 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
+import Emblem from '../../components/Emblem';
 import Select from '../../components/Select';
 import { PERIODS, searchSymbols } from '../stock/api';
 import type { Period, SearchResult } from '../stock/api';
 import CompanyDetail from './CompanyDetail';
-import { direction, fetchCompanies, pct, plain } from './companyApi';
+import { direction, fetchCompanies, money, pct, plain } from './companyApi';
 import type { CompanyCard } from './companyApi';
 import './Companies.css';
 
+// Levels are ranked on the USD-converted figures, never the reported ones:
+// Toyota books ¥50,685bn against Apple's $467bn, and sorting the raw numbers
+// ranks by how small a currency's unit is. Growth needs no conversion — a
+// percentage is currency-neutral — so those two sort on what was filed.
 const SORTS = [
-  { id: 'return', label: 'Return' },
-  { id: 'name', label: 'Name' },
-  { id: 'symbol', label: 'Ticker' },
+  { id: 'return', label: 'Return', of: (c: CompanyCard) => c.periodReturn },
+  { id: 'revenue', label: 'Revenue', of: (c: CompanyCard) => c.revenueUsd ?? null },
+  { id: 'profit', label: 'Profit', of: (c: CompanyCard) => c.netIncomeUsd ?? null },
+  { id: 'revenueGrowth', label: 'Revenue growth', of: (c: CompanyCard) => c.revenueGrowth ?? null },
+  { id: 'profitGrowth', label: 'Profit growth', of: (c: CompanyCard) => c.earningsGrowth ?? null },
+  { id: 'name', label: 'Name', of: () => null },
+  { id: 'symbol', label: 'Ticker', of: () => null },
 ] as const;
 type Sort = (typeof SORTS)[number]['id'];
 
+/** What the second line of a card shows, which follows what it is ranked by. */
+const SORT_FIGURE: Partial<Record<Sort, (c: CompanyCard) => string>> = {
+  revenue: (c) => money(c.revenueUsd ?? null, 'USD'),
+  profit: (c) => money(c.netIncomeUsd ?? null, 'USD'),
+  revenueGrowth: (c) => pct(c.revenueGrowth ?? null, 1, true),
+  profitGrowth: (c) => pct(c.earningsGrowth ?? null, 1, true),
+};
+
 const ALL_SECTORS = 'All sectors';
-const HELD_ONLY = 'In the book';
+const HELD_ONLY = 'In the warehouse';
 
 /**
  * Browse the universe, then open one name in full.
@@ -121,10 +138,18 @@ export default function Companies() {
         card.industry.toLowerCase().includes(term)
       );
     });
+    if (sort === 'name') return filtered.sort((a, b) => a.name.localeCompare(b.name));
+    if (sort === 'symbol') return filtered.sort((a, b) => a.symbol.localeCompare(b.symbol));
+
+    const of = SORTS.find((option) => option.id === sort)?.of ?? (() => null);
     return filtered.sort((a, b) => {
-      if (sort === 'name') return a.name.localeCompare(b.name);
-      if (sort === 'symbol') return a.symbol.localeCompare(b.symbol);
-      return (b.periodReturn ?? -Infinity) - (a.periodReturn ?? -Infinity);
+      const left = of(a);
+      const right = of(b);
+      // A company that does not report the figure sinks rather than sorting as
+      // zero, which would drop it into the middle of the ranking.
+      if (left === null || left === undefined) return 1;
+      if (right === null || right === undefined) return -1;
+      return right - left;
     });
   }, [cards, query, sector, sort]);
 
@@ -206,7 +231,9 @@ export default function Companies() {
       {cards.length > 0 && (
         <p className="sectors__lead">
           {shown.length === cards.length
-            ? `${cards.length} companies, ranked by return over the window.`
+            ? `${cards.length} companies, ranked by ${
+                SORTS.find((option) => option.id === sort)?.label.toLowerCase() ?? 'return'
+              }.`
             : `${shown.length} of ${cards.length} companies.`}{' '}
           {shown.length === 0 && 'Nothing matches — try the live lookup above.'}
         </p>
@@ -221,18 +248,27 @@ export default function Companies() {
             onClick={() => show(card.symbol)}
             title={`${card.name} — ${card.industry || card.sector}`}
           >
-            <span className="company-card__symbol num">{card.symbol}</span>
+            <span className="company-card__mark">
+              <Emblem id={card.symbol} kind="logo" name={card.name} size={20} />
+              <span className="company-card__symbol num">{card.symbol}</span>
+            </span>
             <span className={`company-card__return num ${direction(card.periodReturn)}`}>
               {pct(card.periodReturn, 1, true)}
             </span>
             <span className="company-card__name">{card.name}</span>
+            {SORT_FIGURE[sort] && (
+              <span className="company-card__figure num">
+                {SORT_FIGURE[sort]?.(card)}
+                <em>{SORTS.find((option) => option.id === sort)?.label}</em>
+              </span>
+            )}
             <span className="company-card__foot">
               <span className="company-card__sector">{card.sector || card.country || '—'}</span>
               <span className="company-card__last num">
                 {card.last === null ? '—' : `${plain(card.last)} ${card.currency}`}
               </span>
               {card.warehouse && (
-                <i className="company-card__held" title="Kubera holds this name">
+                <i className="company-card__held" title="Indexed — filings in the warehouse">
                   ●
                 </i>
               )}

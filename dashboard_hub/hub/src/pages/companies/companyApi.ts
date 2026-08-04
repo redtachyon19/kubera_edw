@@ -15,6 +15,24 @@ export interface CompanyCard {
   warehouse: boolean;
   last: number | null;
   periodReturn: number | null;
+
+  /** Bare hostname behind the logo lookup, from the company's website. */
+  domain?: string;
+
+  // Trailing twelve months, captured into `companies.json` by the universe
+  // generator rather than fetched per card — 300 Yahoo profile calls is not a
+  // page load. Levels come in both the reported currency and USD; only the USD
+  // ones are comparable across the grid.
+  revenue?: number | null;
+  revenueUsd?: number | null;
+  netIncome?: number | null;
+  netIncomeUsd?: number | null;
+  marketCap?: number | null;
+  marketCapUsd?: number | null;
+  /** Fractions — 0.164 is 16.4%. Currency-neutral, so no conversion applies. */
+  revenueGrowth?: number | null;
+  earningsGrowth?: number | null;
+  profitMargin?: number | null;
 }
 
 export interface Profile {
@@ -154,10 +172,26 @@ export interface Filed {
   years: FiledYear[];
 }
 
+/** What unit the figures are in, and what was applied to get them there. */
+export interface Money {
+  displayCurrency: string;
+  tradingCurrency: string;
+  reportingCurrency: string;
+  /** Rate applied to price-quoted figures, and to statement figures. */
+  fromTrading: number | null;
+  fromReporting: number | null;
+  converted: boolean;
+  /** True when a needed pair was unavailable; affected figures are null. */
+  incomplete: boolean;
+  /** Currencies offered, including the listing's own two. */
+  options: string[];
+}
+
 export interface Company {
   symbol: string;
   profile: Profile;
   kpis: Kpis;
+  money: Money;
   statements: { annual: Period[]; quarterly: Period[] };
   warehouse: Filed;
   sectors: { slug: string; name: string }[];
@@ -227,8 +261,13 @@ export function fetchCompanies(period: string, signal?: AbortSignal): Promise<Co
   );
 }
 
-export function fetchCompany(symbol: string, signal?: AbortSignal): Promise<Company> {
-  return get<Company>(`/api/market/company?symbol=${encodeURIComponent(symbol)}`, signal);
+export function fetchCompany(
+  symbol: string,
+  currency?: string,
+  signal?: AbortSignal,
+): Promise<Company> {
+  const unit = currency ? `&currency=${encodeURIComponent(currency)}` : '';
+  return get<Company>(`/api/market/company?symbol=${encodeURIComponent(symbol)}${unit}`, signal);
 }
 
 /**

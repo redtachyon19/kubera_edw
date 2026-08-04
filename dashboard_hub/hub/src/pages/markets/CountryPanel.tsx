@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import Emblem from '../../components/Emblem';
 import TimeChart from '../../components/TimeChart';
 import { fetchCountry, index, move, rate, tone, usd } from './worldApi';
 import type { CountryDetail } from './worldApi';
@@ -54,11 +55,14 @@ export default function CountryPanel({
   return (
     <section className="cpanel">
       <header className="cpanel__head">
-        <div>
+        <div className="cpanel__ident">
+          <Emblem id={iso3} kind="flag" name={profile?.name ?? iso3} size={26} />
+          <div>
           <h3 className="cpanel__name">{profile?.name ?? iso3}</h3>
           <p className="cpanel__meta">
             {[profile?.capital, profile?.region, profile?.incomeLevel].filter(Boolean).join(' · ')}
           </p>
+          </div>
         </div>
         <button type="button" className="cpanel__close" onClick={onClose} aria-label="Close">
           ×
@@ -170,7 +174,10 @@ export default function CountryPanel({
               const bought = partner.imports ?? 0;
               return (
                 <li key={partner.iso3}>
-                  <span className="cpanel__pname">{partner.name}</span>
+                  <span className="cpanel__pname">
+                    <Emblem id={partner.iso3} kind="flag" name={partner.name} size={14} />
+                    {partner.name}
+                  </span>
                   <span className="cpanel__pbar">
                     <span
                       className="cpanel__pfill is-exports"

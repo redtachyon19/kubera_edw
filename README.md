@@ -2,22 +2,29 @@
 
 [![CI](https://github.com/redtachyon19/kubera_edw/actions/workflows/ci.yml/badge.svg)](https://github.com/redtachyon19/kubera_edw/actions/workflows/ci.yml)
 
-An end-to-end **enterprise data warehouse** for a fictional global asset management group,
-built as a single monorepo: extraction, loading, transformation, orchestration, and BI.
+An **investment research platform** built on a real enterprise data warehouse: extraction,
+loading, transformation, orchestration and BI in a single monorepo. Public filings and open
+market data go in one end; a research terminal comes out the other.
 
-Kubera holds **38 large publicly traded companies** across 13 countries and 11 currencies —
-US 10-K filers alongside foreign 20-F filers reporting in EUR, JPY, GBP, CNY, KRW, INR, BRL,
-CHF, MXN and AUD — plus two index benchmarks (SPY, ACWI). The warehouse answers portfolio
-questions across that mix: allocation, USD-normalized fundamentals, FX impact on reported
-results, market performance, and the macro backdrop of each holding country.
+Nothing here is owned or simulated. Companies are **indexed into the warehouse** — press
+backfill on any SEC registrant and its full XBRL filing history is resolved, landed, modelled
+and queryable within minutes. **40 issuers** are indexed today across 13 countries and 11
+currencies: US 10-K filers alongside foreign 20-F filers reporting in EUR, JPY, GBP, CNY, KRW,
+INR, BRL, CHF, MXN and AUD. That number is not a fixed universe, it is just where the index
+has got to.
 
-**Every data source is free and public.** Four of the six need no key at all. Nothing here
-uses private, paid, or licensed data — the point is a realistic warehouse built entirely on
-disclosed filings and open macro data.
+The questions it answers are the ones a research or quant desk actually asks — as-filed
+fundamentals normalised across currencies, valuation multiples that survive a cross-listing,
+bilateral trade between any two economies, purchasing power measured against gold rather than
+a currency that is itself moving, and the macro backdrop behind any of it.
 
-> This is deliberately **public disclosed data**, not private operational data. It does not
-> claim to replicate what a buyout firm sees internally (invoice-level transactions, private
-> management accounts). That is a scope decision, stated plainly rather than left implied.
+**Every data source is free and public.** Most need no key at all. Nothing here uses private,
+paid or licensed data — the point is a warehouse of genuine analytical depth built entirely on
+disclosed filings and open data.
+
+> This is **public disclosed data**, not private operational data. It does not claim to
+> replicate what a firm sees internally (invoice-level transactions, private management
+> accounts). That is a scope decision, stated plainly rather than left implied.
 
 For the deep technical treatment — physical storage layout, schema-by-schema column detail,
 and the mechanics of every transformation — see **[ARCHITECTURE.md](ARCHITECTURE.md)**.
@@ -80,7 +87,9 @@ kubera_edw/
 │   └── profiles.yml              #   dev (DuckDB) | ci (DuckDB) | prod (Postgres/Neon)
 │
 ├── orchestration/
-│   └── dagster_pipeline.py       # 41 assets, 2 jobs, 1 failure sensor, 06:00 daily schedule
+│   ├── dagster_pipeline.py       # 41 assets, 2 jobs, 1 failure sensor, 06:00 daily schedule
+│   └── dagster_home/             #   DAGSTER_HOME — only dagster.yaml is committed;
+│                                 #   run history and sensor cursors are runtime state
 │
 ├── dashboard_hub/                # BI — hub & spoke, one front door for every dashboard
 │   ├── dashboards.json           # single source of truth — nav, proxy, processes, palette
@@ -98,6 +107,7 @@ kubera_edw/
 │   │   ├── market_data.py        #   live prices/search/financials (Yahoo) — no key
 │   │   ├── world.py              #   governments, currencies, gold, energy, news
 │   │   ├── trade.py              #   bilateral trade (WITS) + trade composition
+│   │   ├── imagery.py            #   company logos and country flags, disk-cached
 │   │   ├── theme.py              #   palette + Altair theme, both stocks
 │   │   └── ui.py                 #   page chrome, empty states, chart helpers
 │   ├── hub/                      # the website — Vite + React + TypeScript
@@ -112,7 +122,7 @@ kubera_edw/
 │   ├── generate_land_outline.py  # rebuilds the globe's coastlines (Natural Earth)
 │   └── generate_screenshots.py   # renders dashboard charts to docs/screenshots/
 │
-├── tests/                        # 165 pytest tests (mocked HTTP via respx)
+├── tests/                        # 202 pytest tests (mocked HTTP via respx)
 ├── docs/                         # screenshots
 ├── data/                         # kubera_edw.duckdb + data/raw/ landing zone (gitignored)
 │
@@ -145,6 +155,8 @@ genuinely **E → L → T**: extract to files, load to `raw.*`, transform in dbt
 | **Frankfurter** | Daily FX rates, base USD | `api.frankfurter.dev/v1` | none | `timeseries_USD_*.json` |
 | **World Bank WITS** | Bilateral trade — who trades with whom, both directions | `wits.worldbank.org/API/V1` | none | read live by the hub, disk-cached |
 | **Google News RSS** | Per-country economy and market headlines | `news.google.com/rss` | none | read live by the hub, cached 30 min |
+| **Google favicons / DuckDuckGo** | Company logos, by domain | `google.com/s2/favicons` | none | `data/image_cache/`, 30-day TTL |
+| **flagcdn** | Country flags, by ISO2 | `flagcdn.com` | none | `data/image_cache/`, 30-day TTL |
 | **Alpha Vantage** | Daily equity prices + gold proxy | `alphavantage.co` | `ALPHA_VANTAGE_API_KEY` | `av_<TICKER>.json` |
 | **FRED** | Gold benchmark (see note) | `api.stlouisfed.org/fred` | `FRED_API_KEY` | `gold_lbma_fixing.json` |
 
@@ -172,6 +184,15 @@ is the default. `PRICES_BACKEND` switches it if Stooq ever un-gates.
 - **Freshness cache** — a source already landed recently is skipped, so re-runs don't
   re-consume a daily quota
 - **Landing** — `_land(name, payload)` writes to `data/raw/<source_name>/<name>.<ext>`
+
+**The landing zone is anchored to the repo, not to the process.** `raw_root()` resolves against
+`ingestion/`'s own location rather than the working directory. It used to default to a relative
+`"data/raw"`, which cost a whole backfill: the hub starts its market API with
+`cwd=dashboard_hub/`, that API's backfill worker calls straight into these clients, and Ferrari's
+1.3 MB of filings landed in `dashboard_hub/data/raw/` where `load_raw.py` never looks. The
+request reported success, `RACE` joined `companies.yml` and the dbt seed, and the warehouse held
+**zero facts** for it — a failure with no error anywhere. An explicit absolute `RAW_DATA_DIR` is
+still honoured as given; a relative one now resolves against the repo.
 
 ### Surviving a source that half-answers
 
@@ -428,7 +449,7 @@ Navigation is two levels — the top bar holds **sections**, and each section ho
 
 | Desk | Metal | Dashboards |
 |---|---|---|
-| **Markets** | gold | Stock Explorer (native) · Sectors (native) · World (native) · Macro Overlay |
+| **Markets** | gold | Stock Explorer (native, with Sectors) · World (native) · Macro Overlay |
 
 The **World** desk carries four lenses — Governments, Trade, Sectors and Energy — described below.
 | **Companies** | silver | Company Explorer (native) · Fundamentals · FX Impact |
@@ -454,8 +475,8 @@ localhost:5173  hub (Vite)
 
 `/d/*` is reserved for the proxy, so the hub's own routes live under `/s/*` and the two never
 collide. A dashboard marked `"kind": "native"` is a React page the hub renders itself rather
-than a service it embeds — **Stock Explorer**, **Sectors**, **World** and **Company Explorer**
-are the four. They read `/api/market/*`, served by
+than a service it embeds — **Stock Explorer**, **World** and **Company Explorer** are the
+three. They read `/api/market/*`, served by
 [`market_api.py`](dashboard_hub/market_api.py) (stdlib HTTP, no web framework), because Yahoo
 rejects browser requests that lack a session cookie and crumb. Because each spoke is its own process, a dashboard can be rebuilt, restarted or
 swapped for a different framework without touching the hub or any sibling dashboard.
@@ -485,6 +506,77 @@ longitude, culls the hemisphere facing away (`z < 0`), and paints what is left b
 That is what keeps the markers crisp, clickable and data-bearing while it turns. It spins on
 its own until you take hold of it, then stays where you leave it, and honours
 `prefers-reduced-motion`.
+
+#### Marks and flags
+
+Every company on the grid carries its logo and every country its flag, **desaturated at rest
+and full colour under the cursor**. Colour is the loudest signal on these pages and it is
+already spoken for — green for a gain, red for a loss — so three hundred brand marks at full
+saturation would shout over every number. Greyed, they are something you reach for rather than
+fight past.
+
+Both go through `/api/market/logo` and `/api/market/flag`, which fetch once and write to
+`data/image_cache/` with a 30-day TTL, then serve from disk. Proxying rather than hot-linking
+is what makes the cache possible — otherwise the page fires 300 cross-origin requests at a
+favicon service on every load. Logos resolve from the company's own domain, captured into
+`companies.json` by the universe generator; the mark comes from Google's favicon service
+(128–180px for most listed companies) with DuckDuckGo as the fallback. Clearbit was the obvious
+choice here and no longer resolves at all. A company neither service has falls back to a
+lettermark, which reads as deliberate rather than as a hole.
+
+#### One page, any currency
+
+An ADR trades in one currency and files in another, and Yahoo builds some of its
+ratios straight across the two without converting. Ferrari's NYSE line comes back with a
+price/sales of **9.59** and an EV/EBITDA of **28.76**; its own Milan line reports **8.29** and
+**24.93**. The gap is exactly EUR/USD — a dollar numerator over a euro denominator.
+
+Those figures used to be **withheld** on the detail page, which was the cautious answer and the
+wrong one: the information was recoverable all along. They are now recomputed from the
+underlying quantities with both halves put into one currency:
+
+| | Yahoo (RACE) | Kubera | Milan line |
+|---|---|---|---|
+| P/S | 9.59 | **8.33** | 8.29 |
+| EV/EBITDA | 28.76 | **25.00** | 24.93 |
+| P/B | 16.73 | **14.53** | — |
+
+Enterprise value is rebuilt rather than converted — Yahoo's own is mixed, market cap in one
+currency plus net debt in another — by backing net debt out against its cap and converting that.
+
+There is a **fallback** for when Yahoo's `info` omits revenue, EBITDA or book value, which it
+does intermittently: its published ratio is the true one multiplied by the rate between the two
+currencies, so dividing that back out is exact and needs only the rate. Both routes agree to
+three figures. This is not hypothetical — the direct route worked on a scripted call and left
+the live page showing dashes ten minutes later.
+
+A **currency picker** sits above the KPI grid, offering the majors plus the listing's own two,
+marked *traded* and *reported*. It moves every level on the page — KPIs, statements, the filed
+panel — and by construction leaves every multiple alone:
+
+> Ferrari at $70.5bn / €61.3bn / ¥11,118bn market cap, with P/B 14.53, P/S 8.33 and EV/EBITDA
+> 25.00 in all three.
+
+That invariance is the correctness property, and it is what the tests assert: a ratio is
+dimensionless once its two halves share a unit. A rate Yahoo has no pair for blanks the figures
+that depend on it rather than leaving them unconverted.
+
+#### Sorting the grid
+
+Return, revenue, profit, revenue growth, profit growth. The two **level** sorts rank on
+USD-converted figures, never the reported ones — Toyota books ¥50,685bn against Apple's $467bn,
+and sorting raw numbers ranks by how small a currency's unit is. The conversion uses Yahoo's
+`financialCurrency`, **not** `currency`: for an ADR those differ, and Toyota's TM trades in USD
+while filing in JPY. Getting that wrong put Toyota top of the revenue ranking at "$50,685bn".
+Growth needs no conversion — a percentage is currency-neutral — so those two sort on what was
+filed.
+
+> Ranked by revenue: Amazon $776bn, Walmart $725bn, Apple $467bn, UnitedHealth $450bn.
+> By profit: Alphabet $244bn, NVIDIA $160bn, Amazon $135bn.
+
+The figures are trailing twelve months, captured into `companies.json` at build time rather
+than fetched per card — 300 Yahoo profile calls is not a page load. Re-run `make company-universe`
+to refresh them.
 
 #### The four lenses
 
@@ -586,7 +678,7 @@ python -m scripts.generate_country_reference
 #### Company Explorer
 
 The Companies desk opens on a grid of ~300 listings — every constituent of every editorial
-sector in [`sectors.json`](dashboard_hub/sectors.json), plus the 38 holdings the warehouse
+sector in [`sectors.json`](dashboard_hub/sectors.json), plus every issuer the warehouse
 carries filings for, badged. Opening one gives its price history over any window, the
 valuation multiples, a long-run quarterly revenue chart, and the income statement, margins,
 balance sheet and cash flow, annual or quarterly. The search box is not limited to the grid:
@@ -621,7 +713,7 @@ chart falls back to the warehouse's own rows and then to Yahoo's, and says under
 one answered. A listing that files nothing at all — an index, a fund, a currency — says that
 rather than reporting an empty chart.
 
-For a name Kubera holds, a second panel sits below the statements: the **filed** figures from
+For an issuer indexed in the warehouse, a second panel sits below the statements: the **filed** figures from
 `marts.fact_financials`, traceable to a CIK and a taxonomy, with each year converted at the
 rate on its own period end. They are kept in their own panel rather than merged — the two
 sources are on different bases and blending them would hide that.

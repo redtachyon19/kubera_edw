@@ -9,10 +9,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "alcoa.com",
       "sectors": [
         "materials"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 13603000320.0,
+      "netIncome": 1272000000.0,
+      "revenueGrowth": 0.314,
+      "earningsGrowth": 1.468,
+      "marketCap": 11833699328.0,
+      "profitMargin": 0.09388,
+      "revenueUsd": 13603000320.0,
+      "netIncomeUsd": 1272000000.0,
+      "marketCapUsd": 11833699328.0
     },
     {
       "symbol": "AAPL",
@@ -22,10 +33,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "apple.com",
       "sectors": [
         "technology"
       ],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "USD",
+      "revenue": 466822987776.0,
+      "netIncome": 128929996800.0,
+      "revenueGrowth": 0.164,
+      "earningsGrowth": 0.287,
+      "marketCap": 4456437514240.0,
+      "profitMargin": 0.27618998,
+      "revenueUsd": 466822987776.0,
+      "netIncomeUsd": 128929996800.0,
+      "marketCapUsd": 4456437514240.0
     },
     {
       "symbol": "ABBV",
@@ -35,10 +57,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "abbvie.com",
       "sectors": [
         "healthcare"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 64385998848.0,
+      "netIncome": 6270000128.0,
+      "revenueGrowth": 0.102,
+      "earningsGrowth": 2.904,
+      "marketCap": 433040949248.0,
+      "profitMargin": 0.098000005,
+      "revenueUsd": 64385998848.0,
+      "netIncomeUsd": 6270000128.0,
+      "marketCapUsd": 433040949248.0
     },
     {
       "symbol": "ABNB",
@@ -48,10 +81,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "airbnb.com",
       "sectors": [
         "travel"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 12647000064.0,
+      "netIncome": 2516999936.0,
+      "revenueGrowth": 0.179,
+      "earningsGrowth": 0.06,
+      "marketCap": 89405579264.0,
+      "profitMargin": 0.19902,
+      "revenueUsd": 12647000064.0,
+      "netIncomeUsd": 2516999936.0,
+      "marketCapUsd": 89405579264.0
     },
     {
       "symbol": "ABT",
@@ -61,10 +105,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "abbott.com",
       "sectors": [
         "healthcare"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 46584999936.0,
+      "netIncome": 5400999936.0,
+      "revenueGrowth": 0.13,
+      "earningsGrowth": -0.475,
+      "marketCap": 185358663680.0,
+      "profitMargin": 0.116450004,
+      "revenueUsd": 46584999936.0,
+      "netIncomeUsd": 5400999936.0,
+      "marketCapUsd": 185358663680.0
     },
     {
       "symbol": "ADBE",
@@ -74,10 +129,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "adobe.com",
       "sectors": [
         "technology"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 25198000128.0,
+      "netIncome": 7229000192.0,
+      "revenueGrowth": 0.127,
+      "earningsGrowth": 0.079,
+      "marketCap": 99907649536.0,
+      "profitMargin": 0.28689,
+      "revenueUsd": 25198000128.0,
+      "netIncomeUsd": 7229000192.0,
+      "marketCapUsd": 99907649536.0
     },
     {
       "symbol": "ADM",
@@ -87,10 +153,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "adm.com",
       "sectors": [
         "agriculture"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 80583999488.0,
+      "netIncome": 1080999936.0,
+      "revenueGrowth": 0.016,
+      "earningsGrowth": 0.009,
+      "marketCap": null,
+      "profitMargin": 0.013409999,
+      "revenueUsd": 80583999488.0,
+      "netIncomeUsd": 1080999936.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "AEP",
@@ -100,23 +177,45 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "aep.com",
       "sectors": [
         "utilities"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 22791000064.0,
+      "netIncome": 3140999936.0,
+      "revenueGrowth": 0.07,
+      "earningsGrowth": -0.432,
+      "marketCap": 69857075200.0,
+      "profitMargin": 0.13781999,
+      "revenueUsd": 22791000064.0,
+      "netIncomeUsd": 3140999936.0,
+      "marketCapUsd": 69857075200.0
     },
     {
       "symbol": "AFL",
-      "name": "Aflac Incorporated",
+      "name": "AFLAC Incorporated",
       "sector": "Financial Services",
       "industry": "Insurance - Life",
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "aflac.com",
       "sectors": [
         "insurance"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 18112000000.0,
+      "netIncome": 4636000256.0,
+      "revenueGrowth": 0.279,
+      "earningsGrowth": 38.6,
+      "marketCap": null,
+      "profitMargin": 0.25596002,
+      "revenueUsd": 18112000000.0,
+      "netIncomeUsd": 4636000256.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "AGCO",
@@ -126,23 +225,45 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "agcocorp.com",
       "sectors": [
         "agriculture"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 10349100032.0,
+      "netIncome": 533400000.0,
+      "revenueGrowth": -0.01,
+      "earningsGrowth": -0.744,
+      "marketCap": 7277697024.0,
+      "profitMargin": 0.05154,
+      "revenueUsd": 10349100032.0,
+      "netIncomeUsd": 533400000.0,
+      "marketCapUsd": 7277697024.0
     },
     {
       "symbol": "AIG",
-      "name": "American International Group, Inc.",
+      "name": "American International Group, I",
       "sector": "Financial Services",
       "industry": "Insurance - Diversified",
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "aig.com",
       "sectors": [
         "insurance"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 26701000704.0,
+      "netIncome": 3160999936.0,
+      "revenueGrowth": 0.014,
+      "earningsGrowth": 0.216,
+      "marketCap": null,
+      "profitMargin": 0.118389994,
+      "revenueUsd": 26701000704.0,
+      "netIncomeUsd": 3160999936.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "ALL",
@@ -152,10 +273,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "allstate.com",
       "sectors": [
         "insurance"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 68174000128.0,
+      "netIncome": 12026999808.0,
+      "revenueGrowth": 0.03,
+      "earningsGrowth": 3.384,
+      "marketCap": 67619328000.0,
+      "profitMargin": 0.17813,
+      "revenueUsd": 68174000128.0,
+      "netIncomeUsd": 12026999808.0,
+      "marketCapUsd": 67619328000.0
     },
     {
       "symbol": "ALNY",
@@ -165,10 +297,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "alnylam.com",
       "sectors": [
         "biotech"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 4804182016.0,
+      "netIncome": 774710976.0,
+      "revenueGrowth": 0.669,
+      "earningsGrowth": null,
+      "marketCap": 29482164224.0,
+      "profitMargin": 0.16126,
+      "revenueUsd": 4804182016.0,
+      "netIncomeUsd": 774710976.0,
+      "marketCapUsd": 29482164224.0
     },
     {
       "symbol": "AMAT",
@@ -178,10 +321,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "appliedmaterials.com",
       "sectors": [
         "semiconductors"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 29024000000.0,
+      "netIncome": 8508000256.0,
+      "revenueGrowth": 0.114,
+      "earningsGrowth": 0.335,
+      "marketCap": 411437727744.0,
+      "profitMargin": 0.29314,
+      "revenueUsd": 29024000000.0,
+      "netIncomeUsd": 8508000256.0,
+      "marketCapUsd": 411437727744.0
     },
     {
       "symbol": "AMD",
@@ -191,11 +345,22 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "amd.com",
       "sectors": [
         "ai",
         "semiconductors"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 37454000128.0,
+      "netIncome": 4931999744.0,
+      "revenueGrowth": 0.378,
+      "earningsGrowth": 0.912,
+      "marketCap": null,
+      "profitMargin": 0.13374,
+      "revenueUsd": 37454000128.0,
+      "netIncomeUsd": 4931999744.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "AMGN",
@@ -205,11 +370,22 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "amgen.com",
       "sectors": [
         "healthcare",
         "biotech"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 37219999744.0,
+      "netIncome": 7800000000.0,
+      "revenueGrowth": 0.058,
+      "earningsGrowth": 0.044,
+      "marketCap": 204479283200.0,
+      "profitMargin": 0.20955999,
+      "revenueUsd": 37219999744.0,
+      "netIncomeUsd": 7800000000.0,
+      "marketCapUsd": 204479283200.0
     },
     {
       "symbol": "AMT",
@@ -219,10 +395,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "americantower.com",
       "sectors": [
         "reits"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 10941500416.0,
+      "netIncome": 3400999936.0,
+      "revenueGrowth": 0.047,
+      "earningsGrowth": 1.385,
+      "marketCap": 80611090432.0,
+      "profitMargin": 0.31083,
+      "revenueUsd": 10941500416.0,
+      "netIncomeUsd": 3400999936.0,
+      "marketCapUsd": 80611090432.0
     },
     {
       "symbol": "AMX",
@@ -232,10 +419,21 @@
       "country": "Mexico",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "americamovil.com",
       "sectors": [
         "telecom"
       ],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "MXN",
+      "revenue": 955730886656.0,
+      "netIncome": 89567256576.0,
+      "revenueGrowth": 0.031,
+      "earningsGrowth": 0.081,
+      "marketCap": 74905583616.0,
+      "profitMargin": 0.09372,
+      "revenueUsd": 55171211059.37411,
+      "netIncomeUsd": 5170424107.411143,
+      "marketCapUsd": 4324053790.56396
     },
     {
       "symbol": "AMZN",
@@ -245,10 +443,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "amazon.com",
       "sectors": [
         "technology"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 775680032768.0,
+      "netIncome": 135281000448.0,
+      "revenueGrowth": 0.196,
+      "earningsGrowth": 2.423,
+      "marketCap": 3055234318336.0,
+      "profitMargin": 0.1744,
+      "revenueUsd": 775680032768.0,
+      "netIncomeUsd": 135281000448.0,
+      "marketCapUsd": 3055234318336.0
     },
     {
       "symbol": "ANF",
@@ -258,10 +467,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "corporate.abercrombie.com",
       "sectors": [
         "apparel"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 5282802176.0,
+      "netIncome": 493641984.0,
+      "revenueGrowth": 0.015,
+      "earningsGrowth": -0.075,
+      "marketCap": 4835058688.0,
+      "profitMargin": 0.093439996,
+      "revenueUsd": 5282802176.0,
+      "netIncomeUsd": 493641984.0,
+      "marketCapUsd": 4835058688.0
     },
     {
       "symbol": "ARM",
@@ -271,10 +491,21 @@
       "country": "United Kingdom",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "arm.com",
       "sectors": [
         "ai"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 5155999744.0,
+      "netIncome": 1044000000.0,
+      "revenueGrowth": 0.224,
+      "earningsGrowth": 1.083,
+      "marketCap": 255315738624.0,
+      "profitMargin": 0.20247999,
+      "revenueUsd": 5155999744.0,
+      "netIncomeUsd": 1044000000.0,
+      "marketCapUsd": 255315738624.0
     },
     {
       "symbol": "ASML",
@@ -284,10 +515,21 @@
       "country": "Netherlands",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "asml.com",
       "sectors": [
         "semiconductors"
       ],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "EUR",
+      "revenue": 35327500288.0,
+      "netIncome": 10638399488.0,
+      "revenueGrowth": 0.213,
+      "earningsGrowth": 0.285,
+      "marketCap": 630891937792.0,
+      "profitMargin": 0.30114,
+      "revenueUsd": 40667087799.061905,
+      "netIncomeUsd": 12246344136.806852,
+      "marketCapUsd": 726248322602.7329
     },
     {
       "symbol": "ASTS",
@@ -297,10 +539,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "ast-science.com",
       "sectors": [
         "space"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 84935000.0,
+      "netIncome": -487246016.0,
+      "revenueGrowth": 19.522,
+      "earningsGrowth": null,
+      "marketCap": 24653672448.0,
+      "profitMargin": 0.0,
+      "revenueUsd": 84935000.0,
+      "netIncomeUsd": -487246016.0,
+      "marketCapUsd": 24653672448.0
     },
     {
       "symbol": "AVGO",
@@ -310,11 +563,22 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "broadcom.com",
       "sectors": [
         "ai",
         "semiconductors"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 75464998912.0,
+      "netIncome": 29316999168.0,
+      "revenueGrowth": 0.479,
+      "earningsGrowth": 0.854,
+      "marketCap": 1866065772544.0,
+      "profitMargin": 0.38848,
+      "revenueUsd": 75464998912.0,
+      "netIncomeUsd": 29316999168.0,
+      "marketCapUsd": 1866065772544.0
     },
     {
       "symbol": "AXP",
@@ -324,10 +588,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "americanexpress.com",
       "sectors": [
         "banks"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 70912999424.0,
+      "netIncome": 11310999552.0,
+      "revenueGrowth": 0.128,
+      "earningsGrowth": 0.11,
+      "marketCap": 232792801280.0,
+      "profitMargin": 0.16141,
+      "revenueUsd": 70912999424.0,
+      "netIncomeUsd": 11310999552.0,
+      "marketCapUsd": 232792801280.0
     },
     {
       "symbol": "AZN",
@@ -337,8 +612,19 @@
       "country": "United Kingdom",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "astrazeneca.com",
       "sectors": [],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "USD",
+      "revenue": 61366001664.0,
+      "netIncome": 10446000128.0,
+      "revenueGrowth": 0.064,
+      "earningsGrowth": 0.025,
+      "marketCap": null,
+      "profitMargin": 0.17021999,
+      "revenueUsd": 61366001664.0,
+      "netIncomeUsd": 10446000128.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "BA",
@@ -348,11 +634,22 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "boeing.com",
       "sectors": [
         "defense",
         "space"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 93994999808.0,
+      "netIncome": 2088999936.0,
+      "revenueGrowth": 0.08,
+      "earningsGrowth": null,
+      "marketCap": 184543510528.0,
+      "profitMargin": 0.025910001,
+      "revenueUsd": 93994999808.0,
+      "netIncomeUsd": 2088999936.0,
+      "marketCapUsd": 184543510528.0
     },
     {
       "symbol": "BABA",
@@ -362,8 +659,19 @@
       "country": "China",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "alibabagroup.com",
       "sectors": [],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "CNY",
+      "revenue": 1023670026240.0,
+      "netIncome": 105903996928.0,
+      "revenueGrowth": 0.029,
+      "earningsGrowth": 1.041,
+      "marketCap": 305121853440.0,
+      "profitMargin": 0.1012,
+      "revenueUsd": 151735747143.79517,
+      "netIncomeUsd": 15697853495.240255,
+      "marketCapUsd": 45227359612.81668
     },
     {
       "symbol": "BAC",
@@ -373,23 +681,45 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "bankofamerica.com",
       "sectors": [
         "banks"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 113931001856.0,
+      "netIncome": 32124999680.0,
+      "revenueGrowth": 0.168,
+      "earningsGrowth": 0.341,
+      "marketCap": null,
+      "profitMargin": 0.29524,
+      "revenueUsd": 113931001856.0,
+      "netIncomeUsd": 32124999680.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "BG",
-      "name": "Bunge Global SA",
+      "name": "Bunge Limited",
       "sector": "Consumer Defensive",
       "industry": "Farm Products",
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "bunge.com",
       "sectors": [
         "agriculture"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 91818999808.0,
+      "netIncome": 1010000000.0,
+      "revenueGrowth": 0.883,
+      "earningsGrowth": 0.33,
+      "marketCap": 20249356288.0,
+      "profitMargin": 0.01097,
+      "revenueUsd": 91818999808.0,
+      "netIncomeUsd": 1010000000.0,
+      "marketCapUsd": 20249356288.0
     },
     {
       "symbol": "BHP",
@@ -399,10 +729,21 @@
       "country": "Australia",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "bhp.com",
       "sectors": [
         "materials"
       ],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "USD",
+      "revenue": 53987999744.0,
+      "netIncome": 10243000320.0,
+      "revenueGrowth": 0.108,
+      "earningsGrowth": 0.275,
+      "marketCap": 212118814720.0,
+      "profitMargin": 0.18972999,
+      "revenueUsd": 53987999744.0,
+      "netIncomeUsd": 10243000320.0,
+      "marketCapUsd": 212118814720.0
     },
     {
       "symbol": "BIDU",
@@ -412,8 +753,19 @@
       "country": "China",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "ir.baidu.com",
       "sectors": [],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "CNY",
+      "revenue": 128701997056.0,
+      "netIncome": 391000000.0,
+      "revenueGrowth": -0.012,
+      "earningsGrowth": -0.593,
+      "marketCap": 38348427264.0,
+      "profitMargin": 0.01023,
+      "revenueUsd": 19077137340.751026,
+      "netIncomeUsd": 57956837.2741572,
+      "marketCapUsd": 5684280201.175196
     },
     {
       "symbol": "BIIB",
@@ -423,10 +775,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "biogen.com",
       "sectors": [
         "biotech"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 10027899904.0,
+      "netIncome": 834600000.0,
+      "revenueGrowth": 0.034,
+      "earningsGrowth": -0.848,
+      "marketCap": 29819713536.0,
+      "profitMargin": 0.083229996,
+      "revenueUsd": 10027899904.0,
+      "netIncomeUsd": 834600000.0,
+      "marketCapUsd": 29819713536.0
     },
     {
       "symbol": "BKNG",
@@ -436,10 +799,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "bookingholdings.com",
       "sectors": [
         "travel"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 27687000064.0,
+      "netIncome": 6153999872.0,
+      "revenueGrowth": 0.162,
+      "earningsGrowth": 2.4,
+      "marketCap": 149326839808.0,
+      "profitMargin": 0.22227,
+      "revenueUsd": 27687000064.0,
+      "netIncomeUsd": 6153999872.0,
+      "marketCapUsd": 149326839808.0
     },
     {
       "symbol": "BLDR",
@@ -449,10 +823,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "bldr.com",
       "sectors": [
         "homebuilders"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 14448703488.0,
+      "netIncome": 102550000.0,
+      "revenueGrowth": -0.088,
+      "earningsGrowth": null,
+      "marketCap": 7798591488.0,
+      "profitMargin": 0.0070999996,
+      "revenueUsd": 14448703488.0,
+      "netIncomeUsd": 102550000.0,
+      "marketCapUsd": 7798591488.0
     },
     {
       "symbol": "BLK",
@@ -462,10 +847,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "blackrock.com",
       "sectors": [
         "banks"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 27299000320.0,
+      "netIncome": 6576000000.0,
+      "revenueGrowth": 0.306,
+      "earningsGrowth": 0.197,
+      "marketCap": null,
+      "profitMargin": 0.24089001,
+      "revenueUsd": 27299000320.0,
+      "netIncomeUsd": 6576000000.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "BMRN",
@@ -475,10 +871,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "biomarin.com",
       "sectors": [
         "biotech"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 3242316032.0,
+      "netIncome": 268742016.0,
+      "revenueGrowth": 0.028,
+      "earningsGrowth": -0.431,
+      "marketCap": 11596099584.0,
+      "profitMargin": 0.08289,
+      "revenueUsd": 3242316032.0,
+      "netIncomeUsd": 268742016.0,
+      "marketCapUsd": 11596099584.0
     },
     {
       "symbol": "BMY",
@@ -488,10 +895,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "bms.com",
       "sectors": [
         "healthcare"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 49186000896.0,
+      "netIncome": 9281999872.0,
+      "revenueGrowth": 0.057,
+      "earningsGrowth": 1.531,
+      "marketCap": 133736529920.0,
+      "profitMargin": 0.18871,
+      "revenueUsd": 49186000896.0,
+      "netIncomeUsd": 9281999872.0,
+      "marketCapUsd": 133736529920.0
     },
     {
       "symbol": "BP",
@@ -501,10 +919,21 @@
       "country": "United Kingdom",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "bp.com",
       "sectors": [
         "energy"
       ],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "USD",
+      "revenue": 193004994560.0,
+      "netIncome": 3208999936.0,
+      "revenueGrowth": 0.116,
+      "earningsGrowth": 4.745,
+      "marketCap": 113975255040.0,
+      "profitMargin": 0.01663,
+      "revenueUsd": 193004994560.0,
+      "netIncomeUsd": 3208999936.0,
+      "marketCapUsd": 113975255040.0
     },
     {
       "symbol": "BRK-B",
@@ -514,10 +943,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "berkshirehathaway.com",
       "sectors": [
         "insurance"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 375394009088.0,
+      "netIncome": 72471003136.0,
+      "revenueGrowth": 0.044,
+      "earningsGrowth": 1.196,
+      "marketCap": 1106767904768.0,
+      "profitMargin": 0.19305,
+      "revenueUsd": 375394009088.0,
+      "netIncomeUsd": 72471003136.0,
+      "marketCapUsd": 1106767904768.0
     },
     {
       "symbol": "BTC-USD",
@@ -527,10 +967,21 @@
       "country": "",
       "currency": "USD",
       "exchange": "CCC",
+      "domain": "bitcoin.org",
       "sectors": [
         "crypto"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": null,
+      "netIncome": null,
+      "revenueGrowth": null,
+      "earningsGrowth": null,
+      "marketCap": 1273656770560.0,
+      "profitMargin": null,
+      "revenueUsd": null,
+      "netIncomeUsd": null,
+      "marketCapUsd": 1273656770560.0
     },
     {
       "symbol": "BYD",
@@ -540,10 +991,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "boydgaming.com",
       "sectors": [
         "gambling"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 4098167040.0,
+      "netIncome": 1817171968.0,
+      "revenueGrowth": 0.0,
+      "earningsGrowth": -0.049,
+      "marketCap": 6163359232.0,
+      "profitMargin": 0.44341,
+      "revenueUsd": 4098167040.0,
+      "netIncomeUsd": 1817171968.0,
+      "marketCapUsd": 6163359232.0
     },
     {
       "symbol": "C",
@@ -553,10 +1015,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "citigroup.com",
       "sectors": [
         "banks"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 81711996928.0,
+      "netIncome": 16460000256.0,
+      "revenueGrowth": 0.145,
+      "earningsGrowth": 0.61,
+      "marketCap": 224050331648.0,
+      "profitMargin": 0.21832001,
+      "revenueUsd": 81711996928.0,
+      "netIncomeUsd": 16460000256.0,
+      "marketCapUsd": 224050331648.0
     },
     {
       "symbol": "CABO",
@@ -566,10 +1039,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "cableone.biz",
       "sectors": [
         "telecom"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 1473778944.0,
+      "netIncome": -323292000.0,
+      "revenueGrowth": -0.073,
+      "earningsGrowth": 12.296,
+      "marketCap": null,
+      "profitMargin": -0.21936001,
+      "revenueUsd": 1473778944.0,
+      "netIncomeUsd": -323292000.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "CAT",
@@ -579,10 +1063,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "caterpillar.com",
       "sectors": [
         "industrials"
       ],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "USD",
+      "revenue": 70755000320.0,
+      "netIncome": 9429999616.0,
+      "revenueGrowth": 0.222,
+      "earningsGrowth": 0.302,
+      "marketCap": null,
+      "profitMargin": 0.13328,
+      "revenueUsd": 70755000320.0,
+      "netIncomeUsd": 9429999616.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "CB",
@@ -592,10 +1087,21 @@
       "country": "Switzerland",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "chubb.com",
       "sectors": [
         "insurance"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 61895999488.0,
+      "netIncome": 11185000448.0,
+      "revenueGrowth": 0.061,
+      "earningsGrowth": -0.007,
+      "marketCap": 134347096064.0,
+      "profitMargin": 0.18070999,
+      "revenueUsd": 61895999488.0,
+      "netIncomeUsd": 11185000448.0,
+      "marketCapUsd": 134347096064.0
     },
     {
       "symbol": "CCI",
@@ -605,10 +1111,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "crowncastle.com",
       "sectors": [
         "reits"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 4160999936.0,
+      "netIncome": 1074000000.0,
+      "revenueGrowth": -0.049,
+      "earningsGrowth": -0.675,
+      "marketCap": 33535379456.0,
+      "profitMargin": 0.20716,
+      "revenueUsd": 4160999936.0,
+      "netIncomeUsd": 1074000000.0,
+      "marketCapUsd": 33535379456.0
     },
     {
       "symbol": "CCL",
@@ -618,10 +1135,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "carnivalcorp.com",
       "sectors": [
         "travel"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 27310999552.0,
+      "netIncome": 3068999936.0,
+      "revenueGrowth": 0.053,
+      "earningsGrowth": -0.065,
+      "marketCap": 39363715072.0,
+      "profitMargin": 0.11237001,
+      "revenueUsd": 27310999552.0,
+      "netIncomeUsd": 3068999936.0,
+      "marketCapUsd": 39363715072.0
     },
     {
       "symbol": "CF",
@@ -631,10 +1159,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "cfindustries.com",
       "sectors": [
         "agriculture"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 7407000064.0,
+      "netIncome": 1758000000.0,
+      "revenueGrowth": 0.194,
+      "earningsGrowth": 1.151,
+      "marketCap": 18174345216.0,
+      "profitMargin": 0.23733999,
+      "revenueUsd": 7407000064.0,
+      "netIncomeUsd": 1758000000.0,
+      "marketCapUsd": 18174345216.0
     },
     {
       "symbol": "CHDN",
@@ -644,10 +1183,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "churchilldownsincorporated.com",
       "sectors": [
         "gambling"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 2991899904.0,
+      "netIncome": 412000000.0,
+      "revenueGrowth": 0.049,
+      "earningsGrowth": 0.144,
+      "marketCap": 5817879040.0,
+      "profitMargin": 0.13804,
+      "revenueUsd": 2991899904.0,
+      "netIncomeUsd": 412000000.0,
+      "marketCapUsd": 5817879040.0
     },
     {
       "symbol": "CHRW",
@@ -657,10 +1207,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "chrobinson.com",
       "sectors": [
         "logistics"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 16996511744.0,
+      "netIncome": 633326976.0,
+      "revenueGrowth": 0.193,
+      "earningsGrowth": 0.238,
+      "marketCap": 17327337472.0,
+      "profitMargin": 0.03726,
+      "revenueUsd": 16996511744.0,
+      "netIncomeUsd": 633326976.0,
+      "marketCapUsd": 17327337472.0
     },
     {
       "symbol": "CHTR",
@@ -670,10 +1231,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "corporate.charter.com",
       "sectors": [
         "telecom"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 54395998208.0,
+      "netIncome": 4924000256.0,
+      "revenueGrowth": -0.017,
+      "earningsGrowth": 0.161,
+      "marketCap": 19421435904.0,
+      "profitMargin": 0.09052,
+      "revenueUsd": 54395998208.0,
+      "netIncomeUsd": 4924000256.0,
+      "marketCapUsd": 19421435904.0
     },
     {
       "symbol": "CL",
@@ -683,10 +1255,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "colgatepalmolive.com",
       "sectors": [
         "staples"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 21046999040.0,
+      "netIncome": 2038000000.0,
+      "revenueGrowth": 0.049,
+      "earningsGrowth": -0.055,
+      "marketCap": null,
+      "profitMargin": 0.096829996,
+      "revenueUsd": 21046999040.0,
+      "netIncomeUsd": 2038000000.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "CMCSA",
@@ -696,10 +1279,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "corporate.comcast.com",
       "sectors": [
         "media"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 124903997440.0,
+      "netIncome": 11198999552.0,
+      "revenueGrowth": -0.012,
+      "earningsGrowth": -0.668,
+      "marketCap": 87154515968.0,
+      "profitMargin": 0.08966,
+      "revenueUsd": 124903997440.0,
+      "netIncomeUsd": 11198999552.0,
+      "marketCapUsd": 87154515968.0
     },
     {
       "symbol": "CMG",
@@ -709,10 +1303,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "chipotle.com",
       "sectors": [
         "restaurants"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 12423758848.0,
+      "netIncome": 1419405952.0,
+      "revenueGrowth": 0.093,
+      "earningsGrowth": -0.013,
+      "marketCap": 47493210112.0,
+      "profitMargin": 0.114250004,
+      "revenueUsd": 12423758848.0,
+      "netIncomeUsd": 1419405952.0,
+      "marketCapUsd": 47493210112.0
     },
     {
       "symbol": "CMI",
@@ -722,10 +1327,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "cummins.com",
       "sectors": [
         "industrials"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 33894000640.0,
+      "netIncome": 2672999936.0,
+      "revenueGrowth": 0.027,
+      "earningsGrowth": -0.21,
+      "marketCap": 89534210048.0,
+      "profitMargin": 0.07886,
+      "revenueUsd": 33894000640.0,
+      "netIncomeUsd": 2672999936.0,
+      "marketCapUsd": 89534210048.0
     },
     {
       "symbol": "COIN",
@@ -735,10 +1351,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "coinbase.com",
       "sectors": [
         "crypto"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 6043752960.0,
+      "netIncome": -987766016.0,
+      "revenueGrowth": -0.173,
+      "earningsGrowth": null,
+      "marketCap": 38652108800.0,
+      "profitMargin": -0.16344,
+      "revenueUsd": 6043752960.0,
+      "netIncomeUsd": -987766016.0,
+      "marketCapUsd": 38652108800.0
     },
     {
       "symbol": "COP",
@@ -748,10 +1375,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "conocophillips.com",
       "sectors": [
         "energy"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 59377999872.0,
+      "netIncome": 7297999872.0,
+      "revenueGrowth": -0.053,
+      "earningsGrowth": -0.202,
+      "marketCap": 145171922944.0,
+      "profitMargin": 0.12331,
+      "revenueUsd": 59377999872.0,
+      "netIncomeUsd": 7297999872.0,
+      "marketCapUsd": 145171922944.0
     },
     {
       "symbol": "COST",
@@ -761,10 +1399,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "costco.com",
       "sectors": [
         "retail"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 293586993152.0,
+      "netIncome": 8837999616.0,
+      "revenueGrowth": 0.215,
+      "earningsGrowth": 0.455,
+      "marketCap": 423114276864.0,
+      "profitMargin": 0.0301,
+      "revenueUsd": 293586993152.0,
+      "netIncomeUsd": 8837999616.0,
+      "marketCapUsd": 423114276864.0
     },
     {
       "symbol": "CRM",
@@ -774,11 +1423,22 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "salesforce.com",
       "sectors": [
         "technology",
         "software"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 42829000704.0,
+      "netIncome": 8023000064.0,
+      "revenueGrowth": 0.133,
+      "earningsGrowth": 0.522,
+      "marketCap": null,
+      "profitMargin": 0.18733,
+      "revenueUsd": 42829000704.0,
+      "netIncomeUsd": 8023000064.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "CROX",
@@ -788,10 +1448,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "crocs.com",
       "sectors": [
         "apparel"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 4054865920.0,
+      "netIncome": 593424000.0,
+      "revenueGrowth": 0.026,
+      "earningsGrowth": null,
+      "marketCap": 6467311104.0,
+      "profitMargin": 0.14635,
+      "revenueUsd": 4054865920.0,
+      "netIncomeUsd": 593424000.0,
+      "marketCapUsd": 6467311104.0
     },
     {
       "symbol": "CRWD",
@@ -801,10 +1472,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "crowdstrike.com",
       "sectors": [
         "cybersecurity"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 5094199808.0,
+      "netIncome": -30464000.0,
+      "revenueGrowth": 0.256,
+      "earningsGrowth": null,
+      "marketCap": 206238220288.0,
+      "profitMargin": -0.00598,
+      "revenueUsd": 5094199808.0,
+      "netIncomeUsd": -30464000.0,
+      "marketCapUsd": 206238220288.0
     },
     {
       "symbol": "CSCO",
@@ -814,10 +1496,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "cisco.com",
       "sectors": [
         "technology"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 60745998336.0,
+      "netIncome": 11957999616.0,
+      "revenueGrowth": 0.12,
+      "earningsGrowth": 0.371,
+      "marketCap": 456654618624.0,
+      "profitMargin": 0.19685,
+      "revenueUsd": 60745998336.0,
+      "netIncomeUsd": 11957999616.0,
+      "marketCapUsd": 456654618624.0
     },
     {
       "symbol": "CTVA",
@@ -827,10 +1520,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "corteva.com",
       "sectors": [
         "agriculture"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 17812000768.0,
+      "netIncome": 1084999936.0,
+      "revenueGrowth": -0.012,
+      "earningsGrowth": -0.099,
+      "marketCap": 50857070592.0,
+      "profitMargin": 0.056649998,
+      "revenueUsd": 17812000768.0,
+      "netIncomeUsd": 1084999936.0,
+      "marketCapUsd": 50857070592.0
     },
     {
       "symbol": "CVX",
@@ -840,10 +1544,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "chevron.com",
       "sectors": [
         "energy"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 209370005504.0,
+      "netIncome": 20590999552.0,
+      "revenueGrowth": 0.526,
+      "earningsGrowth": 3.229,
+      "marketCap": 384736821248.0,
+      "profitMargin": 0.09835,
+      "revenueUsd": 209370005504.0,
+      "netIncomeUsd": 20590999552.0,
+      "marketCapUsd": 384736821248.0
     },
     {
       "symbol": "CZR",
@@ -853,10 +1568,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "caesars.com",
       "sectors": [
         "gambling"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 11648000000.0,
+      "netIncome": -465000000.0,
+      "revenueGrowth": 0.03,
+      "earningsGrowth": null,
+      "marketCap": 6056606208.0,
+      "profitMargin": -0.039920002,
+      "revenueUsd": 11648000000.0,
+      "netIncomeUsd": -465000000.0,
+      "marketCapUsd": 6056606208.0
     },
     {
       "symbol": "D",
@@ -866,10 +1592,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "dominionenergy.com",
       "sectors": [
         "utilities"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 18119000064.0,
+      "netIncome": 2505999872.0,
+      "revenueGrowth": 0.176,
+      "earningsGrowth": -0.58,
+      "marketCap": 60467408896.0,
+      "profitMargin": 0.13984999,
+      "revenueUsd": 18119000064.0,
+      "netIncomeUsd": 2505999872.0,
+      "marketCapUsd": 60467408896.0
     },
     {
       "symbol": "DAL",
@@ -879,10 +1616,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "delta.com",
       "sectors": [
         "travel"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 68287000576.0,
+      "netIncome": 3950000128.0,
+      "revenueGrowth": 0.187,
+      "earningsGrowth": -0.254,
+      "marketCap": null,
+      "profitMargin": 0.05784,
+      "revenueUsd": 68287000576.0,
+      "netIncomeUsd": 3950000128.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "DB",
@@ -892,8 +1640,19 @@
       "country": "Germany",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "db.com",
       "sectors": [],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "EUR",
+      "revenue": 30464999424.0,
+      "netIncome": 6090999808.0,
+      "revenueGrowth": 0.087,
+      "earningsGrowth": 0.188,
+      "marketCap": 69842427904.0,
+      "profitMargin": 0.22715001,
+      "revenueUsd": 35069642524.212616,
+      "netIncomeUsd": 7011626125.728026,
+      "marketCapUsd": 80398786342.55943
     },
     {
       "symbol": "DDI",
@@ -903,10 +1662,21 @@
       "country": "South Korea",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "doubledowninteractive.com",
       "sectors": [
         "video-games"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 370568000.0,
+      "netIncome": 114038000.0,
+      "revenueGrowth": 0.127,
+      "earningsGrowth": 0.484,
+      "marketCap": 578288640.0,
+      "profitMargin": 0.30774,
+      "revenueUsd": 370568000.0,
+      "netIncomeUsd": 114038000.0,
+      "marketCapUsd": 578288640.0
     },
     {
       "symbol": "DDOG",
@@ -916,10 +1686,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "datadoghq.com",
       "sectors": [
         "software"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 3672030976.0,
+      "netIncome": 135672992.0,
+      "revenueGrowth": 0.322,
+      "earningsGrowth": 1.04,
+      "marketCap": 97390706688.0,
+      "profitMargin": 0.03695,
+      "revenueUsd": 3672030976.0,
+      "netIncomeUsd": 135672992.0,
+      "marketCapUsd": 97390706688.0
     },
     {
       "symbol": "DE",
@@ -929,10 +1710,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "deere.com",
       "sectors": [
         "agriculture"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 47337000960.0,
+      "netIncome": 4783000064.0,
+      "revenueGrowth": -0.111,
+      "earningsGrowth": -0.085,
+      "marketCap": 163328344064.0,
+      "profitMargin": 0.10104,
+      "revenueUsd": 47337000960.0,
+      "netIncomeUsd": 4783000064.0,
+      "marketCapUsd": 163328344064.0
     },
     {
       "symbol": "DECK",
@@ -942,10 +1734,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "deckers.com",
       "sectors": [
         "apparel"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 5527288832.0,
+      "netIncome": 1014840000.0,
+      "revenueGrowth": 0.057,
+      "earningsGrowth": 0.011,
+      "marketCap": 13550094336.0,
+      "profitMargin": 0.18361,
+      "revenueUsd": 5527288832.0,
+      "netIncomeUsd": 1014840000.0,
+      "marketCapUsd": 13550094336.0
     },
     {
       "symbol": "DEO",
@@ -955,8 +1758,19 @@
       "country": "United Kingdom",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "diageo.com",
       "sectors": [],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "USD",
+      "revenue": 19804000256.0,
+      "netIncome": 2414000128.0,
+      "revenueGrowth": -0.04,
+      "earningsGrowth": 0.029,
+      "marketCap": 49202372608.0,
+      "profitMargin": 0.12189,
+      "revenueUsd": 19804000256.0,
+      "netIncomeUsd": 2414000128.0,
+      "marketCapUsd": 49202372608.0
     },
     {
       "symbol": "DG",
@@ -966,10 +1780,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "dollargeneral.com",
       "sectors": [
         "retail"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 43075354624.0,
+      "netIncome": 1564509952.0,
+      "revenueGrowth": 0.034,
+      "earningsGrowth": 0.124,
+      "marketCap": 28173326336.0,
+      "profitMargin": 0.03632,
+      "revenueUsd": 43075354624.0,
+      "netIncomeUsd": 1564509952.0,
+      "marketCapUsd": 28173326336.0
     },
     {
       "symbol": "DHI",
@@ -979,23 +1804,45 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "drhorton.com",
       "sectors": [
         "homebuilders"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 33350000640.0,
+      "netIncome": 3052900096.0,
+      "revenueGrowth": 0.0,
+      "earningsGrowth": -0.048,
+      "marketCap": 41020989440.0,
+      "profitMargin": 0.09154,
+      "revenueUsd": 33350000640.0,
+      "netIncomeUsd": 3052900096.0,
+      "marketCapUsd": 41020989440.0
     },
     {
       "symbol": "DIS",
-      "name": "The Walt Disney Company",
+      "name": "Walt Disney Company (The)",
       "sector": "Communication Services",
       "industry": "Entertainment",
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "thewaltdisneycompany.com",
       "sectors": [
         "media"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 97263001600.0,
+      "netIncome": 11224000512.0,
+      "revenueGrowth": 0.065,
+      "earningsGrowth": -0.298,
+      "marketCap": null,
+      "profitMargin": 0.1154,
+      "revenueUsd": 97263001600.0,
+      "netIncomeUsd": 11224000512.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "DKNG",
@@ -1005,10 +1852,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "draftkings.com",
       "sectors": [
         "gambling"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 6291794944.0,
+      "netIncome": 58644000.0,
+      "revenueGrowth": 0.168,
+      "earningsGrowth": null,
+      "marketCap": 11659027456.0,
+      "profitMargin": 0.00932,
+      "revenueUsd": 6291794944.0,
+      "netIncomeUsd": 58644000.0,
+      "marketCapUsd": 11659027456.0
     },
     {
       "symbol": "DLR",
@@ -1018,23 +1876,45 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "digitalrealty.com",
       "sectors": [
         "reits"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 6757036032.0,
+      "netIncome": 758297984.0,
+      "revenueGrowth": 0.299,
+      "earningsGrowth": -0.587,
+      "marketCap": 71950155776.0,
+      "profitMargin": 0.11825,
+      "revenueUsd": 6757036032.0,
+      "netIncomeUsd": 758297984.0,
+      "marketCapUsd": 71950155776.0
     },
     {
       "symbol": "DPZ",
-      "name": "Domino's Pizza, Inc.",
+      "name": "Domino's Pizza Inc",
       "sector": "Consumer Cyclical",
       "industry": "Restaurants",
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "biz.dominos.com",
       "sectors": [
         "restaurants"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 5027814912.0,
+      "netIncome": 596523008.0,
+      "revenueGrowth": 0.043,
+      "earningsGrowth": 0.068,
+      "marketCap": 12055315456.0,
+      "profitMargin": 0.118640006,
+      "revenueUsd": 5027814912.0,
+      "netIncomeUsd": 596523008.0,
+      "marketCapUsd": 12055315456.0
     },
     {
       "symbol": "DRI",
@@ -1044,10 +1924,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "darden.com",
       "sectors": [
         "restaurants"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 13210900480.0,
+      "netIncome": 1213699968.0,
+      "revenueGrowth": 0.137,
+      "earningsGrowth": 0.36,
+      "marketCap": 23621699584.0,
+      "profitMargin": 0.09134,
+      "revenueUsd": 13210900480.0,
+      "netIncomeUsd": 1213699968.0,
+      "marketCapUsd": 23621699584.0
     },
     {
       "symbol": "DUK",
@@ -1057,10 +1948,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "duke-energy.com",
       "sectors": [
         "utilities"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 32718999552.0,
+      "netIncome": 5062000128.0,
+      "revenueGrowth": 0.113,
+      "earningsGrowth": 0.12,
+      "marketCap": 96888217600.0,
+      "profitMargin": 0.15706,
+      "revenueUsd": 32718999552.0,
+      "netIncomeUsd": 5062000128.0,
+      "marketCapUsd": 96888217600.0
     },
     {
       "symbol": "EA",
@@ -1070,11 +1972,22 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "ea.com",
       "sectors": [
         "media",
         "video-games"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 7530999808.0,
+      "netIncome": 887000000.0,
+      "revenueGrowth": 0.119,
+      "earningsGrowth": 0.853,
+      "marketCap": 52977893376.0,
+      "profitMargin": 0.11778,
+      "revenueUsd": 7530999808.0,
+      "netIncomeUsd": 887000000.0,
+      "marketCapUsd": 52977893376.0
     },
     {
       "symbol": "ED",
@@ -1084,10 +1997,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "conedison.com",
       "sectors": [
         "utilities"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 17215000576.0,
+      "netIncome": 2156000000.0,
+      "revenueGrowth": 0.062,
+      "earningsGrowth": 0.129,
+      "marketCap": null,
+      "profitMargin": 0.12524,
+      "revenueUsd": 17215000576.0,
+      "netIncomeUsd": 2156000000.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "EMR",
@@ -1097,10 +2021,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "emerson.com",
       "sectors": [
         "industrials"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 18315999232.0,
+      "netIncome": 2438000128.0,
+      "revenueGrowth": 0.029,
+      "earningsGrowth": 0.279,
+      "marketCap": 86731481088.0,
+      "profitMargin": 0.13354,
+      "revenueUsd": 18315999232.0,
+      "netIncomeUsd": 2438000128.0,
+      "marketCapUsd": 86731481088.0
     },
     {
       "symbol": "EOG",
@@ -1110,10 +2045,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "eogresources.com",
       "sectors": [
         "energy"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 23569999872.0,
+      "netIncome": 5496999936.0,
+      "revenueGrowth": 0.156,
+      "earningsGrowth": 0.396,
+      "marketCap": 77593321472.0,
+      "profitMargin": 0.23322001,
+      "revenueUsd": 23569999872.0,
+      "netIncomeUsd": 5496999936.0,
+      "marketCapUsd": 77593321472.0
     },
     {
       "symbol": "EQIX",
@@ -1123,10 +2069,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "equinix.com",
       "sectors": [
         "reits"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 9904000000.0,
+      "netIncome": 1532999936.0,
+      "revenueGrowth": 0.167,
+      "earningsGrowth": 0.288,
+      "marketCap": 101773918208.0,
+      "profitMargin": 0.15479,
+      "revenueUsd": 9904000000.0,
+      "netIncomeUsd": 1532999936.0,
+      "marketCapUsd": 101773918208.0
     },
     {
       "symbol": "ETH-USD",
@@ -1136,23 +2093,45 @@
       "country": "",
       "currency": "USD",
       "exchange": "CCC",
+      "domain": "ethereum.org",
       "sectors": [
         "crypto"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": null,
+      "netIncome": null,
+      "revenueGrowth": null,
+      "earningsGrowth": null,
+      "marketCap": 224222838784.0,
+      "profitMargin": null,
+      "revenueUsd": null,
+      "netIncomeUsd": null,
+      "marketCapUsd": 224222838784.0
     },
     {
       "symbol": "ETN",
-      "name": "Eaton Corporation plc",
+      "name": "Eaton Corporation, PLC",
       "sector": "Industrials",
       "industry": "Specialty Industrial Machinery",
       "country": "Ireland",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "eaton.com",
       "sectors": [
         "industrials"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 30026000384.0,
+      "netIncome": 3828999936.0,
+      "revenueGrowth": 0.214,
+      "earningsGrowth": -0.159,
+      "marketCap": null,
+      "profitMargin": 0.12752,
+      "revenueUsd": 30026000384.0,
+      "netIncomeUsd": 3828999936.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "EXC",
@@ -1162,10 +2141,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "exeloncorp.com",
       "sectors": [
         "utilities"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 25326000128.0,
+      "netIncome": 2783000064.0,
+      "revenueGrowth": 0.099,
+      "earningsGrowth": -0.002,
+      "marketCap": 47010488320.0,
+      "profitMargin": 0.10989001,
+      "revenueUsd": 25326000128.0,
+      "netIncomeUsd": 2783000064.0,
+      "marketCapUsd": 47010488320.0
     },
     {
       "symbol": "EXPD",
@@ -1175,10 +2165,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "expeditors.com",
       "sectors": [
         "logistics"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 11185552384.0,
+      "netIncome": 836147008.0,
+      "revenueGrowth": 0.044,
+      "earningsGrowth": 0.163,
+      "marketCap": 22311659520.0,
+      "profitMargin": 0.07475,
+      "revenueUsd": 11185552384.0,
+      "netIncomeUsd": 836147008.0,
+      "marketCapUsd": 22311659520.0
     },
     {
       "symbol": "EXPE",
@@ -1188,10 +2189,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "expediagroup.com",
       "sectors": [
         "travel"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 15171000320.0,
+      "netIncome": 1488000000.0,
+      "revenueGrowth": 0.147,
+      "earningsGrowth": null,
+      "marketCap": 35770179584.0,
+      "profitMargin": 0.098079994,
+      "revenueUsd": 15171000320.0,
+      "netIncomeUsd": 1488000000.0,
+      "marketCapUsd": 35770179584.0
     },
     {
       "symbol": "F",
@@ -1201,23 +2213,45 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "ford.com",
       "sectors": [
         "automobiles"
       ],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "USD",
+      "revenue": 187972993024.0,
+      "netIncome": -7395999744.0,
+      "revenueGrowth": -0.038,
+      "earningsGrowth": null,
+      "marketCap": 57541009408.0,
+      "profitMargin": -0.03935,
+      "revenueUsd": 187972993024.0,
+      "netIncomeUsd": -7395999744.0,
+      "marketCapUsd": 57541009408.0
     },
     {
       "symbol": "FCX",
-      "name": "Freeport-McMoRan Inc.",
+      "name": "Freeport-McMoRan, Inc.",
       "sector": "Basic Materials",
       "industry": "Copper",
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "fcx.com",
       "sectors": [
         "materials"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 25867999232.0,
+      "netIncome": 2937999872.0,
+      "revenueGrowth": -0.073,
+      "earningsGrowth": 0.271,
+      "marketCap": null,
+      "profitMargin": 0.113850005,
+      "revenueUsd": 25867999232.0,
+      "netIncomeUsd": 2937999872.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "FDX",
@@ -1227,10 +2261,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "fedex.com",
       "sectors": [
         "logistics"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 94720000000.0,
+      "netIncome": 4425999872.0,
+      "revenueGrowth": 0.125,
+      "earningsGrowth": -0.043,
+      "marketCap": 73160359936.0,
+      "profitMargin": 0.0468,
+      "revenueUsd": 94720000000.0,
+      "netIncomeUsd": 4425999872.0,
+      "marketCapUsd": 73160359936.0
     },
     {
       "symbol": "FLUT",
@@ -1240,10 +2285,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "flutter.com",
       "sectors": [
         "gambling"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 17022000128.0,
+      "netIncome": -375000000.0,
+      "revenueGrowth": 0.174,
+      "earningsGrowth": -0.217,
+      "marketCap": 18382061568.0,
+      "profitMargin": -0.022030002,
+      "revenueUsd": 17022000128.0,
+      "netIncomeUsd": -375000000.0,
+      "marketCapUsd": 18382061568.0
     },
     {
       "symbol": "FMC",
@@ -1253,10 +2309,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "fmc.com",
       "sectors": [
         "agriculture"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 3251200000.0,
+      "netIncome": -2693100032.0,
+      "revenueGrowth": -0.175,
+      "earningsGrowth": null,
+      "marketCap": 1297350016.0,
+      "profitMargin": -0.84830004,
+      "revenueUsd": 3251200000.0,
+      "netIncomeUsd": -2693100032.0,
+      "marketCapUsd": 1297350016.0
     },
     {
       "symbol": "FTNT",
@@ -1266,10 +2333,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "fortinet.com",
       "sectors": [
         "cybersecurity"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 7527399936.0,
+      "netIncome": 2120700032.0,
+      "revenueGrowth": 0.256,
+      "earningsGrowth": 0.439,
+      "marketCap": 119749410816.0,
+      "profitMargin": 0.28173,
+      "revenueUsd": 7527399936.0,
+      "netIncomeUsd": 2120700032.0,
+      "marketCapUsd": 119749410816.0
     },
     {
       "symbol": "GD",
@@ -1279,10 +2357,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "gd.com",
       "sectors": [
         "defense"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 54861000704.0,
+      "netIncome": 4487000064.0,
+      "revenueGrowth": 0.081,
+      "earningsGrowth": 0.134,
+      "marketCap": 103469178880.0,
+      "profitMargin": 0.08179,
+      "revenueUsd": 54861000704.0,
+      "netIncomeUsd": 4487000064.0,
+      "marketCapUsd": 103469178880.0
     },
     {
       "symbol": "GE",
@@ -1292,10 +2381,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "geaerospace.com",
       "sectors": [
         "industrials"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 50638999552.0,
+      "netIncome": 8963999744.0,
+      "revenueGrowth": 0.211,
+      "earningsGrowth": 0.194,
+      "marketCap": 382787911680.0,
+      "profitMargin": 0.17716,
+      "revenueUsd": 50638999552.0,
+      "netIncomeUsd": 8963999744.0,
+      "marketCapUsd": 382787911680.0
     },
     {
       "symbol": "GILD",
@@ -1305,10 +2405,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "gilead.com",
       "sectors": [
         "biotech"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 29735999488.0,
+      "netIncome": 9216000000.0,
+      "revenueGrowth": 0.044,
+      "earningsGrowth": 0.548,
+      "marketCap": 162831892480.0,
+      "profitMargin": 0.30993,
+      "revenueUsd": 29735999488.0,
+      "netIncomeUsd": 9216000000.0,
+      "marketCapUsd": 162831892480.0
     },
     {
       "symbol": "GIS",
@@ -1318,10 +2429,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "generalmills.com",
       "sectors": [
         "staples"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 18424600576.0,
+      "netIncome": -87600000.0,
+      "revenueGrowth": 0.022,
+      "earningsGrowth": -0.145,
+      "marketCap": null,
+      "profitMargin": -0.00475,
+      "revenueUsd": 18424600576.0,
+      "netIncomeUsd": -87600000.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "GM",
@@ -1331,10 +2453,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "gm.com",
       "sectors": [
         "automobiles"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 185527992320.0,
+      "netIncome": 1856999936.0,
+      "revenueGrowth": 0.019,
+      "earningsGrowth": -0.262,
+      "marketCap": 79302311936.0,
+      "profitMargin": 0.01051,
+      "revenueUsd": 185527992320.0,
+      "netIncomeUsd": 1856999936.0,
+      "marketCapUsd": 79302311936.0
     },
     {
       "symbol": "GOLD",
@@ -1344,10 +2477,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "gold.com",
       "sectors": [
         "materials"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 23020443648.0,
+      "netIncome": 80508000.0,
+      "revenueGrowth": 2.44,
+      "earningsGrowth": null,
+      "marketCap": 1221954304.0,
+      "profitMargin": 0.0034999999,
+      "revenueUsd": 23020443648.0,
+      "netIncomeUsd": 80508000.0,
+      "marketCapUsd": 1221954304.0
     },
     {
       "symbol": "GOOGL",
@@ -1357,11 +2501,22 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "abc.xyz",
       "sectors": [
         "ai",
         "technology"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 445865984000.0,
+      "netIncome": 244118994944.0,
+      "revenueGrowth": 0.242,
+      "earningsGrowth": 2.94,
+      "marketCap": 4568003379200.0,
+      "profitMargin": 0.54771,
+      "revenueUsd": 445865984000.0,
+      "netIncomeUsd": 244118994944.0,
+      "marketCapUsd": 4568003379200.0
     },
     {
       "symbol": "GRVY",
@@ -1371,23 +2526,45 @@
       "country": "South Korea",
       "currency": "USD",
       "exchange": "NasdaqGM",
+      "domain": "gravity.co.kr",
       "sectors": [
         "video-games"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "KRW",
+      "revenue": 569987629056.0,
+      "netIncome": 74819715072.0,
+      "revenueGrowth": 0.182,
+      "earningsGrowth": 0.334,
+      "marketCap": 429303040.0,
+      "profitMargin": 0.13126999,
+      "revenueUsd": 398944267.64277625,
+      "netIncomeUsd": 52367621.52904136,
+      "marketCapUsd": 300476.6738065306
     },
     {
       "symbol": "GS",
-      "name": "The Goldman Sachs Group, Inc.",
+      "name": "Goldman Sachs Group, Inc. (The)",
       "sector": "Financial Services",
       "industry": "Capital Markets",
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "goldmansachs.com",
       "sectors": [
         "banks"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 67569999872.0,
+      "netIncome": 19989999616.0,
+      "revenueGrowth": 0.425,
+      "earningsGrowth": 0.923,
+      "marketCap": null,
+      "profitMargin": 0.31039,
+      "revenueUsd": 67569999872.0,
+      "netIncomeUsd": 19989999616.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "GSK",
@@ -1397,8 +2574,19 @@
       "country": "United Kingdom",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "gsk.com",
       "sectors": [],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "GBP",
+      "revenue": 33202999296.0,
+      "netIncome": 4821000192.0,
+      "revenueGrowth": 0.053,
+      "earningsGrowth": -0.695,
+      "marketCap": 103197507584.0,
+      "profitMargin": 0.1452,
+      "revenueUsd": 44589930873.62995,
+      "netIncomeUsd": 6474356831.038879,
+      "marketCapUsd": 138588977714.90836
     },
     {
       "symbol": "GXO",
@@ -1408,23 +2596,45 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "gxo.com",
       "sectors": [
         "logistics"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 13498999808.0,
+      "netIncome": 132000000.0,
+      "revenueGrowth": 0.108,
+      "earningsGrowth": null,
+      "marketCap": 5823759360.0,
+      "profitMargin": 0.00978,
+      "revenueUsd": 13498999808.0,
+      "netIncomeUsd": 132000000.0,
+      "marketCapUsd": 5823759360.0
     },
     {
       "symbol": "HD",
-      "name": "The Home Depot, Inc.",
+      "name": "Home Depot, Inc. (The)",
       "sector": "Consumer Cyclical",
       "industry": "Home Improvement Retail",
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "homedepot.com",
       "sectors": [
         "retail"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 166592004096.0,
+      "netIncome": 14012000256.0,
+      "revenueGrowth": 0.048,
+      "earningsGrowth": -0.043,
+      "marketCap": null,
+      "profitMargin": 0.08411,
+      "revenueUsd": 166592004096.0,
+      "netIncomeUsd": 14012000256.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "HIG",
@@ -1434,10 +2644,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "thehartford.com",
       "sectors": [
         "insurance"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 29315000320.0,
+      "netIncome": 4076999936.0,
+      "revenueGrowth": 0.081,
+      "earningsGrowth": 0.361,
+      "marketCap": 39173292032.0,
+      "profitMargin": 0.1489,
+      "revenueUsd": 29315000320.0,
+      "netIncomeUsd": 4076999936.0,
+      "marketCapUsd": 39173292032.0
     },
     {
       "symbol": "HLT",
@@ -1447,10 +2668,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "hilton.com",
       "sectors": [
         "travel"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 5104000000.0,
+      "netIncome": 1584000000.0,
+      "revenueGrowth": 0.025,
+      "earningsGrowth": 0.141,
+      "marketCap": 70746906624.0,
+      "profitMargin": 0.31034002,
+      "revenueUsd": 5104000000.0,
+      "netIncomeUsd": 1584000000.0,
+      "marketCapUsd": 70746906624.0
     },
     {
       "symbol": "HMC",
@@ -1460,10 +2692,21 @@
       "country": "Japan",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "honda.co.jp",
       "sectors": [
         "automobiles"
       ],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "JPY",
+      "revenue": 21796610899968.0,
+      "netIncome": -423941013504.0,
+      "revenueGrowth": 0.086,
+      "earningsGrowth": null,
+      "marketCap": null,
+      "profitMargin": -0.019450001,
+      "revenueUsd": 138535434375.48154,
+      "netIncomeUsd": -2694494695.753125,
+      "marketCapUsd": null
     },
     {
       "symbol": "HON",
@@ -1473,10 +2716,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "honeywell.com",
       "sectors": [
         "industrials"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 38057000960.0,
+      "netIncome": 8265999872.0,
+      "revenueGrowth": 0.043,
+      "earningsGrowth": 2.639,
+      "marketCap": 78211284992.0,
+      "profitMargin": 0.21581,
+      "revenueUsd": 38057000960.0,
+      "netIncomeUsd": 8265999872.0,
+      "marketCapUsd": 78211284992.0
     },
     {
       "symbol": "HOOD",
@@ -1486,10 +2740,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "robinhood.com",
       "sectors": [
         "crypto"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 4931999744.0,
+      "netIncome": 2072000000.0,
+      "revenueGrowth": 0.323,
+      "earningsGrowth": 0.476,
+      "marketCap": 81223090176.0,
+      "profitMargin": 0.42011002,
+      "revenueUsd": 4931999744.0,
+      "netIncomeUsd": 2072000000.0,
+      "marketCapUsd": 81223090176.0
     },
     {
       "symbol": "HSBC",
@@ -1499,8 +2764,19 @@
       "country": "United Kingdom",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "hsbc.com",
       "sectors": [],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "USD",
+      "revenue": 63773999104.0,
+      "netIncome": 21108000768.0,
+      "revenueGrowth": 0.033,
+      "earningsGrowth": 0.026,
+      "marketCap": 369921196032.0,
+      "profitMargin": 0.34977,
+      "revenueUsd": 63773999104.0,
+      "netIncomeUsd": 21108000768.0,
+      "marketCapUsd": 369921196032.0
     },
     {
       "symbol": "HSY",
@@ -1510,10 +2786,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "thehersheycompany.com",
       "sectors": [
         "staples"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 12163911680.0,
+      "netIncome": 1489106944.0,
+      "revenueGrowth": 0.066,
+      "earningsGrowth": 6.31,
+      "marketCap": 35698462720.0,
+      "profitMargin": 0.12242,
+      "revenueUsd": 12163911680.0,
+      "netIncomeUsd": 1489106944.0,
+      "marketCapUsd": 35698462720.0
     },
     {
       "symbol": "HUBS",
@@ -1523,10 +2810,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "hubspot.com",
       "sectors": [
         "software"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 3298124032.0,
+      "netIncome": 100258000.0,
+      "revenueGrowth": 0.234,
+      "earningsGrowth": null,
+      "marketCap": 12281674752.0,
+      "profitMargin": 0.0304,
+      "revenueUsd": 3298124032.0,
+      "netIncomeUsd": 100258000.0,
+      "marketCapUsd": 12281674752.0
     },
     {
       "symbol": "HWM",
@@ -1536,10 +2834,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "howmet.com",
       "sectors": [
         "defense"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 8622999552.0,
+      "netIncome": 1743000064.0,
+      "revenueGrowth": 0.191,
+      "earningsGrowth": 0.714,
+      "marketCap": 114566774784.0,
+      "profitMargin": 0.20225,
+      "revenueUsd": 8622999552.0,
+      "netIncomeUsd": 1743000064.0,
+      "marketCapUsd": 114566774784.0
     },
     {
       "symbol": "IBM",
@@ -1549,10 +2858,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "ibm.com",
       "sectors": [
         "technology"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 69094998016.0,
+      "netIncome": 10705000448.0,
+      "revenueGrowth": 0.011,
+      "earningsGrowth": -0.018,
+      "marketCap": 213214429184.0,
+      "profitMargin": 0.15522,
+      "revenueUsd": 69094998016.0,
+      "netIncomeUsd": 10705000448.0,
+      "marketCapUsd": 213214429184.0
     },
     {
       "symbol": "INCY",
@@ -1562,10 +2882,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "incyte.com",
       "sectors": [
         "biotech"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 5819530240.0,
+      "netIncome": 1612382976.0,
+      "revenueGrowth": 0.377,
+      "earningsGrowth": 0.377,
+      "marketCap": 24005494784.0,
+      "profitMargin": 0.27706,
+      "revenueUsd": 5819530240.0,
+      "netIncomeUsd": 1612382976.0,
+      "marketCapUsd": 24005494784.0
     },
     {
       "symbol": "INFY",
@@ -1575,8 +2906,19 @@
       "country": "India",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "infosys.com",
       "sectors": [],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "USD",
+      "revenue": 20298999808.0,
+      "netIncome": 3323000064.0,
+      "revenueGrowth": 0.029,
+      "earningsGrowth": 0.053,
+      "marketCap": 49614012416.0,
+      "profitMargin": 0.16370001,
+      "revenueUsd": 20298999808.0,
+      "netIncomeUsd": 3323000064.0,
+      "marketCapUsd": 49614012416.0
     },
     {
       "symbol": "INTC",
@@ -1586,10 +2928,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "intel.com",
       "sectors": [
         "semiconductors"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 57031999488.0,
+      "netIncome": -11288999936.0,
+      "revenueGrowth": 0.254,
+      "earningsGrowth": null,
+      "marketCap": 459003985920.0,
+      "profitMargin": -0.19794,
+      "revenueUsd": 57031999488.0,
+      "netIncomeUsd": -11288999936.0,
+      "marketCapUsd": 459003985920.0
     },
     {
       "symbol": "INTU",
@@ -1599,10 +2952,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "intuit.com",
       "sectors": [
         "software"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 20924999680.0,
+      "netIncome": 4584000000.0,
+      "revenueGrowth": 0.104,
+      "earningsGrowth": 0.107,
+      "marketCap": 87091445760.0,
+      "profitMargin": 0.21907,
+      "revenueUsd": 20924999680.0,
+      "netIncomeUsd": 4584000000.0,
+      "marketCapUsd": 87091445760.0
     },
     {
       "symbol": "IRDM",
@@ -1612,11 +2976,22 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "iridium.com",
       "sectors": [
         "telecom",
         "space"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 884169024.0,
+      "netIncome": 93265000.0,
+      "revenueGrowth": 0.038,
+      "earningsGrowth": -0.55,
+      "marketCap": 5120005632.0,
+      "profitMargin": 0.10548,
+      "revenueUsd": 884169024.0,
+      "netIncomeUsd": 93265000.0,
+      "marketCapUsd": 5120005632.0
     },
     {
       "symbol": "ITUB",
@@ -1626,8 +3001,19 @@
       "country": "Brazil",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "itau.com.br",
       "sectors": [],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "BRL",
+      "revenue": 138185998336.0,
+      "netIncome": 45986000896.0,
+      "revenueGrowth": -0.021,
+      "earningsGrowth": 0.114,
+      "marketCap": 93575692288.0,
+      "profitMargin": 0.33278,
+      "revenueUsd": 27151727781.22671,
+      "netIncomeUsd": 9035643213.572647,
+      "marketCapUsd": 18386390477.606743
     },
     {
       "symbol": "ITW",
@@ -1637,10 +3023,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "itw.com",
       "sectors": [
         "industrials"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 16469000192.0,
+      "netIncome": 3193999872.0,
+      "revenueGrowth": 0.061,
+      "earningsGrowth": 0.101,
+      "marketCap": 82998566912.0,
+      "profitMargin": 0.19393998,
+      "revenueUsd": 16469000192.0,
+      "netIncomeUsd": 3193999872.0,
+      "marketCapUsd": 82998566912.0
     },
     {
       "symbol": "JBHT",
@@ -1650,10 +3047,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "jbhunt.com",
       "sectors": [
         "logistics"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 12701309952.0,
+      "netIncome": 674505024.0,
+      "revenueGrowth": 0.194,
+      "earningsGrowth": 0.458,
+      "marketCap": 25066835968.0,
+      "profitMargin": 0.05311,
+      "revenueUsd": 12701309952.0,
+      "netIncomeUsd": 674505024.0,
+      "marketCapUsd": 25066835968.0
     },
     {
       "symbol": "JD",
@@ -1663,8 +3071,19 @@
       "country": "China",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "jd.com",
       "sectors": [],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "CNY",
+      "revenue": 1323697045504.0,
+      "netIncome": 13843000320.0,
+      "revenueGrowth": 0.049,
+      "earningsGrowth": -0.507,
+      "marketCap": null,
+      "profitMargin": 0.0104600005,
+      "revenueUsd": 196207913725.21225,
+      "netIncomeUsd": 2051909250.4663582,
+      "marketCapUsd": null
     },
     {
       "symbol": "JNJ",
@@ -1674,10 +3093,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "jnj.com",
       "sectors": [
         "healthcare"
       ],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "USD",
+      "revenue": 97929003008.0,
+      "netIncome": 21037000704.0,
+      "revenueGrowth": 0.066,
+      "earningsGrowth": -0.009,
+      "marketCap": 613102256128.0,
+      "profitMargin": 0.21482,
+      "revenueUsd": 97929003008.0,
+      "netIncomeUsd": 21037000704.0,
+      "marketCapUsd": 613102256128.0
     },
     {
       "symbol": "JPM",
@@ -1687,10 +3117,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "jpmorganchase.com",
       "sectors": [
         "banks"
       ],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "USD",
+      "revenue": 186328006656.0,
+      "netIncome": 63634001920.0,
+      "revenueGrowth": 0.304,
+      "earningsGrowth": 0.469,
+      "marketCap": null,
+      "profitMargin": 0.34921002,
+      "revenueUsd": 186328006656.0,
+      "netIncomeUsd": 63634001920.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "KB",
@@ -1700,8 +3141,19 @@
       "country": "South Korea",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "kbfg.com",
       "sectors": [],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "KRW",
+      "revenue": 17197593264128.0,
+      "netIncome": 6225372643328.0,
+      "revenueGrowth": 0.185,
+      "earningsGrowth": 0.195,
+      "marketCap": 42171355136.0,
+      "profitMargin": 0.36775002,
+      "revenueUsd": 12036895013.561462,
+      "netIncomeUsd": 4357246725.001916,
+      "marketCapUsd": 29516465.854001943
     },
     {
       "symbol": "KBH",
@@ -1711,10 +3163,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "kbhome.com",
       "sectors": [
         "homebuilders"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 5504297984.0,
+      "netIncome": 270558016.0,
+      "revenueGrowth": -0.273,
+      "earningsGrowth": -0.712,
+      "marketCap": null,
+      "profitMargin": 0.049439996,
+      "revenueUsd": 5504297984.0,
+      "netIncomeUsd": 270558016.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "KDP",
@@ -1724,10 +3187,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "keurigdrpepper.com",
       "sectors": [
         "staples"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 16944000000.0,
+      "netIncome": 1832000000.0,
+      "revenueGrowth": 0.094,
+      "earningsGrowth": -0.477,
+      "marketCap": 42054893568.0,
+      "profitMargin": 0.10812,
+      "revenueUsd": 16944000000.0,
+      "netIncomeUsd": 1832000000.0,
+      "marketCapUsd": 42054893568.0
     },
     {
       "symbol": "KHC",
@@ -1737,10 +3211,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "kraftheinzcompany.com",
       "sectors": [
         "staples"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 24989999104.0,
+      "netIncome": -5760000000.0,
+      "revenueGrowth": 0.008,
+      "earningsGrowth": 0.136,
+      "marketCap": 31328245760.0,
+      "profitMargin": -0.23049,
+      "revenueUsd": 24989999104.0,
+      "netIncomeUsd": -5760000000.0,
+      "marketCapUsd": 31328245760.0
     },
     {
       "symbol": "KO",
@@ -1750,23 +3235,45 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "coca-colacompany.com",
       "sectors": [
         "staples"
       ],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "USD",
+      "revenue": 50128998400.0,
+      "netIncome": 14316000256.0,
+      "revenueGrowth": 0.067,
+      "earningsGrowth": 0.169,
+      "marketCap": 373719400448.0,
+      "profitMargin": 0.28558,
+      "revenueUsd": 50128998400.0,
+      "netIncomeUsd": 14316000256.0,
+      "marketCapUsd": 373719400448.0
     },
     {
       "symbol": "KR",
-      "name": "The Kroger Co.",
+      "name": "Kroger Company (The)",
       "sector": "Consumer Defensive",
       "industry": "Grocery Stores",
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "thekrogerco.com",
       "sectors": [
         "retail"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 148645003264.0,
+      "netIncome": 1046000000.0,
+      "revenueGrowth": 0.022,
+      "earningsGrowth": 0.132,
+      "marketCap": null,
+      "profitMargin": 0.00708,
+      "revenueUsd": 148645003264.0,
+      "netIncomeUsd": 1046000000.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "LCID",
@@ -1776,10 +3283,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "lucidmotors.com",
       "sectors": [
         "automobiles"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 1401207040.0,
+      "netIncome": -4084909056.0,
+      "revenueGrowth": 0.202,
+      "earningsGrowth": null,
+      "marketCap": 3004977408.0,
+      "profitMargin": -2.3980901,
+      "revenueUsd": 1401207040.0,
+      "netIncomeUsd": -4084909056.0,
+      "marketCapUsd": 3004977408.0
     },
     {
       "symbol": "LDOS",
@@ -1789,10 +3307,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "leidos.com",
       "sectors": [
         "defense"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 17329000448.0,
+      "netIncome": 1412999936.0,
+      "revenueGrowth": 0.037,
+      "earningsGrowth": -0.076,
+      "marketCap": 14933250048.0,
+      "profitMargin": 0.08154,
+      "revenueUsd": 17329000448.0,
+      "netIncomeUsd": 1412999936.0,
+      "marketCapUsd": 14933250048.0
     },
     {
       "symbol": "LEN",
@@ -1802,10 +3331,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "lennar.com",
       "sectors": [
         "homebuilders"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 32737234944.0,
+      "netIncome": 1598947968.0,
+      "revenueGrowth": -0.052,
+      "earningsGrowth": -0.315,
+      "marketCap": 20524265472.0,
+      "profitMargin": 0.04934,
+      "revenueUsd": 32737234944.0,
+      "netIncomeUsd": 1598947968.0,
+      "marketCapUsd": 20524265472.0
     },
     {
       "symbol": "LHX",
@@ -1815,10 +3355,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "l3harris.com",
       "sectors": [
         "defense"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 12856000512.0,
+      "netIncome": 1332999936.0,
+      "revenueGrowth": 1.9,
+      "earningsGrowth": -0.061,
+      "marketCap": 51741593600.0,
+      "profitMargin": 0.103690006,
+      "revenueUsd": 12856000512.0,
+      "netIncomeUsd": 1332999936.0,
+      "marketCapUsd": 51741593600.0
     },
     {
       "symbol": "LLY",
@@ -1828,10 +3379,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "lilly.com",
       "sectors": [
         "healthcare"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 72248999936.0,
+      "netIncome": 25276999680.0,
+      "revenueGrowth": 0.555,
+      "earningsGrowth": 1.699,
+      "marketCap": null,
+      "profitMargin": 0.34986,
+      "revenueUsd": 72248999936.0,
+      "netIncomeUsd": 25276999680.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "LMT",
@@ -1841,10 +3403,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "lockheedmartin.com",
       "sectors": [
         "defense"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 77013999616.0,
+      "netIncome": 6287000064.0,
+      "revenueGrowth": 0.105,
+      "earningsGrowth": 4.438,
+      "marketCap": 135310303232.0,
+      "profitMargin": 0.08163,
+      "revenueUsd": 77013999616.0,
+      "netIncomeUsd": 6287000064.0,
+      "marketCapUsd": 135310303232.0
     },
     {
       "symbol": "LOW",
@@ -1854,10 +3427,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "corporate.lowes.com",
       "sectors": [
         "retail"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 88433999872.0,
+      "netIncome": 6623000064.0,
+      "revenueGrowth": 0.103,
+      "earningsGrowth": -0.007,
+      "marketCap": null,
+      "profitMargin": 0.075100005,
+      "revenueUsd": 88433999872.0,
+      "netIncomeUsd": 6623000064.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "LRCX",
@@ -1867,10 +3451,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "lamresearch.com",
       "sectors": [
         "semiconductors"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 23232690176.0,
+      "netIncome": 7265396224.0,
+      "revenueGrowth": 0.3,
+      "earningsGrowth": 0.347,
+      "marketCap": 368638984192.0,
+      "profitMargin": 0.31272,
+      "revenueUsd": 23232690176.0,
+      "netIncomeUsd": 7265396224.0,
+      "marketCapUsd": 368638984192.0
     },
     {
       "symbol": "LULU",
@@ -1880,10 +3475,21 @@
       "country": "Canada",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "corporate.lululemon.com",
       "sectors": [
         "apparel"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 11203543040.0,
+      "netIncome": 1459659008.0,
+      "revenueGrowth": 0.043,
+      "earningsGrowth": -0.35,
+      "marketCap": 14043212800.0,
+      "profitMargin": 0.13029,
+      "revenueUsd": 11203543040.0,
+      "netIncomeUsd": 1459659008.0,
+      "marketCapUsd": 14043212800.0
     },
     {
       "symbol": "LUMN",
@@ -1893,10 +3499,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "lumen.com",
       "sectors": [
         "telecom"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 12119000064.0,
+      "netIncome": -1738000000.0,
+      "revenueGrowth": -0.089,
+      "earningsGrowth": null,
+      "marketCap": 6645506048.0,
+      "profitMargin": -0.14341,
+      "revenueUsd": 12119000064.0,
+      "netIncomeUsd": -1738000000.0,
+      "marketCapUsd": 6645506048.0
     },
     {
       "symbol": "LUNR",
@@ -1906,10 +3523,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGM",
+      "domain": "intuitivemachines.com",
       "sectors": [
         "space"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 334264992.0,
+      "netIncome": -109916000.0,
+      "revenueGrowth": 1.987,
+      "earningsGrowth": null,
+      "marketCap": 2101925248.0,
+      "profitMargin": -0.32694,
+      "revenueUsd": 334264992.0,
+      "netIncomeUsd": -109916000.0,
+      "marketCapUsd": 2101925248.0
     },
     {
       "symbol": "LUV",
@@ -1919,10 +3547,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "southwest.com",
       "sectors": [
         "travel"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 30072999936.0,
+      "netIncome": 837000000.0,
+      "revenueGrowth": 0.164,
+      "earningsGrowth": 0.205,
+      "marketCap": 23027030016.0,
+      "profitMargin": 0.02783,
+      "revenueUsd": 30072999936.0,
+      "netIncomeUsd": 837000000.0,
+      "marketCapUsd": 23027030016.0
     },
     {
       "symbol": "LVS",
@@ -1932,10 +3571,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "sands.com",
       "sectors": [
         "gambling"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 13719000064.0,
+      "netIncome": 1727000064.0,
+      "revenueGrowth": -0.007,
+      "earningsGrowth": -0.198,
+      "marketCap": 30623311872.0,
+      "profitMargin": 0.12588,
+      "revenueUsd": 13719000064.0,
+      "netIncomeUsd": 1727000064.0,
+      "marketCapUsd": 30623311872.0
     },
     {
       "symbol": "LYV",
@@ -1945,23 +3595,45 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "livenationentertainment.com",
       "sectors": [
         "media"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 26272534528.0,
+      "netIncome": -258028992.0,
+      "revenueGrowth": 0.094,
+      "earningsGrowth": 1.562,
+      "marketCap": 42326413312.0,
+      "profitMargin": 0.00513,
+      "revenueUsd": 26272534528.0,
+      "netIncomeUsd": -258028992.0,
+      "marketCapUsd": 42326413312.0
     },
     {
       "symbol": "MAR",
-      "name": "Marriott International, Inc.",
+      "name": "Marriott International",
       "sector": "Consumer Cyclical",
       "industry": "Lodging",
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "marriott.com",
       "sectors": [
         "travel"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 7184000000.0,
+      "netIncome": 2584000000.0,
+      "revenueGrowth": 0.126,
+      "earningsGrowth": 0.017,
+      "marketCap": null,
+      "profitMargin": 0.35969,
+      "revenueUsd": 7184000000.0,
+      "netIncomeUsd": 2584000000.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "MARA",
@@ -1971,10 +3643,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqCM",
+      "domain": "mara.com",
       "sectors": [
         "crypto"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 867822976.0,
+      "netIncome": -2037900032.0,
+      "revenueGrowth": -0.184,
+      "earningsGrowth": null,
+      "marketCap": 4479928320.0,
+      "profitMargin": -2.34829,
+      "revenueUsd": 867822976.0,
+      "netIncomeUsd": -2037900032.0,
+      "marketCapUsd": 4479928320.0
     },
     {
       "symbol": "MAS",
@@ -1984,10 +3667,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "masco.com",
       "sectors": [
         "homebuilders"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 7619999744.0,
+      "netIncome": 885000000.0,
+      "revenueGrowth": -0.029,
+      "earningsGrowth": 0.245,
+      "marketCap": 14735816704.0,
+      "profitMargin": 0.11614,
+      "revenueUsd": 7619999744.0,
+      "netIncomeUsd": 885000000.0,
+      "marketCapUsd": 14735816704.0
     },
     {
       "symbol": "MATX",
@@ -1997,10 +3691,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "matson.com",
       "sectors": [
         "logistics"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 3320300032.0,
+      "netIncome": 429100000.0,
+      "revenueGrowth": -0.031,
+      "earningsGrowth": -0.151,
+      "marketCap": 6278117376.0,
+      "profitMargin": 0.12923999,
+      "revenueUsd": 3320300032.0,
+      "netIncomeUsd": 429100000.0,
+      "marketCapUsd": 6278117376.0
     },
     {
       "symbol": "MCD",
@@ -2010,10 +3715,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "mcdonalds.com",
       "sectors": [
         "restaurants"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 27445999616.0,
+      "netIncome": 8677999616.0,
+      "revenueGrowth": 0.094,
+      "earningsGrowth": 0.069,
+      "marketCap": null,
+      "profitMargin": 0.31618,
+      "revenueUsd": 27445999616.0,
+      "netIncomeUsd": 8677999616.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "MDB",
@@ -2023,10 +3739,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGM",
+      "domain": "mongodb.com",
       "sectors": [
         "software"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 2602398976.0,
+      "netIncome": -29091000.0,
+      "revenueGrowth": 0.252,
+      "earningsGrowth": null,
+      "marketCap": 28792217600.0,
+      "profitMargin": -0.01118,
+      "revenueUsd": 2602398976.0,
+      "netIncomeUsd": -29091000.0,
+      "marketCapUsd": 28792217600.0
     },
     {
       "symbol": "MDLZ",
@@ -2036,10 +3763,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "mondelezinternational.com",
       "sectors": [
         "staples"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 39674998784.0,
+      "netIncome": 3516000000.0,
+      "revenueGrowth": 0.041,
+      "earningsGrowth": 1.449,
+      "marketCap": 78786494464.0,
+      "profitMargin": 0.08862001,
+      "revenueUsd": 39674998784.0,
+      "netIncomeUsd": 3516000000.0,
+      "marketCapUsd": 78786494464.0
     },
     {
       "symbol": "MET",
@@ -2049,10 +3787,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "metlife.com",
       "sectors": [
         "insurance"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 77583998976.0,
+      "netIncome": 3433999872.0,
+      "revenueGrowth": 0.027,
+      "earningsGrowth": 0.359,
+      "marketCap": 61969395712.0,
+      "profitMargin": 0.04665,
+      "revenueUsd": 77583998976.0,
+      "netIncomeUsd": 3433999872.0,
+      "marketCapUsd": 61969395712.0
     },
     {
       "symbol": "META",
@@ -2062,11 +3811,22 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "meta.com",
       "sectors": [
         "ai",
         "technology"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 228246994944.0,
+      "netIncome": 68097998848.0,
+      "revenueGrowth": 0.28,
+      "earningsGrowth": -0.134,
+      "marketCap": 1503640027136.0,
+      "profitMargin": 0.29834998,
+      "revenueUsd": 228246994944.0,
+      "netIncomeUsd": 68097998848.0,
+      "marketCapUsd": 1503640027136.0
     },
     {
       "symbol": "MGM",
@@ -2076,10 +3836,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "mgmresorts.com",
       "sectors": [
         "gambling"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 17761441792.0,
+      "netIncome": 423588000.0,
+      "revenueGrowth": 0.01,
+      "earningsGrowth": 5.194,
+      "marketCap": null,
+      "profitMargin": 0.02398,
+      "revenueUsd": 17761441792.0,
+      "netIncomeUsd": 423588000.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "MMM",
@@ -2089,10 +3860,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "3m.com",
       "sectors": [
         "industrials"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 25180000256.0,
+      "netIncome": 2996999936.0,
+      "revenueGrowth": 0.025,
+      "earningsGrowth": 0.328,
+      "marketCap": 91401486336.0,
+      "profitMargin": 0.11902001,
+      "revenueUsd": 25180000256.0,
+      "netIncomeUsd": 2996999936.0,
+      "marketCapUsd": 91401486336.0
     },
     {
       "symbol": "MNST",
@@ -2102,10 +3884,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "monsterbevcorp.com",
       "sectors": [
         "staples"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 8793075712.0,
+      "netIncome": 2031923968.0,
+      "revenueGrowth": 0.269,
+      "earningsGrowth": 0.289,
+      "marketCap": 91492663296.0,
+      "profitMargin": 0.23108,
+      "revenueUsd": 8793075712.0,
+      "netIncomeUsd": 2031923968.0,
+      "marketCapUsd": 91492663296.0
     },
     {
       "symbol": "MOS",
@@ -2115,10 +3908,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "mosaicco.com",
       "sectors": [
         "agriculture"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 12429500416.0,
+      "netIncome": 45000000.0,
+      "revenueGrowth": 0.144,
+      "earningsGrowth": null,
+      "marketCap": 6932235264.0,
+      "profitMargin": 0.0036199999,
+      "revenueUsd": 12429500416.0,
+      "netIncomeUsd": 45000000.0,
+      "marketCapUsd": 6932235264.0
     },
     {
       "symbol": "MPC",
@@ -2128,23 +3932,45 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "marathonpetroleum.com",
       "sectors": [
         "energy"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 135946002432.0,
+      "netIncome": 4627999744.0,
+      "revenueGrowth": 0.088,
+      "earningsGrowth": null,
+      "marketCap": 89633308672.0,
+      "profitMargin": 0.03407,
+      "revenueUsd": 135946002432.0,
+      "netIncomeUsd": 4627999744.0,
+      "marketCapUsd": 89633308672.0
     },
     {
       "symbol": "MRK",
-      "name": "Merck & Co., Inc.",
+      "name": "Merck & Company, Inc.",
       "sector": "Healthcare",
       "industry": "Drug Manufacturers - General",
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "merck.com",
       "sectors": [
         "healthcare"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 65768001536.0,
+      "netIncome": 8935000064.0,
+      "revenueGrowth": 0.049,
+      "earningsGrowth": null,
+      "marketCap": null,
+      "profitMargin": 0.13586001,
+      "revenueUsd": 65768001536.0,
+      "netIncomeUsd": 8935000064.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "MRNA",
@@ -2154,10 +3980,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "modernatx.com",
       "sectors": [
         "biotech"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 2228000000.0,
+      "netIncome": -3151000064.0,
+      "revenueGrowth": 0.021,
+      "earningsGrowth": null,
+      "marketCap": 21878794240.0,
+      "profitMargin": -1.41427,
+      "revenueUsd": 2228000000.0,
+      "netIncomeUsd": -3151000064.0,
+      "marketCapUsd": 21878794240.0
     },
     {
       "symbol": "MS",
@@ -2167,10 +4004,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "morganstanley.com",
       "sectors": [
         "banks"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 77827997696.0,
+      "netIncome": 19547000832.0,
+      "revenueGrowth": 0.28,
+      "earningsGrowth": 0.624,
+      "marketCap": 332053544960.0,
+      "profitMargin": 0.25897,
+      "revenueUsd": 77827997696.0,
+      "netIncomeUsd": 19547000832.0,
+      "marketCapUsd": 332053544960.0
     },
     {
       "symbol": "MSFT",
@@ -2180,11 +4028,22 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "microsoft.com",
       "sectors": [
         "ai",
         "technology"
       ],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "USD",
+      "revenue": 331839012864.0,
+      "netIncome": 133748998144.0,
+      "revenueGrowth": 0.177,
+      "earningsGrowth": 0.317,
+      "marketCap": 3621067423744.0,
+      "profitMargin": 0.40305,
+      "revenueUsd": 331839012864.0,
+      "netIncomeUsd": 133748998144.0,
+      "marketCapUsd": 3621067423744.0
     },
     {
       "symbol": "MSTR",
@@ -2194,10 +4053,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "strategy.com",
       "sectors": [
         "crypto"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 498347008.0,
+      "netIncome": -31367133184.0,
+      "revenueGrowth": 0.069,
+      "earningsGrowth": null,
+      "marketCap": 34654220288.0,
+      "profitMargin": 0.0,
+      "revenueUsd": 498347008.0,
+      "netIncomeUsd": -31367133184.0,
+      "marketCapUsd": 34654220288.0
     },
     {
       "symbol": "MTH",
@@ -2207,10 +4077,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "meritagehomes.com",
       "sectors": [
         "homebuilders"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 5391501824.0,
+      "netIncome": 329267008.0,
+      "revenueGrowth": -0.138,
+      "earningsGrowth": -0.328,
+      "marketCap": 4712087040.0,
+      "profitMargin": 0.06107,
+      "revenueUsd": 5391501824.0,
+      "netIncomeUsd": 329267008.0,
+      "marketCapUsd": 4712087040.0
     },
     {
       "symbol": "MU",
@@ -2220,10 +4101,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "micron.com",
       "sectors": [
         "semiconductors"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 90273996800.0,
+      "netIncome": 50468999168.0,
+      "revenueGrowth": 3.457,
+      "earningsGrowth": 13.685,
+      "marketCap": null,
+      "profitMargin": 0.55906,
+      "revenueUsd": 90273996800.0,
+      "netIncomeUsd": 50468999168.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "MUFG",
@@ -2233,8 +4125,19 @@
       "country": "Japan",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "mufg.jp",
       "sectors": [],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "JPY",
+      "revenue": 6711541235712.0,
+      "netIncome": 1729358987264.0,
+      "revenueGrowth": null,
+      "earningsGrowth": null,
+      "marketCap": 253616865280.0,
+      "profitMargin": 0.25767002,
+      "revenueUsd": 42657378465.1853,
+      "netIncomeUsd": 10991502284.059805,
+      "marketCapUsd": 1611944295.2741046
     },
     {
       "symbol": "NCTY",
@@ -2244,10 +4147,21 @@
       "country": "China",
       "currency": "USD",
       "exchange": "NasdaqCM",
+      "domain": "the9.com",
       "sectors": [
         "video-games"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "CNY",
+      "revenue": 83783000.0,
+      "netIncome": -179440992.0,
+      "revenueGrowth": -0.653,
+      "earningsGrowth": null,
+      "marketCap": 69340176.0,
+      "profitMargin": -2.1417398,
+      "revenueUsd": 12418919.942047859,
+      "netIncomeUsd": -26598036.76127198,
+      "marketCapUsd": 10278100.50381949
     },
     {
       "symbol": "NEE",
@@ -2257,10 +4171,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "nexteraenergy.com",
       "sectors": [
         "utilities"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 28700000256.0,
+      "netIncome": 9299000320.0,
+      "revenueGrowth": 0.124,
+      "earningsGrowth": 0.531,
+      "marketCap": 180541423616.0,
+      "profitMargin": 0.32401,
+      "revenueUsd": 28700000256.0,
+      "netIncomeUsd": 9299000320.0,
+      "marketCapUsd": 180541423616.0
     },
     {
       "symbol": "NEM",
@@ -2270,10 +4195,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "newmont.com",
       "sectors": [
         "materials"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 25767000064.0,
+      "netIncome": 8597000192.0,
+      "revenueGrowth": 0.151,
+      "earningsGrowth": 0.114,
+      "marketCap": 100490633216.0,
+      "profitMargin": 0.33363998,
+      "revenueUsd": 25767000064.0,
+      "netIncomeUsd": 8597000192.0,
+      "marketCapUsd": 100490633216.0
     },
     {
       "symbol": "NET",
@@ -2283,10 +4219,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "cloudflare.com",
       "sectors": [
         "cybersecurity"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 2328604928.0,
+      "netIncome": -86740000.0,
+      "revenueGrowth": 0.335,
+      "earningsGrowth": null,
+      "marketCap": 100355604480.0,
+      "profitMargin": -0.037249997,
+      "revenueUsd": 2328604928.0,
+      "netIncomeUsd": -86740000.0,
+      "marketCapUsd": 100355604480.0
     },
     {
       "symbol": "NFLX",
@@ -2296,10 +4243,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "netflix.com",
       "sectors": [
         "media"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 48370765824.0,
+      "netIncome": 13649642496.0,
+      "revenueGrowth": 0.134,
+      "earningsGrowth": 0.111,
+      "marketCap": 305341693952.0,
+      "profitMargin": 0.28219,
+      "revenueUsd": 48370765824.0,
+      "netIncomeUsd": 13649642496.0,
+      "marketCapUsd": 305341693952.0
     },
     {
       "symbol": "NIO",
@@ -2309,10 +4267,21 @@
       "country": "China",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "nio.com",
       "sectors": [
         "automobiles"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "CNY",
+      "revenue": 100985438208.0,
+      "netIncome": -9175624704.0,
+      "revenueGrowth": 1.122,
+      "earningsGrowth": null,
+      "marketCap": null,
+      "profitMargin": -0.09086,
+      "revenueUsd": 14968789282.047348,
+      "netIncomeUsd": -1360077206.7991428,
+      "marketCapUsd": null
     },
     {
       "symbol": "NKE",
@@ -2322,11 +4291,22 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "nike.com",
       "sectors": [
         "retail",
         "apparel"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 46398001152.0,
+      "netIncome": 3108000000.0,
+      "revenueGrowth": -0.011,
+      "earningsGrowth": 4.28,
+      "marketCap": 63256387584.0,
+      "profitMargin": 0.066989996,
+      "revenueUsd": 46398001152.0,
+      "netIncomeUsd": 3108000000.0,
+      "marketCapUsd": 63256387584.0
     },
     {
       "symbol": "NOC",
@@ -2336,11 +4316,22 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "northropgrumman.com",
       "sectors": [
         "defense",
         "space"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 42892001280.0,
+      "netIncome": 4496000000.0,
+      "revenueGrowth": 0.051,
+      "earningsGrowth": -0.058,
+      "marketCap": 77917298688.0,
+      "profitMargin": 0.104820006,
+      "revenueUsd": 42892001280.0,
+      "netIncomeUsd": 4496000000.0,
+      "marketCapUsd": 77917298688.0
     },
     {
       "symbol": "NOW",
@@ -2350,10 +4341,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "servicenow.com",
       "sectors": [
         "software"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 14732000256.0,
+      "netIncome": 1670000000.0,
+      "revenueGrowth": 0.24,
+      "earningsGrowth": -0.219,
+      "marketCap": 118056706048.0,
+      "profitMargin": 0.11336,
+      "revenueUsd": 14732000256.0,
+      "netIncomeUsd": 1670000000.0,
+      "marketCapUsd": 118056706048.0
     },
     {
       "symbol": "NTES",
@@ -2363,10 +4365,21 @@
       "country": "China",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "ir.netease.com",
       "sectors": [
         "video-games"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "CNY",
+      "revenue": 114388541440.0,
+      "netIncome": 34132748288.0,
+      "revenueGrowth": 0.061,
+      "earningsGrowth": 0.031,
+      "marketCap": 84244119552.0,
+      "profitMargin": 0.29839,
+      "revenueUsd": 16955493816.537767,
+      "netIncomeUsd": 5059401888.100725,
+      "marketCapUsd": 12487270404.552197
     },
     {
       "symbol": "NTR",
@@ -2376,10 +4389,21 @@
       "country": "Canada",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "nutrien.com",
       "sectors": [
         "agriculture"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 26876999680.0,
+      "netIncome": 2387000064.0,
+      "revenueGrowth": 0.19,
+      "earningsGrowth": 12.5,
+      "marketCap": 31662352384.0,
+      "profitMargin": 0.08881,
+      "revenueUsd": 26876999680.0,
+      "netIncomeUsd": 2387000064.0,
+      "marketCapUsd": 31662352384.0
     },
     {
       "symbol": "NUE",
@@ -2389,10 +4413,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "nucor.com",
       "sectors": [
         "materials"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 36101001216.0,
+      "netIncome": 2876999936.0,
+      "revenueGrowth": 0.23,
+      "earningsGrowth": 0.938,
+      "marketCap": null,
+      "profitMargin": 0.07989,
+      "revenueUsd": 36101001216.0,
+      "netIncomeUsd": 2876999936.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "NVDA",
@@ -2402,11 +4437,22 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "nvidia.com",
       "sectors": [
         "ai",
         "semiconductors"
       ],
-      "warehouse": false
+      "warehouse": true,
+      "financialCurrency": "USD",
+      "revenue": 253491003392.0,
+      "netIncome": 159612993536.0,
+      "revenueGrowth": 0.852,
+      "earningsGrowth": 2.145,
+      "marketCap": 5005027311616.0,
+      "profitMargin": 0.62966,
+      "revenueUsd": 253491003392.0,
+      "netIncomeUsd": 159612993536.0,
+      "marketCapUsd": 5005027311616.0
     },
     {
       "symbol": "NVR",
@@ -2416,10 +4462,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "nvrinc.com",
       "sectors": [
         "homebuilders"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 9631335424.0,
+      "netIncome": 1141319936.0,
+      "revenueGrowth": -0.109,
+      "earningsGrowth": -0.226,
+      "marketCap": 16615529472.0,
+      "profitMargin": 0.1185,
+      "revenueUsd": 9631335424.0,
+      "netIncomeUsd": 1141319936.0,
+      "marketCapUsd": 16615529472.0
     },
     {
       "symbol": "NVS",
@@ -2429,8 +4486,19 @@
       "country": "Switzerland",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "novartis.com",
       "sectors": [],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "USD",
+      "revenue": 56692998144.0,
+      "netIncome": 12757000192.0,
+      "revenueGrowth": 0.008,
+      "earningsGrowth": -0.17,
+      "marketCap": 292082843648.0,
+      "profitMargin": 0.22502,
+      "revenueUsd": 56692998144.0,
+      "netIncomeUsd": 12757000192.0,
+      "marketCapUsd": 292082843648.0
     },
     {
       "symbol": "O",
@@ -2440,10 +4508,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "realtyincome.com",
       "sectors": [
         "reits"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 5929241088.0,
+      "netIncome": 1120541056.0,
+      "revenueGrowth": 0.12,
+      "earningsGrowth": 0.179,
+      "marketCap": null,
+      "profitMargin": 0.18899,
+      "revenueUsd": 5929241088.0,
+      "netIncomeUsd": 1120541056.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "ODFL",
@@ -2453,10 +4532,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "odfl.com",
       "sectors": [
         "logistics"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 5602506752.0,
+      "netIncome": 1089276032.0,
+      "revenueGrowth": 0.104,
+      "earningsGrowth": 0.323,
+      "marketCap": 43989454848.0,
+      "profitMargin": 0.19443001,
+      "revenueUsd": 5602506752.0,
+      "netIncomeUsd": 1089276032.0,
+      "marketCapUsd": 43989454848.0
     },
     {
       "symbol": "OKTA",
@@ -2466,10 +4556,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "okta.com",
       "sectors": [
         "cybersecurity"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 2996000000.0,
+      "netIncome": 247000000.0,
+      "revenueGrowth": 0.112,
+      "earningsGrowth": 0.212,
+      "marketCap": 24605908992.0,
+      "profitMargin": 0.082440004,
+      "revenueUsd": 2996000000.0,
+      "netIncomeUsd": 247000000.0,
+      "marketCapUsd": 24605908992.0
     },
     {
       "symbol": "ONON",
@@ -2479,10 +4580,21 @@
       "country": "Switzerland",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "on.com",
       "sectors": [
         "apparel"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "CHF",
+      "revenue": 3119300096.0,
+      "netIncome": 250300000.0,
+      "revenueGrowth": 0.145,
+      "earningsGrowth": 0.811,
+      "marketCap": 12649863168.0,
+      "profitMargin": 0.080240004,
+      "revenueUsd": 3849419615.7722588,
+      "netIncomeUsd": 308886513.0557148,
+      "marketCapUsd": 15610755591.671743
     },
     {
       "symbol": "ORCL",
@@ -2492,10 +4604,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "oracle.com",
       "sectors": [
         "technology"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 67356999680.0,
+      "netIncome": 16984000512.0,
+      "revenueGrowth": 0.206,
+      "earningsGrowth": 0.219,
+      "marketCap": 408594841600.0,
+      "profitMargin": 0.25368,
+      "revenueUsd": 67356999680.0,
+      "netIncomeUsd": 16984000512.0,
+      "marketCapUsd": 408594841600.0
     },
     {
       "symbol": "OXY",
@@ -2505,10 +4628,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "oxy.com",
       "sectors": [
         "energy"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 21119000576.0,
+      "netIncome": 736000000.0,
+      "revenueGrowth": -0.083,
+      "earningsGrowth": 3.156,
+      "marketCap": 55172386816.0,
+      "profitMargin": 0.22421,
+      "revenueUsd": 21119000576.0,
+      "netIncomeUsd": 736000000.0,
+      "marketCapUsd": 55172386816.0
     },
     {
       "symbol": "PANW",
@@ -2518,10 +4652,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "paloaltonetworks.com",
       "sectors": [
         "cybersecurity"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 10606499840.0,
+      "netIncome": 842899968.0,
+      "revenueGrowth": 0.311,
+      "earningsGrowth": null,
+      "marketCap": 282910949376.0,
+      "profitMargin": 0.07947,
+      "revenueUsd": 10606499840.0,
+      "netIncomeUsd": 842899968.0,
+      "marketCapUsd": 282910949376.0
     },
     {
       "symbol": "PBR",
@@ -2531,8 +4676,19 @@
       "country": "Brazil",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "petrobras.com.br",
       "sectors": [],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "BRL",
+      "revenue": 498090999808.0,
+      "netIncome": 107582996480.0,
+      "revenueGrowth": 0.004,
+      "earningsGrowth": -0.072,
+      "marketCap": 122829619200.0,
+      "profitMargin": 0.21599,
+      "revenueUsd": 97868318063.47055,
+      "netIncomeUsd": 21138641175.57734,
+      "marketCapUsd": 24134401633.66609
     },
     {
       "symbol": "PEG",
@@ -2542,10 +4698,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "investor.pseg.com",
       "sectors": [
         "utilities"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 12794000384.0,
+      "netIncome": 2263000064.0,
+      "revenueGrowth": 0.194,
+      "earningsGrowth": 0.254,
+      "marketCap": 38181388288.0,
+      "profitMargin": 0.17688,
+      "revenueUsd": 12794000384.0,
+      "netIncomeUsd": 2263000064.0,
+      "marketCapUsd": 38181388288.0
     },
     {
       "symbol": "PENN",
@@ -2555,10 +4722,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "pennentertainment.com",
       "sectors": [
         "gambling"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 7067599872.0,
+      "netIncome": -957200000.0,
+      "revenueGrowth": 0.064,
+      "earningsGrowth": null,
+      "marketCap": 2676166912.0,
+      "profitMargin": -0.13543001,
+      "revenueUsd": 7067599872.0,
+      "netIncomeUsd": -957200000.0,
+      "marketCapUsd": 2676166912.0
     },
     {
       "symbol": "PEP",
@@ -2568,23 +4746,45 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "pepsico.com",
       "sectors": [
         "staples"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 96904003584.0,
+      "netIncome": 10451000320.0,
+      "revenueGrowth": 0.064,
+      "earningsGrowth": 1.37,
+      "marketCap": 190734581760.0,
+      "profitMargin": 0.10785,
+      "revenueUsd": 96904003584.0,
+      "netIncomeUsd": 10451000320.0,
+      "marketCapUsd": 190734581760.0
     },
     {
       "symbol": "PFE",
-      "name": "Pfizer Inc.",
+      "name": "Pfizer, Inc.",
       "sector": "Healthcare",
       "industry": "Drug Manufacturers - General",
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "pfizer.com",
       "sectors": [
         "healthcare"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 63315001344.0,
+      "netIncome": 7479000064.0,
+      "revenueGrowth": 0.054,
+      "earningsGrowth": -0.101,
+      "marketCap": null,
+      "profitMargin": 0.118310004,
+      "revenueUsd": 63315001344.0,
+      "netIncomeUsd": 7479000064.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "PG",
@@ -2594,10 +4794,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "pginvestor.com",
       "sectors": [
         "retail"
       ],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "USD",
+      "revenue": 87031996416.0,
+      "netIncome": 16046000128.0,
+      "revenueGrowth": 0.015,
+      "earningsGrowth": -0.148,
+      "marketCap": null,
+      "profitMargin": 0.18437,
+      "revenueUsd": 87031996416.0,
+      "netIncomeUsd": 16046000128.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "PGR",
@@ -2607,10 +4818,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "progressive.com",
       "sectors": [
         "insurance"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 91019001856.0,
+      "netIncome": 11694999552.0,
+      "revenueGrowth": 0.073,
+      "earningsGrowth": 0.05,
+      "marketCap": 122361446400.0,
+      "profitMargin": 0.12849,
+      "revenueUsd": 91019001856.0,
+      "netIncomeUsd": 11694999552.0,
+      "marketCapUsd": 122361446400.0
     },
     {
       "symbol": "PH",
@@ -2620,10 +4842,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "parker.com",
       "sectors": [
         "industrials"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 20987000832.0,
+      "netIncome": 3480000000.0,
+      "revenueGrowth": 0.106,
+      "earningsGrowth": -0.042,
+      "marketCap": 125773701120.0,
+      "profitMargin": 0.16582,
+      "revenueUsd": 20987000832.0,
+      "netIncomeUsd": 3480000000.0,
+      "marketCapUsd": 125773701120.0
     },
     {
       "symbol": "PHM",
@@ -2633,10 +4866,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "pultegroupinc.com",
       "sectors": [
         "homebuilders"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 16407075840.0,
+      "netIncome": 1906445952.0,
+      "revenueGrowth": -0.096,
+      "earningsGrowth": -0.182,
+      "marketCap": null,
+      "profitMargin": 0.1162,
+      "revenueUsd": 16407075840.0,
+      "netIncomeUsd": 1906445952.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "PL",
@@ -2646,10 +4890,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "planet.com",
       "sectors": [
         "space"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 335612000.0,
+      "netIncome": -373104000.0,
+      "revenueGrowth": 0.421,
+      "earningsGrowth": null,
+      "marketCap": 7673346560.0,
+      "profitMargin": -1.11171,
+      "revenueUsd": 335612000.0,
+      "netIncomeUsd": -373104000.0,
+      "marketCapUsd": 7673346560.0
     },
     {
       "symbol": "PLD",
@@ -2659,10 +4914,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "prologis.com",
       "sectors": [
         "reits"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 9657474048.0,
+      "netIncome": 4202444032.0,
+      "revenueGrowth": 0.123,
+      "earningsGrowth": 0.853,
+      "marketCap": 137639313408.0,
+      "profitMargin": 0.43575,
+      "revenueUsd": 9657474048.0,
+      "netIncomeUsd": 4202444032.0,
+      "marketCapUsd": 137639313408.0
     },
     {
       "symbol": "PLTK",
@@ -2672,10 +4938,21 @@
       "country": "Israel",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "playtika.com",
       "sectors": [
         "video-games"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 2794099968.0,
+      "netIncome": -294500000.0,
+      "revenueGrowth": 0.055,
+      "earningsGrowth": null,
+      "marketCap": 1544340992.0,
+      "profitMargin": -0.105399996,
+      "revenueUsd": 2794099968.0,
+      "netIncomeUsd": -294500000.0,
+      "marketCapUsd": 1544340992.0
     },
     {
       "symbol": "PLTR",
@@ -2685,10 +4962,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "palantir.com",
       "sectors": [
         "ai"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 5224174080.0,
+      "netIncome": 2281529088.0,
+      "revenueGrowth": 0.847,
+      "earningsGrowth": 3.25,
+      "marketCap": 301222264832.0,
+      "profitMargin": 0.43673,
+      "revenueUsd": 5224174080.0,
+      "netIncomeUsd": 2281529088.0,
+      "marketCapUsd": 301222264832.0
     },
     {
       "symbol": "PRU",
@@ -2698,10 +4986,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "prudential.com",
       "sectors": [
         "insurance"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 63288999936.0,
+      "netIncome": 3425999872.0,
+      "revenueGrowth": 0.153,
+      "earningsGrowth": -0.143,
+      "marketCap": null,
+      "profitMargin": 0.054759998,
+      "revenueUsd": 63288999936.0,
+      "netIncomeUsd": 3425999872.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "PSA",
@@ -2711,10 +5010,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "publicstorage.com",
       "sectors": [
         "reits"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 4910444032.0,
+      "netIncome": 1845432960.0,
+      "revenueGrowth": 0.033,
+      "earningsGrowth": 0.451,
+      "marketCap": 60860436480.0,
+      "profitMargin": 0.41632998,
+      "revenueUsd": 4910444032.0,
+      "netIncomeUsd": 1845432960.0,
+      "marketCapUsd": 60860436480.0
     },
     {
       "symbol": "PSKY",
@@ -2724,10 +5034,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "paramount.com",
       "sectors": [
         "media"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 29045999616.0,
+      "netIncome": -605000000.0,
+      "revenueGrowth": 0.022,
+      "earningsGrowth": -0.318,
+      "marketCap": 9199603712.0,
+      "profitMargin": -0.02083,
+      "revenueUsd": 29045999616.0,
+      "netIncomeUsd": -605000000.0,
+      "marketCapUsd": 9199603712.0
     },
     {
       "symbol": "PSX",
@@ -2737,10 +5058,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "phillips66.com",
       "sectors": [
         "energy"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 134485999616.0,
+      "netIncome": 4113999872.0,
+      "revenueGrowth": 0.069,
+      "earningsGrowth": -0.568,
+      "marketCap": 82668789760.0,
+      "profitMargin": 0.03066,
+      "revenueUsd": 134485999616.0,
+      "netIncomeUsd": 4113999872.0,
+      "marketCapUsd": 82668789760.0
     },
     {
       "symbol": "PVH",
@@ -2750,10 +5082,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "pvh.com",
       "sectors": [
         "apparel"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 8991699968.0,
+      "netIncome": 158100000.0,
+      "revenueGrowth": 0.021,
+      "earningsGrowth": null,
+      "marketCap": null,
+      "profitMargin": 0.01758,
+      "revenueUsd": 8991699968.0,
+      "netIncomeUsd": 158100000.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "PYPL",
@@ -2763,10 +5106,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "paypal.com",
       "sectors": [
         "crypto"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 34127998976.0,
+      "netIncome": 4902000128.0,
+      "revenueGrowth": 0.048,
+      "earningsGrowth": -0.031,
+      "marketCap": 49505517568.0,
+      "profitMargin": 0.14364,
+      "revenueUsd": 34127998976.0,
+      "netIncomeUsd": 4902000128.0,
+      "marketCapUsd": 49505517568.0
     },
     {
       "symbol": "QCOM",
@@ -2776,10 +5130,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "qualcomm.com",
       "sectors": [
         "semiconductors"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 44068999168.0,
+      "netIncome": 9260000256.0,
+      "revenueGrowth": -0.04,
+      "earningsGrowth": -0.23,
+      "marketCap": 159148507136.0,
+      "profitMargin": 0.21013,
+      "revenueUsd": 44068999168.0,
+      "netIncomeUsd": 9260000256.0,
+      "marketCapUsd": 159148507136.0
     },
     {
       "symbol": "QLYS",
@@ -2789,23 +5154,45 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "qualys.com",
       "sectors": [
         "cybersecurity"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 684864000.0,
+      "netIncome": 201428992.0,
+      "revenueGrowth": 0.098,
+      "earningsGrowth": 0.101,
+      "marketCap": 5454762496.0,
+      "profitMargin": 0.29412,
+      "revenueUsd": 684864000.0,
+      "netIncomeUsd": 201428992.0,
+      "marketCapUsd": 5454762496.0
     },
     {
       "symbol": "QSR",
-      "name": "Restaurant Brands International Inc.",
+      "name": "Restaurant Brands International",
       "sector": "Consumer Cyclical",
       "industry": "Restaurants",
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "rbi.com",
       "sectors": [
         "restaurants"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 9589000192.0,
+      "netIncome": 1079000064.0,
+      "revenueGrowth": 0.073,
+      "earningsGrowth": 1.0,
+      "marketCap": null,
+      "profitMargin": 0.099589996,
+      "revenueUsd": 9589000192.0,
+      "netIncomeUsd": 1079000064.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "RACE",
@@ -2815,10 +5202,21 @@
       "country": "Italy",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "ferrari.com",
       "sectors": [
         "automobiles"
       ],
-      "warehouse": false
+      "warehouse": true,
+      "financialCurrency": "EUR",
+      "revenue": 7353308160.0,
+      "netIncome": 1636115968.0,
+      "revenueGrowth": 0.084,
+      "earningsGrowth": 0.101,
+      "marketCap": 70535716864.0,
+      "profitMargin": 0.2225,
+      "revenueUsd": 8464726519.522669,
+      "netIncomeUsd": 1883407293.9687736,
+      "marketCapUsd": 81196862707.3346
     },
     {
       "symbol": "RBLX",
@@ -2828,11 +5226,22 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "corp.roblox.com",
       "sectors": [
         "media",
         "video-games"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 5685551104.0,
+      "netIncome": -1001057024.0,
+      "revenueGrowth": 0.359,
+      "earningsGrowth": null,
+      "marketCap": 26196164608.0,
+      "profitMargin": -0.17607,
+      "revenueUsd": 5685551104.0,
+      "netIncomeUsd": -1001057024.0,
+      "marketCapUsd": 26196164608.0
     },
     {
       "symbol": "RBRK",
@@ -2842,10 +5251,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "rubrik.com",
       "sectors": [
         "cybersecurity"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 1424777984.0,
+      "netIncome": -288576992.0,
+      "revenueGrowth": 0.39,
+      "earningsGrowth": null,
+      "marketCap": 15383625728.0,
+      "profitMargin": -0.20254,
+      "revenueUsd": 1424777984.0,
+      "netIncomeUsd": -288576992.0,
+      "marketCapUsd": 15383625728.0
     },
     {
       "symbol": "RCL",
@@ -2855,10 +5275,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "rclinvestor.com",
       "sectors": [
         "travel"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 18681999360.0,
+      "netIncome": 4398000128.0,
+      "revenueGrowth": 0.065,
+      "earningsGrowth": -0.046,
+      "marketCap": 86654476288.0,
+      "profitMargin": 0.23541,
+      "revenueUsd": 18681999360.0,
+      "netIncomeUsd": 4398000128.0,
+      "marketCapUsd": 86654476288.0
     },
     {
       "symbol": "RDW",
@@ -2868,10 +5299,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "rdw.com",
       "sectors": [
         "space"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 370958016.0,
+      "netIncome": -343864000.0,
+      "revenueGrowth": 0.579,
+      "earningsGrowth": null,
+      "marketCap": 2302276352.0,
+      "profitMargin": -0.809,
+      "revenueUsd": 370958016.0,
+      "netIncomeUsd": -343864000.0,
+      "marketCapUsd": 2302276352.0
     },
     {
       "symbol": "REGN",
@@ -2881,10 +5323,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "regeneron.com",
       "sectors": [
         "biotech"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 15534699520.0,
+      "netIncome": 4328699904.0,
+      "revenueGrowth": 0.167,
+      "earningsGrowth": -0.045,
+      "marketCap": 78167547904.0,
+      "profitMargin": 0.27865,
+      "revenueUsd": 15534699520.0,
+      "netIncomeUsd": 4328699904.0,
+      "marketCapUsd": 78167547904.0
     },
     {
       "symbol": "RIO",
@@ -2894,10 +5347,21 @@
       "country": "United Kingdom",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "riotinto.com",
       "sectors": [
         "materials"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 61793001472.0,
+      "netIncome": 12101999616.0,
+      "revenueGrowth": 0.155,
+      "earningsGrowth": 0.469,
+      "marketCap": 155957592064.0,
+      "profitMargin": 0.19584998,
+      "revenueUsd": 61793001472.0,
+      "netIncomeUsd": 12101999616.0,
+      "marketCapUsd": 155957592064.0
     },
     {
       "symbol": "RIOT",
@@ -2907,10 +5371,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqCM",
+      "domain": "riotplatforms.com",
       "sectors": [
         "crypto"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 653267008.0,
+      "netIncome": -867291008.0,
+      "revenueGrowth": 0.036,
+      "earningsGrowth": null,
+      "marketCap": 8099999232.0,
+      "profitMargin": -1.3276199,
+      "revenueUsd": 653267008.0,
+      "netIncomeUsd": -867291008.0,
+      "marketCapUsd": 8099999232.0
     },
     {
       "symbol": "RIVN",
@@ -2920,10 +5395,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "rivian.com",
       "sectors": [
         "automobiles"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 5882999808.0,
+      "netIncome": -3232999936.0,
+      "revenueGrowth": 0.272,
+      "earningsGrowth": null,
+      "marketCap": 22231898112.0,
+      "profitMargin": -0.54955,
+      "revenueUsd": 5882999808.0,
+      "netIncomeUsd": -3232999936.0,
+      "marketCapUsd": 22231898112.0
     },
     {
       "symbol": "RKLB",
@@ -2933,10 +5419,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "rocketlabcorp.com",
       "sectors": [
         "space"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 679577984.0,
+      "netIncome": -182615008.0,
+      "revenueGrowth": 0.635,
+      "earningsGrowth": null,
+      "marketCap": 44005986304.0,
+      "profitMargin": -0.26872,
+      "revenueUsd": 679577984.0,
+      "netIncomeUsd": -182615008.0,
+      "marketCapUsd": 44005986304.0
     },
     {
       "symbol": "RL",
@@ -2946,10 +5443,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "ralphlauren.com",
       "sectors": [
         "apparel"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 8114500096.0,
+      "netIncome": 941100032.0,
+      "revenueGrowth": 0.166,
+      "earningsGrowth": 0.2,
+      "marketCap": 22626328576.0,
+      "profitMargin": 0.11598,
+      "revenueUsd": 8114500096.0,
+      "netIncomeUsd": 941100032.0,
+      "marketCapUsd": 22626328576.0
     },
     {
       "symbol": "ROK",
@@ -2959,10 +5467,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "rockwellautomation.com",
       "sectors": [
         "industrials"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 8803999744.0,
+      "netIncome": 1086000000.0,
+      "revenueGrowth": 0.119,
+      "earningsGrowth": 0.396,
+      "marketCap": 53520547840.0,
+      "profitMargin": 0.12358,
+      "revenueUsd": 8803999744.0,
+      "netIncomeUsd": 1086000000.0,
+      "marketCapUsd": 53520547840.0
     },
     {
       "symbol": "RSI",
@@ -2972,10 +5491,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "rushstreetinteractive.com",
       "sectors": [
         "gambling"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 1366941056.0,
+      "netIncome": 31917000.0,
+      "revenueGrowth": 0.463,
+      "earningsGrowth": -0.187,
+      "marketCap": 6521131008.0,
+      "profitMargin": 0.02335,
+      "revenueUsd": 1366941056.0,
+      "netIncomeUsd": 31917000.0,
+      "marketCapUsd": 6521131008.0
     },
     {
       "symbol": "RTX",
@@ -2985,10 +5515,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "rtx.com",
       "sectors": [
         "defense"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 93499998208.0,
+      "netIncome": 7737999872.0,
+      "revenueGrowth": 0.145,
+      "earningsGrowth": 0.287,
+      "marketCap": 291991781376.0,
+      "profitMargin": 0.08276,
+      "revenueUsd": 93499998208.0,
+      "netIncomeUsd": 7737999872.0,
+      "marketCapUsd": 291991781376.0
     },
     {
       "symbol": "S",
@@ -2998,10 +5539,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "sentinelone.com",
       "sectors": [
         "cybersecurity"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 1048905984.0,
+      "netIncome": -318705984.0,
+      "revenueGrowth": 0.208,
+      "earningsGrowth": null,
+      "marketCap": 6873213952.0,
+      "profitMargin": -0.30385,
+      "revenueUsd": 1048905984.0,
+      "netIncomeUsd": -318705984.0,
+      "marketCapUsd": 6873213952.0
     },
     {
       "symbol": "SATS",
@@ -3011,11 +5563,22 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NGM",
+      "domain": "echostar.com",
       "sectors": [
         "telecom",
         "space"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 14802719744.0,
+      "netIncome": -14441396224.0,
+      "revenueGrowth": -0.052,
+      "earningsGrowth": null,
+      "marketCap": 30115971072.0,
+      "profitMargin": -0.97559,
+      "revenueUsd": 14802719744.0,
+      "netIncomeUsd": -14441396224.0,
+      "marketCapUsd": 30115971072.0
     },
     {
       "symbol": "SBUX",
@@ -3025,10 +5588,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "starbucks.com",
       "sectors": [
         "restaurants"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 38338301952.0,
+      "netIncome": 1982800000.0,
+      "revenueGrowth": -0.014,
+      "earningsGrowth": 0.857,
+      "marketCap": 117841805312.0,
+      "profitMargin": 0.05172,
+      "revenueUsd": 38338301952.0,
+      "netIncomeUsd": 1982800000.0,
+      "marketCapUsd": 117841805312.0
     },
     {
       "symbol": "SCCO",
@@ -3038,10 +5612,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "southerncoppercorp.com",
       "sectors": [
         "materials"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 15787499520.0,
+      "netIncome": 5662300160.0,
+      "revenueGrowth": 0.406,
+      "earningsGrowth": 0.716,
+      "marketCap": 145759469568.0,
+      "profitMargin": 0.35866,
+      "revenueUsd": 15787499520.0,
+      "netIncomeUsd": 5662300160.0,
+      "marketCapUsd": 145759469568.0
     },
     {
       "symbol": "SCHW",
@@ -3051,10 +5636,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "aboutschwab.com",
       "sectors": [
         "banks"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 26025000960.0,
+      "netIncome": 9722500096.0,
+      "revenueGrowth": 0.209,
+      "earningsGrowth": 0.426,
+      "marketCap": 184122277888.0,
+      "profitMargin": 0.38793,
+      "revenueUsd": 26025000960.0,
+      "netIncomeUsd": 9722500096.0,
+      "marketCapUsd": 184122277888.0
     },
     {
       "symbol": "SE",
@@ -3064,10 +5660,21 @@
       "country": "Singapore",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "sea.com",
       "sectors": [
         "video-games"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 25194858496.0,
+      "netIncome": 1603036032.0,
+      "revenueGrowth": 0.466,
+      "earningsGrowth": 0.031,
+      "marketCap": null,
+      "profitMargin": 0.06363,
+      "revenueUsd": 25194858496.0,
+      "netIncomeUsd": 1603036032.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "SHAK",
@@ -3077,10 +5684,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "shakeshack.com",
       "sectors": [
         "restaurants"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 1491144960.0,
+      "netIncome": 41190000.0,
+      "revenueGrowth": 0.143,
+      "earningsGrowth": null,
+      "marketCap": 2771386880.0,
+      "profitMargin": 0.02762,
+      "revenueUsd": 1491144960.0,
+      "netIncomeUsd": 41190000.0,
+      "marketCapUsd": 2771386880.0
     },
     {
       "symbol": "SHEL",
@@ -3090,10 +5708,21 @@
       "country": "United Kingdom",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "shell.com",
       "sectors": [
         "energy"
       ],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "USD",
+      "revenue": 296600993792.0,
+      "netIncome": 25970999296.0,
+      "revenueGrowth": 0.447,
+      "earningsGrowth": 2.2,
+      "marketCap": 252000026624.0,
+      "profitMargin": 0.08756,
+      "revenueUsd": 296600993792.0,
+      "netIncomeUsd": 25970999296.0,
+      "marketCapUsd": 252000026624.0
     },
     {
       "symbol": "SKM",
@@ -3103,8 +5732,19 @@
       "country": "South Korea",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "sktelecom.com",
       "sectors": [],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "KRW",
+      "revenue": 17037808107520.0,
+      "netIncome": 346577010688.0,
+      "revenueGrowth": -0.014,
+      "earningsGrowth": -0.116,
+      "marketCap": 12376553472.0,
+      "profitMargin": 0.0215,
+      "revenueUsd": 11925058599.868172,
+      "netIncomeUsd": 242575285.25616926,
+      "marketCapUsd": 8662565.306910539
     },
     {
       "symbol": "SLB",
@@ -3114,10 +5754,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "slb.com",
       "sectors": [
         "energy"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 36366000128.0,
+      "netIncome": 3100999936.0,
+      "revenueGrowth": 0.05,
+      "earningsGrowth": -0.297,
+      "marketCap": 73183100928.0,
+      "profitMargin": 0.08527,
+      "revenueUsd": 36366000128.0,
+      "netIncomeUsd": 3100999936.0,
+      "marketCapUsd": 73183100928.0
     },
     {
       "symbol": "SMCI",
@@ -3127,10 +5778,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "supermicro.com",
       "sectors": [
         "ai"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 33700206592.0,
+      "netIncome": 1247389952.0,
+      "revenueGrowth": 1.227,
+      "earningsGrowth": 3.26,
+      "marketCap": 18526443520.0,
+      "profitMargin": 0.03701,
+      "revenueUsd": 33700206592.0,
+      "netIncomeUsd": 1247389952.0,
+      "marketCapUsd": 18526443520.0
     },
     {
       "symbol": "SNOW",
@@ -3140,10 +5802,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "snowflake.com",
       "sectors": [
         "software"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 5032822784.0,
+      "netIncome": -1197095040.0,
+      "revenueGrowth": 0.335,
+      "earningsGrowth": null,
+      "marketCap": 106589896704.0,
+      "profitMargin": -0.23786,
+      "revenueUsd": 5032822784.0,
+      "netIncomeUsd": -1197095040.0,
+      "marketCapUsd": 106589896704.0
     },
     {
       "symbol": "SNY",
@@ -3153,21 +5826,43 @@
       "country": "France",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "sanofi.com",
       "sectors": [],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "EUR",
+      "revenue": 48918999040.0,
+      "netIncome": 3939000064.0,
+      "revenueGrowth": 0.146,
+      "earningsGrowth": -0.912,
+      "marketCap": 102914105344.0,
+      "profitMargin": 0.08091,
+      "revenueUsd": 56312878431.35789,
+      "netIncomeUsd": 4534361620.191134,
+      "marketCapUsd": 118469094152.3531
     },
     {
       "symbol": "SO",
-      "name": "The Southern Company",
+      "name": "Southern Company (The)",
       "sector": "Utilities",
       "industry": "Utilities - Regulated Electric",
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "southerncompany.com",
       "sectors": [
         "utilities"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 30179000320.0,
+      "netIncome": 4657999872.0,
+      "revenueGrowth": 0.001,
+      "earningsGrowth": 0.304,
+      "marketCap": 106914742272.0,
+      "profitMargin": 0.15435,
+      "revenueUsd": 30179000320.0,
+      "netIncomeUsd": 4657999872.0,
+      "marketCapUsd": 106914742272.0
     },
     {
       "symbol": "SOFI",
@@ -3177,10 +5872,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "sofi.com",
       "sectors": [
         "crypto"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 4268439040.0,
+      "netIncome": 636264000.0,
+      "revenueGrowth": 0.426,
+      "earningsGrowth": 0.438,
+      "marketCap": 23264333824.0,
+      "profitMargin": 0.14906,
+      "revenueUsd": 4268439040.0,
+      "netIncomeUsd": 636264000.0,
+      "marketCapUsd": 23264333824.0
     },
     {
       "symbol": "SONY",
@@ -3190,8 +5896,19 @@
       "country": "Japan",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "sony.com",
       "sectors": [],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "JPY",
+      "revenue": 12695775477760.0,
+      "netIncome": 1114027065344.0,
+      "revenueGrowth": 0.082,
+      "earningsGrowth": 0.476,
+      "marketCap": 132893802496.0,
+      "profitMargin": -0.01746,
+      "revenueUsd": 80692121294.30867,
+      "netIncomeUsd": 7080560556.490026,
+      "marketCapUsd": 844649690.6828686
     },
     {
       "symbol": "SPCE",
@@ -3201,10 +5918,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "virgingalactic.com",
       "sectors": [
         "space"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 1310000.0,
+      "netIncome": -259135008.0,
+      "revenueGrowth": -0.508,
+      "earningsGrowth": null,
+      "marketCap": 362475104.0,
+      "profitMargin": 0.0,
+      "revenueUsd": 1310000.0,
+      "netIncomeUsd": -259135008.0,
+      "marketCapUsd": 362475104.0
     },
     {
       "symbol": "SPG",
@@ -3214,10 +5942,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "simon.com",
       "sectors": [
         "reits"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 6648586240.0,
+      "netIncome": 4690144768.0,
+      "revenueGrowth": 0.193,
+      "earningsGrowth": 0.164,
+      "marketCap": null,
+      "profitMargin": 0.70594,
+      "revenueUsd": 6648586240.0,
+      "netIncomeUsd": 4690144768.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "SPOT",
@@ -3227,23 +5966,45 @@
       "country": "Sweden",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "spotify.com",
       "sectors": [
         "media"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "EUR",
+      "revenue": 17528999936.0,
+      "netIncome": 2708000000.0,
+      "revenueGrowth": 0.082,
+      "earningsGrowth": 2.224,
+      "marketCap": 99999203328.0,
+      "profitMargin": 0.15449001,
+      "revenueUsd": 20178426823.74002,
+      "netIncomeUsd": 3117301616.64643,
+      "marketCapUsd": 115113618241.40675
     },
     {
       "symbol": "SRE",
-      "name": "Sempra",
+      "name": "DBA Sempra",
       "sector": "Utilities",
       "industry": "Utilities - Diversified",
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "sempra.com",
       "sectors": [
         "utilities"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 13555000320.0,
+      "netIncome": 1927000064.0,
+      "revenueGrowth": -0.039,
+      "earningsGrowth": 0.137,
+      "marketCap": null,
+      "profitMargin": 0.1443,
+      "revenueUsd": 13555000320.0,
+      "netIncomeUsd": 1927000064.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "SRPT",
@@ -3253,10 +6014,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "sarepta.com",
       "sectors": [
         "biotech"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 2184184064.0,
+      "netIncome": 65057000.0,
+      "revenueGrowth": -0.019,
+      "earningsGrowth": null,
+      "marketCap": 1676550400.0,
+      "profitMargin": 0.029790001,
+      "revenueUsd": 2184184064.0,
+      "netIncomeUsd": 65057000.0,
+      "marketCapUsd": 1676550400.0
     },
     {
       "symbol": "STLA",
@@ -3266,10 +6038,21 @@
       "country": "Netherlands",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "stellantis.com",
       "sectors": [
         "automobiles"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "EUR",
+      "revenue": 160860995584.0,
+      "netIncome": -19471998976.0,
+      "revenueGrowth": 0.131,
+      "earningsGrowth": null,
+      "marketCap": 21285380096.0,
+      "profitMargin": -0.12104999,
+      "revenueUsd": 185174387588.389,
+      "netIncomeUsd": -22415101140.037827,
+      "marketCapUsd": 24502566390.02753
     },
     {
       "symbol": "STLD",
@@ -3279,10 +6062,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "steeldynamics.com",
       "sectors": [
         "materials"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 20538677248.0,
+      "netIncome": 1607240960.0,
+      "revenueGrowth": 0.334,
+      "earningsGrowth": 0.836,
+      "marketCap": 37033115648.0,
+      "profitMargin": 0.07825,
+      "revenueUsd": 20538677248.0,
+      "netIncomeUsd": 1607240960.0,
+      "marketCapUsd": 37033115648.0
     },
     {
       "symbol": "STZ",
@@ -3292,10 +6086,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "cbrands.com",
       "sectors": [
         "staples"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 9056700416.0,
+      "netIncome": 1824400000.0,
+      "revenueGrowth": -0.033,
+      "earningsGrowth": 0.307,
+      "marketCap": 22436859904.0,
+      "profitMargin": 0.20143999,
+      "revenueUsd": 9056700416.0,
+      "netIncomeUsd": 1824400000.0,
+      "marketCapUsd": 22436859904.0
     },
     {
       "symbol": "T",
@@ -3305,23 +6110,45 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "att.com",
       "sectors": [
         "telecom"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 127238995968.0,
+      "netIncome": 21479999488.0,
+      "revenueGrowth": 0.023,
+      "earningsGrowth": 0.062,
+      "marketCap": 161647788032.0,
+      "profitMargin": 0.16943,
+      "revenueUsd": 127238995968.0,
+      "netIncomeUsd": 21479999488.0,
+      "marketCapUsd": 161647788032.0
     },
     {
       "symbol": "TDG",
-      "name": "TransDigm Group Incorporated",
+      "name": "Transdigm Group Incorporated",
       "sector": "Industrials",
       "industry": "Aerospace & Defense",
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "transdigm.com",
       "sectors": [
         "defense"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 9502999552.0,
+      "netIncome": 1864000000.0,
+      "revenueGrowth": 0.183,
+      "earningsGrowth": 0.115,
+      "marketCap": null,
+      "profitMargin": 0.21909,
+      "revenueUsd": 9502999552.0,
+      "netIncomeUsd": 1864000000.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "TEAM",
@@ -3331,10 +6158,21 @@
       "country": "Australia",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "atlassian.com",
       "sectors": [
         "software"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 6190182912.0,
+      "netIncome": -216807008.0,
+      "revenueGrowth": 0.317,
+      "earningsGrowth": null,
+      "marketCap": 26318264320.0,
+      "profitMargin": -0.03502,
+      "revenueUsd": 6190182912.0,
+      "netIncomeUsd": -216807008.0,
+      "marketCapUsd": 26318264320.0
     },
     {
       "symbol": "TENB",
@@ -3344,10 +6182,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "tenable.com",
       "sectors": [
         "cybersecurity"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 1043539008.0,
+      "netIncome": 6742000.0,
+      "revenueGrowth": 0.086,
+      "earningsGrowth": null,
+      "marketCap": 3856211200.0,
+      "profitMargin": 0.0064600003,
+      "revenueUsd": 1043539008.0,
+      "netIncomeUsd": 6742000.0,
+      "marketCapUsd": 3856211200.0
     },
     {
       "symbol": "TGT",
@@ -3357,10 +6206,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "corporate.target.com",
       "sectors": [
         "retail"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 106377003008.0,
+      "netIncome": 3449999872.0,
+      "revenueGrowth": 0.067,
+      "earningsGrowth": -0.247,
+      "marketCap": null,
+      "profitMargin": 0.03243,
+      "revenueUsd": 106377003008.0,
+      "netIncomeUsd": 3449999872.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "TJX",
@@ -3370,10 +6230,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "tjx.com",
       "sectors": [
         "retail"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 61583998976.0,
+      "netIncome": 5790000128.0,
+      "revenueGrowth": 0.092,
+      "earningsGrowth": 0.293,
+      "marketCap": 173990936576.0,
+      "profitMargin": 0.09402,
+      "revenueUsd": 61583998976.0,
+      "netIncomeUsd": 5790000128.0,
+      "marketCapUsd": 173990936576.0
     },
     {
       "symbol": "TM",
@@ -3383,10 +6254,21 @@
       "country": "Japan",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "global.toyota",
       "sectors": [
         "automobiles"
       ],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "JPY",
+      "revenue": 50684951003136.0,
+      "netIncome": 3848098021376.0,
+      "revenueGrowth": 0.019,
+      "earningsGrowth": 0.232,
+      "marketCap": 220444868608.0,
+      "profitMargin": 0.07592,
+      "revenueUsd": 322144655228.47656,
+      "netIncomeUsd": 24457835823.987568,
+      "marketCapUsd": 1401108904.8940206
     },
     {
       "symbol": "TMHC",
@@ -3396,23 +6278,45 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYQ",
+      "domain": "taylormorrison.com",
       "sectors": [
         "homebuilders"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 7612553216.0,
+      "netIncome": 667659008.0,
+      "revenueGrowth": -0.268,
+      "earningsGrowth": -0.512,
+      "marketCap": 6665396224.0,
+      "profitMargin": 0.08771,
+      "revenueUsd": 7612553216.0,
+      "netIncomeUsd": 667659008.0,
+      "marketCapUsd": 6665396224.0
     },
     {
       "symbol": "TMO",
-      "name": "Thermo Fisher Scientific Inc.",
+      "name": "Thermo Fisher Scientific Inc",
       "sector": "Healthcare",
       "industry": "Diagnostics & Research",
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "thermofisher.com",
       "sectors": [
         "healthcare"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 46336000000.0,
+      "netIncome": 6967000064.0,
+      "revenueGrowth": 0.105,
+      "earningsGrowth": 0.094,
+      "marketCap": null,
+      "profitMargin": 0.15036,
+      "revenueUsd": 46336000000.0,
+      "netIncomeUsd": 6967000064.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "TMUS",
@@ -3422,10 +6326,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "t-mobile.com",
       "sectors": [
         "telecom"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 92188999680.0,
+      "netIncome": 10560000000.0,
+      "revenueGrowth": 0.079,
+      "earningsGrowth": 0.053,
+      "marketCap": 189959405568.0,
+      "profitMargin": 0.11455,
+      "revenueUsd": 92188999680.0,
+      "netIncomeUsd": 10560000000.0,
+      "marketCapUsd": 189959405568.0
     },
     {
       "symbol": "TOL",
@@ -3435,10 +6350,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "tollbrothers.com",
       "sectors": [
         "homebuilders"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 11045371904.0,
+      "netIncome": 1287858944.0,
+      "revenueGrowth": -0.076,
+      "earningsGrowth": -0.223,
+      "marketCap": null,
+      "profitMargin": 0.1166,
+      "revenueUsd": 11045371904.0,
+      "netIncomeUsd": 1287858944.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "TRV",
@@ -3448,10 +6374,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "travelers.com",
       "sectors": [
         "insurance"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 48979001344.0,
+      "netIncome": 8242999808.0,
+      "revenueGrowth": 0.003,
+      "earningsGrowth": 0.571,
+      "marketCap": 77969514496.0,
+      "profitMargin": 0.16951999,
+      "revenueUsd": 48979001344.0,
+      "netIncomeUsd": 8242999808.0,
+      "marketCapUsd": 77969514496.0
     },
     {
       "symbol": "TSLA",
@@ -3461,10 +6398,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "tesla.com",
       "sectors": [
         "automobiles"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 103619002368.0,
+      "netIncome": 3806000128.0,
+      "revenueGrowth": 0.255,
+      "earningsGrowth": -0.03,
+      "marketCap": 1272070275072.0,
+      "profitMargin": 0.03671,
+      "revenueUsd": 103619002368.0,
+      "netIncomeUsd": 3806000128.0,
+      "marketCapUsd": 1272070275072.0
     },
     {
       "symbol": "TSM",
@@ -3474,11 +6422,22 @@
       "country": "Taiwan",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "tsmc.com",
       "sectors": [
         "ai",
         "semiconductors"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "TWD",
+      "revenue": 4440492343296.0,
+      "netIncome": 2216808939520.0,
+      "revenueGrowth": 0.36,
+      "earningsGrowth": 0.774,
+      "marketCap": 2106278936576.0,
+      "profitMargin": 0.49923,
+      "revenueUsd": 137073384181.16327,
+      "netIncomeUsd": 68430588306.68198,
+      "marketCapUsd": 65018641976.0095
     },
     {
       "symbol": "TSN",
@@ -3488,10 +6447,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "tysonfoods.com",
       "sectors": [
         "agriculture"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 55709999104.0,
+      "netIncome": 453000000.0,
+      "revenueGrowth": 0.044,
+      "earningsGrowth": 36.022,
+      "marketCap": null,
+      "profitMargin": 0.00813,
+      "revenueUsd": 55709999104.0,
+      "netIncomeUsd": 453000000.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "TTE",
@@ -3501,8 +6471,19 @@
       "country": "France",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "totalenergies.com",
       "sectors": [],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "USD",
+      "revenue": 196381999104.0,
+      "netIncome": 17837000704.0,
+      "revenueGrowth": 0.278,
+      "earningsGrowth": 1.06,
+      "marketCap": 193609154560.0,
+      "profitMargin": 0.09083,
+      "revenueUsd": 196381999104.0,
+      "netIncomeUsd": 17837000704.0,
+      "marketCapUsd": 193609154560.0
     },
     {
       "symbol": "TTWO",
@@ -3512,11 +6493,22 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "take2games.com",
       "sectors": [
         "media",
         "video-games"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 6656399872.0,
+      "netIncome": -298200000.0,
+      "revenueGrowth": 0.061,
+      "earningsGrowth": null,
+      "marketCap": 45838254080.0,
+      "profitMargin": -0.0448,
+      "revenueUsd": 6656399872.0,
+      "netIncomeUsd": -298200000.0,
+      "marketCapUsd": 45838254080.0
     },
     {
       "symbol": "TXRH",
@@ -3526,10 +6518,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "texasroadhouse.com",
       "sectors": [
         "restaurants"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 6063592960.0,
+      "netIncome": 415324992.0,
+      "revenueGrowth": 0.128,
+      "earningsGrowth": 0.1,
+      "marketCap": 13847258112.0,
+      "profitMargin": 0.06849,
+      "revenueUsd": 6063592960.0,
+      "netIncomeUsd": 415324992.0,
+      "marketCapUsd": 13847258112.0
     },
     {
       "symbol": "TXT",
@@ -3539,10 +6542,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "textron.com",
       "sectors": [
         "defense"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 15299000320.0,
+      "netIncome": 939000000.0,
+      "revenueGrowth": 0.03,
+      "earningsGrowth": 0.052,
+      "marketCap": 14857949184.0,
+      "profitMargin": 0.06125,
+      "revenueUsd": 15299000320.0,
+      "netIncomeUsd": 939000000.0,
+      "marketCapUsd": 14857949184.0
     },
     {
       "symbol": "U",
@@ -3552,10 +6566,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "unity.com",
       "sectors": [
         "video-games"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 1922886016.0,
+      "netIncome": -672732992.0,
+      "revenueGrowth": 0.168,
+      "earningsGrowth": null,
+      "marketCap": 14571539456.0,
+      "profitMargin": -0.34986,
+      "revenueUsd": 1922886016.0,
+      "netIncomeUsd": -672732992.0,
+      "marketCapUsd": 14571539456.0
     },
     {
       "symbol": "UAA",
@@ -3565,10 +6590,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "underarmour.com",
       "sectors": [
         "apparel"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 4966369792.0,
+      "netIncome": -495643008.0,
+      "revenueGrowth": -0.008,
+      "earningsGrowth": null,
+      "marketCap": 2890482944.0,
+      "profitMargin": -0.0998,
+      "revenueUsd": 4966369792.0,
+      "netIncomeUsd": -495643008.0,
+      "marketCapUsd": 2890482944.0
     },
     {
       "symbol": "UAL",
@@ -3578,10 +6614,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "united.com",
       "sectors": [
         "travel"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 62902001664.0,
+      "netIncome": 3496000000.0,
+      "revenueGrowth": 0.16,
+      "earningsGrowth": -0.172,
+      "marketCap": 41671507968.0,
+      "profitMargin": 0.05558,
+      "revenueUsd": 62902001664.0,
+      "netIncomeUsd": 3496000000.0,
+      "marketCapUsd": 41671507968.0
     },
     {
       "symbol": "UBS",
@@ -3591,8 +6638,19 @@
       "country": "Switzerland",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "ubs.com",
       "sectors": [],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "USD",
+      "revenue": 53040001024.0,
+      "netIncome": 9520000000.0,
+      "revenueGrowth": 0.146,
+      "earningsGrowth": 0.206,
+      "marketCap": 172904218624.0,
+      "profitMargin": 0.17949,
+      "revenueUsd": 53040001024.0,
+      "netIncomeUsd": 9520000000.0,
+      "marketCapUsd": 172904218624.0
     },
     {
       "symbol": "UL",
@@ -3602,8 +6660,19 @@
       "country": "United Kingdom",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "unilever.com",
       "sectors": [],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "EUR",
+      "revenue": 50619998208.0,
+      "netIncome": 5598000128.0,
+      "revenueGrowth": 0.005,
+      "earningsGrowth": -0.056,
+      "marketCap": 137380536320.0,
+      "profitMargin": 0.18319,
+      "revenueUsd": 58270975719.51174,
+      "netIncomeUsd": 6444111834.934019,
+      "marketCapUsd": 158144966014.06558
     },
     {
       "symbol": "UNH",
@@ -3613,10 +6682,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "unitedhealthgroup.com",
       "sectors": [
         "healthcare"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 450129002496.0,
+      "netIncome": 14122000384.0,
+      "revenueGrowth": 0.004,
+      "earningsGrowth": 0.615,
+      "marketCap": 377206833152.0,
+      "profitMargin": 0.03137,
+      "revenueUsd": 450129002496.0,
+      "netIncomeUsd": 14122000384.0,
+      "marketCapUsd": 377206833152.0
     },
     {
       "symbol": "UPS",
@@ -3626,10 +6706,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "ups.com",
       "sectors": [
         "logistics"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 89929998336.0,
+      "netIncome": 4569999872.0,
+      "revenueGrowth": 0.076,
+      "earningsGrowth": -0.53,
+      "marketCap": null,
+      "profitMargin": 0.050819997,
+      "revenueUsd": 89929998336.0,
+      "netIncomeUsd": 4569999872.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "USB",
@@ -3639,10 +6730,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "usbank.com",
       "sectors": [
         "banks"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 27320999936.0,
+      "netIncome": 7797000192.0,
+      "revenueGrowth": 0.104,
+      "earningsGrowth": 0.216,
+      "marketCap": 99601367040.0,
+      "profitMargin": 0.29896,
+      "revenueUsd": 27320999936.0,
+      "netIncomeUsd": 7797000192.0,
+      "marketCapUsd": 99601367040.0
     },
     {
       "symbol": "VALE",
@@ -3652,10 +6754,21 @@
       "country": "Brazil",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "vale.com",
       "sectors": [
         "materials"
       ],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "BRL",
+      "revenue": 218068992000.0,
+      "netIncome": 10369000448.0,
+      "revenueGrowth": 0.064,
+      "earningsGrowth": -0.436,
+      "marketCap": 62049017856.0,
+      "profitMargin": 0.04755,
+      "revenueUsd": 42847683409.38337,
+      "netIncomeUsd": 2037371954.5952609,
+      "marketCapUsd": 12191814382.106483
     },
     {
       "symbol": "VFC",
@@ -3665,10 +6778,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "vfc.com",
       "sectors": [
         "apparel"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 12784847872.0,
+      "netIncome": 814185024.0,
+      "revenueGrowth": -0.052,
+      "earningsGrowth": null,
+      "marketCap": 5865567744.0,
+      "profitMargin": 0.05546,
+      "revenueUsd": 12784847872.0,
+      "netIncomeUsd": 814185024.0,
+      "marketCapUsd": 5865567744.0
     },
     {
       "symbol": "VICI",
@@ -3678,10 +6802,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "viciproperties.com",
       "sectors": [
         "reits"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 4097604096.0,
+      "netIncome": 2765718016.0,
+      "revenueGrowth": 0.057,
+      "earningsGrowth": -0.414,
+      "marketCap": 29222598656.0,
+      "profitMargin": 0.67496,
+      "revenueUsd": 4097604096.0,
+      "netIncomeUsd": 2765718016.0,
+      "marketCapUsd": 29222598656.0
     },
     {
       "symbol": "VOD",
@@ -3691,10 +6826,21 @@
       "country": "United Kingdom",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "vodafone.com",
       "sectors": [
         "telecom"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "EUR",
+      "revenue": 40461000704.0,
+      "netIncome": -289000000.0,
+      "revenueGrowth": null,
+      "earningsGrowth": null,
+      "marketCap": 35947413504.0,
+      "profitMargin": -0.00981,
+      "revenueUsd": 46576492948.933365,
+      "netIncomeUsd": -332681007.0940983,
+      "marketCapUsd": 41380698017.08897
     },
     {
       "symbol": "VRTX",
@@ -3704,10 +6850,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "vrtx.com",
       "sectors": [
         "biotech"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 12218000384.0,
+      "netIncome": 4338299904.0,
+      "revenueGrowth": 0.078,
+      "earningsGrowth": 0.614,
+      "marketCap": 119471292416.0,
+      "profitMargin": 0.35507,
+      "revenueUsd": 12218000384.0,
+      "netIncomeUsd": 4338299904.0,
+      "marketCapUsd": 119471292416.0
     },
     {
       "symbol": "VZ",
@@ -3717,10 +6874,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "verizon.com",
       "sectors": [
         "telecom"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 138894999552.0,
+      "netIncome": 16172000256.0,
+      "revenueGrowth": -0.007,
+      "earningsGrowth": -0.22,
+      "marketCap": 197754470400.0,
+      "profitMargin": 0.11643,
+      "revenueUsd": 138894999552.0,
+      "netIncomeUsd": 16172000256.0,
+      "marketCapUsd": 197754470400.0
     },
     {
       "symbol": "WBD",
@@ -3730,10 +6898,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "wbd.com",
       "sectors": [
         "media"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 37210001408.0,
+      "netIncome": -1735000064.0,
+      "revenueGrowth": -0.01,
+      "earningsGrowth": null,
+      "marketCap": 65411198976.0,
+      "profitMargin": -0.04665,
+      "revenueUsd": 37210001408.0,
+      "netIncomeUsd": -1735000064.0,
+      "marketCapUsd": 65411198976.0
     },
     {
       "symbol": "WDAY",
@@ -3743,10 +6922,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "workday.com",
       "sectors": [
         "software"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 9854000128.0,
+      "netIncome": 847000000.0,
+      "revenueGrowth": 0.135,
+      "earningsGrowth": 2.48,
+      "marketCap": 40762974208.0,
+      "profitMargin": 0.08595,
+      "revenueUsd": 9854000128.0,
+      "netIncomeUsd": 847000000.0,
+      "marketCapUsd": 40762974208.0
     },
     {
       "symbol": "WELL",
@@ -3756,23 +6946,45 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "welltower.com",
       "sectors": [
         "reits"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 12763214848.0,
+      "netIncome": 1550674048.0,
+      "revenueGrowth": 0.391,
+      "earningsGrowth": 0.356,
+      "marketCap": 167965343744.0,
+      "profitMargin": 0.12149999,
+      "revenueUsd": 12763214848.0,
+      "netIncomeUsd": 1550674048.0,
+      "marketCapUsd": 167965343744.0
     },
     {
       "symbol": "WEN",
-      "name": "The Wendy's Company",
+      "name": "Wendy's Company (The)",
       "sector": "Consumer Cyclical",
       "industry": "Restaurants",
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "wendys.com",
       "sectors": [
         "restaurants"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 2194055936.0,
+      "netIncome": 148555008.0,
+      "revenueGrowth": 0.033,
+      "earningsGrowth": -0.372,
+      "marketCap": null,
+      "profitMargin": 0.06771,
+      "revenueUsd": 2194055936.0,
+      "netIncomeUsd": 148555008.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "WFC",
@@ -3782,10 +6994,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "wellsfargo.com",
       "sectors": [
         "banks"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 83026001920.0,
+      "netIncome": 21614999552.0,
+      "revenueGrowth": 0.095,
+      "earningsGrowth": 0.25,
+      "marketCap": 265779298304.0,
+      "profitMargin": 0.27232,
+      "revenueUsd": 83026001920.0,
+      "netIncomeUsd": 21614999552.0,
+      "marketCapUsd": 265779298304.0
     },
     {
       "symbol": "WIT",
@@ -3795,8 +7018,19 @@
       "country": "India",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "wipro.com",
       "sectors": [],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "INR",
+      "revenue": 949680013312.0,
+      "netIncome": 132190003200.0,
+      "revenueGrowth": 0.106,
+      "earningsGrowth": 0.009,
+      "marketCap": 20279318528.0,
+      "profitMargin": 0.13919,
+      "revenueUsd": 9962339931.53021,
+      "netIncomeUsd": 1386700498.0295568,
+      "marketCapUsd": 212734249.35114622
     },
     {
       "symbol": "WMT",
@@ -3806,10 +7040,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "stock.walmart.com",
       "sectors": [
         "retail"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 725304999936.0,
+      "netIncome": 22735998976.0,
+      "revenueGrowth": 0.073,
+      "earningsGrowth": 0.194,
+      "marketCap": 881038917632.0,
+      "profitMargin": 0.03135,
+      "revenueUsd": 725304999936.0,
+      "netIncomeUsd": 22735998976.0,
+      "marketCapUsd": 881038917632.0
     },
     {
       "symbol": "WYNN",
@@ -3819,10 +7064,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "wynnresorts.com",
       "sectors": [
         "gambling"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 7294288896.0,
+      "netIncome": 375040992.0,
+      "revenueGrowth": 0.092,
+      "earningsGrowth": 0.509,
+      "marketCap": 10208462848.0,
+      "profitMargin": 0.051420003,
+      "revenueUsd": 7294288896.0,
+      "netIncomeUsd": 375040992.0,
+      "marketCapUsd": 10208462848.0
     },
     {
       "symbol": "XEL",
@@ -3832,10 +7088,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "my.xcelenergy.com",
       "sectors": [
         "utilities"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 14616000512.0,
+      "netIncome": 2232999936.0,
+      "revenueGrowth": -0.051,
+      "earningsGrowth": 0.24,
+      "marketCap": 48527839232.0,
+      "profitMargin": 0.15278,
+      "revenueUsd": 14616000512.0,
+      "netIncomeUsd": 2232999936.0,
+      "marketCapUsd": 48527839232.0
     },
     {
       "symbol": "XOM",
@@ -3845,10 +7112,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "corporate.exxonmobil.com",
       "sectors": [
         "energy"
       ],
-      "warehouse": true
+      "warehouse": true,
+      "financialCurrency": "USD",
+      "revenue": 361060007936.0,
+      "netIncome": 32757000192.0,
+      "revenueGrowth": 0.441,
+      "earningsGrowth": 1.128,
+      "marketCap": null,
+      "profitMargin": 0.09072,
+      "revenueUsd": 361060007936.0,
+      "netIncomeUsd": 32757000192.0,
+      "marketCapUsd": null
     },
     {
       "symbol": "XPO",
@@ -3858,10 +7136,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "xpo.com",
       "sectors": [
         "logistics"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 8574000128.0,
+      "netIncome": 404000000.0,
+      "revenueGrowth": 0.132,
+      "earningsGrowth": 0.528,
+      "marketCap": 23067203584.0,
+      "profitMargin": 0.047119997,
+      "revenueUsd": 8574000128.0,
+      "netIncomeUsd": 404000000.0,
+      "marketCapUsd": 23067203584.0
     },
     {
       "symbol": "XYZ",
@@ -3871,10 +7160,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "block.xyz",
       "sectors": [
         "crypto"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 24478734336.0,
+      "netIncome": 807083008.0,
+      "revenueGrowth": 0.049,
+      "earningsGrowth": null,
+      "marketCap": 48858406912.0,
+      "profitMargin": 0.03297,
+      "revenueUsd": 24478734336.0,
+      "netIncomeUsd": 807083008.0,
+      "marketCapUsd": 48858406912.0
     },
     {
       "symbol": "YUM",
@@ -3884,10 +7184,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "yum.com",
       "sectors": [
         "restaurants"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 8721999872.0,
+      "netIncome": 2216000000.0,
+      "revenueGrowth": 0.123,
+      "earningsGrowth": 1.316,
+      "marketCap": 40622399488.0,
+      "profitMargin": 0.25406998,
+      "revenueUsd": 8721999872.0,
+      "netIncomeUsd": 2216000000.0,
+      "marketCapUsd": 40622399488.0
     },
     {
       "symbol": "ZIM",
@@ -3897,10 +7208,21 @@
       "country": "Israel",
       "currency": "USD",
       "exchange": "NYSE",
+      "domain": "zim.com",
       "sectors": [
         "logistics"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 6294099968.0,
+      "netIncome": 97900000.0,
+      "revenueGrowth": -0.304,
+      "earningsGrowth": null,
+      "marketCap": 3141947648.0,
+      "profitMargin": 0.01555,
+      "revenueUsd": 6294099968.0,
+      "netIncomeUsd": 97900000.0,
+      "marketCapUsd": 3141947648.0
     },
     {
       "symbol": "ZM",
@@ -3910,10 +7232,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "zoom.com",
       "sectors": [
         "software"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 4933060096.0,
+      "netIncome": 2071222016.0,
+      "revenueGrowth": 0.055,
+      "earningsGrowth": 0.742,
+      "marketCap": 28810065920.0,
+      "profitMargin": 0.41987,
+      "revenueUsd": 4933060096.0,
+      "netIncomeUsd": 2071222016.0,
+      "marketCapUsd": 28810065920.0
     },
     {
       "symbol": "ZS",
@@ -3923,10 +7256,21 @@
       "country": "United States",
       "currency": "USD",
       "exchange": "NasdaqGS",
+      "domain": "zscaler.com",
       "sectors": [
         "cybersecurity"
       ],
-      "warehouse": false
+      "warehouse": false,
+      "financialCurrency": "USD",
+      "revenue": 3173563904.0,
+      "netIncome": -77388000.0,
+      "revenueGrowth": 0.254,
+      "earningsGrowth": null,
+      "marketCap": 24977653760.0,
+      "profitMargin": -0.024389999,
+      "revenueUsd": 3173563904.0,
+      "netIncomeUsd": -77388000.0,
+      "marketCapUsd": 24977653760.0
     }
   ]
 }

@@ -9,7 +9,7 @@ export interface WorldCountry {
   capital: string | null;
   lat: number;
   lon: number;
-  /** True when Kubera holds a company domiciled here. */
+  /** True when a company domiciled here is indexed in the warehouse. */
   hasIssuer: boolean;
 
   currency: string | null;

@@ -13,11 +13,31 @@ from tenacity import retry, retry_if_exception, stop_after_attempt, wait_exponen
 
 log = logging.getLogger(__name__)
 
-DEFAULT_RAW_ROOT = "data/raw"
+REPO_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_RAW_ROOT = REPO_ROOT / "data" / "raw"
 
 
 def raw_root() -> Path:
-    return Path(os.environ.get("RAW_DATA_DIR", DEFAULT_RAW_ROOT))
+    """Where landed responses go — anchored to the repo, not to the caller's CWD.
+
+    This used to default to the relative `"data/raw"`, which meant the landing
+    zone moved with whatever directory the process happened to start in. The hub
+    starts its market API with `cwd=dashboard_hub/` (so the Streamlit children
+    resolve their own paths), and that API's backfill worker calls straight into
+    these clients — so a backfill requested from the UI landed its filings in
+    `dashboard_hub/data/raw/`, where `load_raw.py` never looks. The request
+    reported success, the ticker joined `companies.yml` and the dbt seed, and the
+    warehouse got no facts for it at all.
+
+    An explicit `RAW_DATA_DIR` is still honoured as given — the container sets it
+    to an absolute path — but a relative one is resolved against the repo rather
+    than the process.
+    """
+    configured = os.environ.get("RAW_DATA_DIR")
+    if not configured:
+        return DEFAULT_RAW_ROOT
+    path = Path(configured)
+    return path if path.is_absolute() else REPO_ROOT / path
 
 
 def _is_retryable(exc: BaseException) -> bool:

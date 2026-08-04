@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
+import cardFlip from '../assets/card-flip.mp3';
 import './BusinessCard.css';
 
 /**
@@ -26,44 +27,33 @@ const CARD = {
 const FLIP_MS = 620;
 
 /**
- * A card flick, synthesised rather than shipped.
+ * The card flick — a real recording, not a synthesised one.
  *
- * A short burst of noise through a bandpass with a fast decay is what a
- * fingernail off a card edge sounds like, and it costs nothing to serve. The
- * only sound in the app, at low volume, and always behind a deliberate gesture —
- * nothing here plays on load.
+ * Vite fingerprints and bundles the file from this import, so it is one cached
+ * asset rather than a path that can rot. The element is reused across flips
+ * instead of constructed each time: a fresh `Audio` per click stacks up
+ * decoders, and rewinding one is instant where loading another is not.
+ *
+ * This is the only sound in the app, at low volume, and always behind a
+ * deliberate gesture — nothing here plays on load.
  */
-function flick(pitch = 2400): void {
-  const Ctx: typeof AudioContext | undefined =
-    window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext })
-      .webkitAudioContext;
-  if (!Ctx) return;
+let player: HTMLAudioElement | null = null;
 
+function flick(rate = 1): void {
   try {
-    const ctx = new Ctx();
-    const seconds = 0.16;
-    const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * seconds), ctx.sampleRate);
-    const samples = buffer.getChannelData(0);
-    for (let i = 0; i < samples.length; i += 1) {
-      const t = i / samples.length;
-      // Noise under a cubic decay: all the energy at the front, like a flick.
-      samples[i] = (Math.random() * 2 - 1) * (1 - t) ** 3;
+    if (!player) {
+      player = new Audio(cardFlip);
+      player.volume = 0.55;
+      player.preload = 'auto';
     }
-
-    const source = ctx.createBufferSource();
-    source.buffer = buffer;
-    const band = ctx.createBiquadFilter();
-    band.type = 'bandpass';
-    band.frequency.value = pitch;
-    band.Q.value = 0.9;
-    const gain = ctx.createGain();
-    gain.gain.value = 0.22;
-
-    source.connect(band).connect(gain).connect(ctx.destination);
-    source.onended = () => void ctx.close();
-    source.start();
+    player.playbackRate = rate;
+    player.currentTime = 0;
+    // Autoplay policy rejects this until the page has been interacted with.
+    // Every caller here is a click, so it resolves — but a rejected promise
+    // must still be swallowed or it surfaces as an unhandled rejection.
+    void player.play().catch(() => {});
   } catch {
-    // An audio context the browser will not grant is not worth a broken card.
+    // A card that flips silently beats a card that does not flip.
   }
 }
 
@@ -107,8 +97,8 @@ export default function BusinessCard({ open, onClose }: BusinessCardProps) {
 
   function dismiss() {
     if (leaving) return;
-    // A lower pitch on the way out, so leaving does not sound like arriving.
-    flick(1500);
+    // Slightly slower on the way out, so leaving does not sound like arriving.
+    flick(0.92);
     setLeaving(true);
     timer.current = window.setTimeout(() => {
       setLeaving(false);

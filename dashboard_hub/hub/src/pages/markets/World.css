@@ -564,3 +564,13 @@
     display: none;
   }
 }
+
+/* The flag reads as part of the country's name, not a separate column. The
+   flex lives on a span inside the cell, never on the cell: `display: flex` on a
+   `<th>` takes it out of the table layout model and the table loses every
+   column width it had. */
+.world__country {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}

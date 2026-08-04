@@ -88,3 +88,55 @@ def test_get_retries_and_recovers_on_500() -> None:
 
     assert route.call_count == 2
     assert resp.json() == {"ok": True}
+
+
+# ── Landing zone anchoring ───────────────────────────────────────────────────
+# `raw_root` used to default to the relative "data/raw", which followed whatever
+# directory the process started in. The hub launches its market API with
+# `cwd=dashboard_hub/`, and that API's backfill worker calls straight into these
+# clients — so a backfill requested from the UI landed 1.3 MB of Ferrari filings
+# in `dashboard_hub/data/raw/`, where `load_raw.py` never looks. The request
+# reported success, RACE joined companies.yml and the dbt seed, and the warehouse
+# held zero facts for it.
+
+
+def test_the_landing_zone_does_not_follow_the_working_directory(tmp_path, monkeypatch):
+    from ingestion.base_client import REPO_ROOT, raw_root
+
+    monkeypatch.delenv("RAW_DATA_DIR", raising=False)
+    anchored = raw_root()
+
+    monkeypatch.chdir(tmp_path)
+    assert raw_root() == anchored, "landing zone moved with the CWD"
+    assert raw_root() == REPO_ROOT / "data" / "raw"
+
+
+def test_an_absolute_override_is_taken_as_given(monkeypatch, tmp_path):
+    """The container sets RAW_DATA_DIR to an absolute path and means it."""
+    from ingestion.base_client import raw_root
+
+    monkeypatch.setenv("RAW_DATA_DIR", str(tmp_path / "landing"))
+    assert raw_root() == tmp_path / "landing"
+
+
+def test_a_relative_override_resolves_against_the_repo(monkeypatch, tmp_path):
+    from ingestion.base_client import REPO_ROOT, raw_root
+
+    monkeypatch.setenv("RAW_DATA_DIR", "scratch/raw")
+    monkeypatch.chdir(tmp_path)
+    assert raw_root() == REPO_ROOT / "scratch" / "raw"
+
+
+def test_landed_files_go_under_the_anchored_root(tmp_path, monkeypatch):
+    """The path a client actually writes to, not just the root it computes."""
+    from ingestion.base_client import BaseClient
+
+    monkeypatch.setenv("RAW_DATA_DIR", str(tmp_path))
+    monkeypatch.chdir(tmp_path)
+
+    client = BaseClient.__new__(BaseClient)
+    client.source_name = "sec_edgar"
+    landed = client._land("companyfacts_CIK0001648416", {"ok": True})
+
+    assert landed == tmp_path / "sec_edgar" / "companyfacts_CIK0001648416.json"
+    assert landed.exists()

@@ -571,8 +571,14 @@ parse is `|| echo`-guarded so an unreachable warehouse at build time doesn't fai
 
 ### Orchestration runtime
 
-`DAGSTER_HOME=/app/dagster_home` is set explicitly. Without it Dagster falls back to a temp
-directory and loses run history, schedules, and sensor state on every restart.
+`DAGSTER_HOME=/app/orchestration/dagster_home` is set explicitly. Without it Dagster falls back
+to a temp directory and loses run history, schedules, and sensor state on every restart.
+
+The instance directory lives under `orchestration/` because that is what owns it. Only
+`dagster.yaml` is committed — run history, event logs and sensor cursors are runtime state and
+are ignored. The two cannot be separated: Dagster requires its config to sit inside
+`DAGSTER_HOME`, which is why the gitignore negates one file back in rather than keeping the
+config somewhere tidier.
 
 The daily schedule is `DefaultScheduleStatus.STOPPED`. Importing the module never starts a
 06:00 job on someone's laptop; it has to be turned on deliberately in the UI.

@@ -5,11 +5,12 @@ import io
 import json
 import logging
 import os
+from pathlib import Path
 from typing import Any
 
 import pandas as pd
 
-from .base_client import raw_root
+from .base_client import REPO_ROOT, raw_root
 from .config_loader import bootstrap, load_companies
 
 log = logging.getLogger(__name__)
@@ -269,8 +270,14 @@ def parse_imf() -> pd.DataFrame:
 def _write_duckdb(tables: dict[str, pd.DataFrame]) -> str:
     import duckdb
 
-    path = os.environ.get("DUCKDB_PATH", "data/kubera_edw.duckdb")
-    con = duckdb.connect(path)
+    # Anchored to the repo for the same reason `raw_root` is: a relative default
+    # follows the process's CWD, and this loader is reachable from the hub, which
+    # does not run from the repo root.
+    configured = os.environ.get("DUCKDB_PATH")
+    path = Path(configured) if configured else REPO_ROOT / "data" / "kubera_edw.duckdb"
+    if not path.is_absolute():
+        path = REPO_ROOT / path
+    con = duckdb.connect(str(path))
     con.execute(f"create schema if not exists {RAW_SCHEMA}")
     for name, df in tables.items():
         con.register("_df", df)

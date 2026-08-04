@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
+import Emblem from '../../components/Emblem';
 import Globe from '../../components/Globe';
 import type { GlobePoint } from '../../components/Globe';
 import { PERIODS } from '../stock/api';
@@ -349,9 +350,12 @@ export default function World() {
                     }
                   >
                     <th scope="row">
-                      {country.name}
+                      <span className="world__country">
+                        <Emblem id={country.iso3} kind="flag" name={country.name} size={14} />
+                        {country.name}
+                      </span>
                       {country.hasIssuer && (
-                        <span className="world__held" title="Kubera holds an issuer here">
+                        <span className="world__held" title="An issuer here is indexed in the warehouse">
                           ●
                         </span>
                       )}

@@ -23,9 +23,11 @@ KB,0001445930,KB Financial Group,South Korea,KOR,KRW,KRW,Financials,,20-F,12-31,
 KO,0000021344,Coca-Cola Co.,United States,USA,USD,USD,Consumer Staples,,10-K,12-31,us-gaap,2024-01-01
 MSFT,0000789019,Microsoft Corp.,United States,USA,USD,USD,Technology,,10-K,06-30,us-gaap,2024-01-01
 MUFG,0000067088,Mitsubishi UFJ Financial Group,Japan,JPN,JPY,JPY,Financials,,20-F,03-31,us-gaap,2024-01-01
+NVDA,0001045810,NVIDIA Corporation,United States,USA,USD,USD,Technology,,10-K,01-31,us-gaap,2024-01-01
 NVS,0001114448,Novartis AG,Switzerland,CHE,CHF,USD,Healthcare,,20-F,12-31,ifrs-full,2024-01-01
 PBR,0001119639,Petroleo Brasileiro (Petrobras),Brazil,BRA,BRL,USD,Energy,,20-F,12-31,ifrs-full,2024-01-01
 PG,0000080424,Procter & Gamble Co.,United States,USA,USD,USD,Consumer Staples,,10-K,06-30,us-gaap,2024-01-01
+RACE,0001648416,Ferrari N.V.,Italy,ITA,USD,EUR,Consumer Cyclical,,20-F,12-31,ifrs-full,2024-01-01
 SHEL,0001306965,Shell plc,Netherlands/UK,GBR,GBP,USD,Energy,,20-F,12-31,ifrs-full,2024-01-01
 SKM,0001015650,SK Telecom Co.,South Korea,KOR,KRW,KRW,Telecom,,20-F,12-31,ifrs-full,2024-01-01
 SNY,0001121404,Sanofi,France,FRA,EUR,EUR,Healthcare,,20-F,12-31,ifrs-full,2024-01-01

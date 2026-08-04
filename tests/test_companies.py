@@ -94,9 +94,27 @@ def test_absent_figures_become_null_not_nan() -> None:
     assert market_data._number(3) == 3.0
 
 
-def test_filed_panel_is_absent_for_a_name_outside_the_book() -> None:
-    filed = market_data._filed("NVDA")
-    assert filed == {"held": False, "meta": None, "years": []}
+def test_filed_panel_is_absent_for_an_unindexed_name() -> None:
+    """A name the warehouse has never been asked for gets no filed panel.
+
+    The subject is derived rather than hardcoded. This test named NVDA and broke
+    the moment NVDA was backfilled — which is not a defect being caught, it is
+    the tool working as intended. Anything can be indexed on request, so a test
+    that pins one ticker as permanently absent is only measuring how recently it
+    was written.
+    """
+    indexed = set(warehouse.holdings())
+    subject = next(
+        (
+            entry["symbol"]
+            for entry in market_data.companies()
+            if entry["symbol"] not in indexed
+        ),
+        None,
+    )
+    assert subject, "every browsable name is indexed — pick another fixture"
+
+    assert market_data._filed(subject) == {"held": False, "meta": None, "years": []}
 
 
 @needs_warehouse

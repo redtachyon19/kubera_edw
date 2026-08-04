@@ -1,10 +1,10 @@
 {
   "org": {
-    "name": "Kubera Global Asset Management",
+    "name": "Kubera Research",
     "short": "KUBERA",
     "product": "Investment Research",
-    "descriptor": "Markets · Issuers · Capital Allocation",
-    "tagline": "Fictional firm; real public data. Nothing here is investment advice or a claim of ownership."
+    "descriptor": "Markets · Issuers · Macro",
+    "tagline": "Public filings and open market data, indexed end to end. Not investment advice."
   },
   "basePrefix": "/d",
   "theme": {
@@ -27,29 +27,18 @@
       "accent": "#E2B84F",
       "metal": "gold",
       "tagline": "Markets & Macro",
-      "description": "Price action, realised risk and the macroeconomic backdrop behind it.",
+      "description": "Price action, realised risk, and the macroeconomic and trade backdrop behind it.",
       "dashboards": [
         {
           "id": "stock-explorer",
           "title": "Stock Explorer",
           "module": "stock_explorer",
           "status": "stub",
-          "blurb": "Search any listed company, chart it over 1/5/10 years or all time, and compare it against others and gold.",
+          "blurb": "Search any listed company and chart it over 1/5/10 years or all time — or sweep the market by sector and send a whole industry to the chart.",
           "source": "Yahoo Finance, live — rendered natively by the hub",
           "marts": [],
           "planned": [],
           "kind": "native"
-        },
-        {
-          "id": "sectors",
-          "title": "Sectors",
-          "module": "sectors",
-          "status": "stub",
-          "kind": "native",
-          "blurb": "Browse the market by industry, then by what actually moves together — constituents, performance and pairwise correlation.",
-          "source": "Yahoo Finance, live — rendered natively by the hub",
-          "marts": [],
-          "planned": []
         },
         {
           "id": "world",
@@ -135,7 +124,7 @@
       "accent": "#CFD8DE",
       "metal": "silver",
       "tagline": "Issuer Fundamentals",
-      "description": "Company financials as filed and as converted, normalised for cross-border comparison.",
+      "description": "Company financials as filed and as converted, normalised for currency and comparable across markets.",
       "layout": "workspace",
       "dashboards": [
         {
@@ -144,7 +133,7 @@
           "module": "company_explorer",
           "status": "stub",
           "kind": "native",
-          "blurb": "Open any company for its price history, valuation, income statement, balance sheet and cash flow — with the filed figures beside them for the names Kubera holds.",
+          "blurb": "Open any company for its price history, valuation, income statement, balance sheet and cash flow — with the filed figures beside them for the names are indexed in the warehouse.",
           "source": "Yahoo Finance, live — rendered natively by the hub, plus fact_financials for held names",
           "marts": [
             "fact_financials",
@@ -194,7 +183,7 @@
       "accent": "#CD7F32",
       "metal": "bronze",
       "tagline": "Positions & Exposure",
-      "description": "Composition, concentration and the mandate screens applied to the book.",
+      "description": "Composition, concentration and the mandate screens applied to the warehouse.",
       "dashboards": [
         {
           "id": "allocation",
@@ -232,7 +221,7 @@
           "title": "ESG Exposure",
           "module": "esg",
           "status": "planned",
-          "blurb": "Environmental, social and governance screening across the book.",
+          "blurb": "Environmental, social and governance screening across the warehouse.",
           "marts": [],
           "planned": [
             "Portfolio-weighted emissions intensity",
@@ -248,7 +237,7 @@
       "accent": "#CFD8DE",
       "metal": "silver",
       "tagline": "Data Integrity",
-      "description": "Provenance, freshness and test coverage behind every figure in this hub.",
+      "description": "Provenance, freshness and test coverage behind every figure in the warehouse.",
       "dashboards": [
         {
           "id": "data-quality",

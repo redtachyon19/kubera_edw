@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
+import Emblem from '../../components/Emblem';
 import Globe from '../../components/Globe';
 import type { GlobePoint } from '../../components/Globe';
 import Select from '../../components/Select';
@@ -172,7 +173,10 @@ export default function TradeLens({
                     className={partner.iso3 === pinned ? 'is-pinned' : ''}
                     onClick={() => setPinned((c) => (c === partner.iso3 ? null : partner.iso3))}
                   >
-                    <span className="cpanel__pname">{partner.name}</span>
+                    <span className="cpanel__pname">
+                      <Emblem id={partner.iso3} kind="flag" name={partner.name} size={14} />
+                      {partner.name}
+                    </span>
                     <span className="cpanel__pbar">
                       <span
                         className="cpanel__pfill is-exports"

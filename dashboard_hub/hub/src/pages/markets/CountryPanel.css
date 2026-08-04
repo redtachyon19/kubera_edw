@@ -312,3 +312,22 @@
 .cpanel__error {
   color: var(--down);
 }
+
+/* Flag beside the name, aligned to the heading rather than the block, so the
+   two lines under it still hang off one left edge. */
+.cpanel__ident {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.cpanel__ident .emblem {
+  margin-top: 0.15rem;
+}
+
+.cpanel__pname {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+}

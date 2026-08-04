@@ -561,3 +561,84 @@ i.chart__swatch.co__swatch--netIncome.is-loss {
   border-bottom: 1px solid currentColor;
   cursor: pointer;
 }
+
+/* The mark sits with the ticker rather than floating alone: at 20px it is a
+   detail on the card, not a tile, and pairing the two keeps the top line one
+   object instead of two. */
+.company-card__mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+/* The figure the grid is currently ranked by, so a sort is legible on the cards
+   and not only in their order. */
+.company-card__figure {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.2rem;
+  font-size: 0.82rem;
+  color: var(--ink);
+}
+
+.company-card__figure em {
+  font-family: var(--font-display);
+  font-style: normal;
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+/* ── Display currency ────────────────────────────────────────────────────── */
+
+/* One unit for the whole page. It sits directly above the KPI grid because
+   that is the first thing it changes, and it carries which of the codes are the
+   listing's own so a reader can tell a conversion from a native reading. */
+.co__unit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.2rem;
+}
+
+.co__unit .eyebrow {
+  margin-right: 0.35rem;
+}
+
+.co__unit button {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.32rem;
+  padding: 0.22rem 0.5rem;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+.co__unit button:hover {
+  color: var(--ink);
+  border-color: var(--rule-strong);
+}
+
+.co__unit button.is-on {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.co__unit button em {
+  font-family: var(--font-display);
+  font-style: normal;
+  font-size: 0.5rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  opacity: 0.62;
+}

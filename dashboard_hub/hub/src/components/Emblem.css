@@ -1,0 +1,64 @@
+.emblem {
+  display: inline-block;
+  flex: none;
+  vertical-align: middle;
+  object-fit: contain;
+  border-radius: 2px;
+}
+
+/* Grey at rest, colour under the cursor. `filter` is what does it — the source
+   images are full colour and untouched, so there is nothing to fetch twice.
+   The row is the hover target, not the mark itself: a 22px image is a small
+   thing to have to hit, and the whole row is already interactive. */
+.emblem--logo,
+.emblem--flag {
+  filter: grayscale(100%) contrast(0.92);
+  opacity: 0.78;
+  transition:
+    filter 140ms ease,
+    opacity 140ms ease;
+}
+
+/* Every container a mark can sit in — a grid card, a table row, a list item —
+   plus the mark itself, so a direct hover works even where the parent is not
+   one of these. A pinned row stays coloured because it is the one being read. */
+.company-card:hover .emblem--logo,
+.company-card:hover .emblem--flag,
+tr:hover .emblem--logo,
+tr:hover .emblem--flag,
+li:hover .emblem--logo,
+li:hover .emblem--flag,
+.emblem--logo:hover,
+.emblem--flag:hover,
+.is-pinned .emblem--logo,
+.is-pinned .emblem--flag {
+  filter: none;
+  opacity: 1;
+}
+
+/* A flag is a rectangle; forcing it square would letterbox every one of them. */
+.emblem--flag {
+  width: auto !important;
+  border: 1px solid var(--rule);
+}
+
+/* The fallback when the icon services have nothing: the company's initials on
+   the page's own stock, which reads as deliberate rather than as a hole. */
+.emblem--letters {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-sunk);
+  border: 1px solid var(--rule);
+  color: var(--ink-4);
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .emblem--logo,
+  .emblem--flag {
+    transition: none;
+  }
+}
