@@ -65,12 +65,6 @@
   padding: 72px 32px 104px;
 }
 
-.home__index-rule {
-  height: 1px;
-  background: var(--rule);
-  margin: 14px 0 40px;
-}
-
 .home__grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(258px, 1fr));

@@ -1,0 +1,8 @@
+/* The one hairline. Its top margin is fixed — the gap between a label and its
+   rule is a house constant, not something a page should be choosing — while the
+   space beneath it is the caller's, because that depends on what follows. */
+.ruled {
+  height: 1px;
+  background: var(--rule);
+  margin: 14px 0 18px;
+}

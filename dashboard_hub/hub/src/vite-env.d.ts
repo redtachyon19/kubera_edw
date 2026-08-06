@@ -24,6 +24,13 @@ declare module '@registry' {
     label: string;
     /** `rate` shows a yield level and a move in percentage points, not a % change. */
     format?: 'rate';
+    /**
+     * A mark to draw beside the label, as `logo:TICKER` or `flag:ISO3`. The
+     * quote symbol is often not the thing being pictured — the Nikkei's mark is
+     * Japan's flag, not `^N225` — so the emblem is named separately rather than
+     * derived.
+     */
+    emblem?: string;
   }
 
   /** A top-bar tab, holding the dashboards that belong to it. */

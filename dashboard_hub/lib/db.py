@@ -22,7 +22,19 @@ def warehouse_target() -> str:
 
 @st.cache_resource(show_spinner=False)
 def _engine():
-    """Postgres pools its own connections, so the engine is worth keeping."""
+    """Postgres pools its own connections, so the engine is worth keeping.
+
+    `pool_pre_ping` is not optional against a serverless Postgres. Neon suspends
+    its compute when idle and drops the TCP connection with it, so a pooled
+    handle that worked an hour ago is dead on the next query. Without the ping,
+    SQLAlchemy hands out the corpse, the query fails mid-transaction, and every
+    later query on that connection answers "can't reconnect until invalid
+    transaction is rolled back" — which is exactly how the Macro Overlay died,
+    taking the whole Streamlit process with it on a segfault.
+
+    `pool_recycle` retires connections before the server's own idle timeout can,
+    so the ping usually has nothing to catch.
+    """
     from sqlalchemy import create_engine
 
     url = (
@@ -30,7 +42,20 @@ def _engine():
         f"{os.environ['POSTGRES_PASSWORD']}@{os.environ['POSTGRES_HOST']}:"
         f"{os.environ.get('POSTGRES_PORT', '5432')}/{os.environ['POSTGRES_DB']}"
     )
-    return create_engine(url, connect_args={"sslmode": os.environ.get("PGSSLMODE", "require")})
+    return create_engine(
+        url,
+        pool_pre_ping=True,
+        pool_recycle=280,
+        connect_args={
+            "sslmode": os.environ.get("PGSSLMODE", "require"),
+            "connect_timeout": 15,
+            # Keep the socket alive through a suspend rather than discovering it
+            # is gone only when a query needs it.
+            "keepalives": 1,
+            "keepalives_idle": 30,
+            "keepalives_interval": 10,
+        },
+    )
 
 
 @st.cache_data(ttl=300, show_spinner=False)
@@ -45,7 +70,16 @@ def query(sql: str) -> pd.DataFrame:
     per query costs a few milliseconds a few times an hour.
     """
     if warehouse_target() == "postgres":
-        return pd.read_sql(sql, _engine())
+        engine = _engine()
+        try:
+            return pd.read_sql(sql, engine)
+        except Exception:
+            # One failed read must not poison the pool for the rest of the
+            # session. Disposing returns every connection and forces the next
+            # query to dial fresh; the retry is what turns a suspended database
+            # into a slow page rather than a dead dashboard.
+            engine.dispose()
+            return pd.read_sql(sql, engine)
 
     import duckdb
 

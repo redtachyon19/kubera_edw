@@ -5,13 +5,16 @@ import { dashboardRoute, getSectionBySlug, isWorkspace } from '../config/dashboa
 import type { Section } from '../config/dashboards';
 import CompaniesWorkspace from './companies/CompaniesWorkspace';
 import MarketsWorkspace from './markets/MarketsWorkspace';
+import WorldWorkspace from './markets/WorldWorkspace';
 import NotFound from './NotFound';
 import './SectionPage.css';
+import Ruled from '../components/Ruled';
 
 /** Which shell a live desk uses. A desk with no entry falls back to the index. */
 const WORKSPACES: Record<string, (section: Section) => JSX.Element> = {
   markets: (section) => <MarketsWorkspace section={section} />,
   companies: (section) => <CompaniesWorkspace section={section} />,
+  world: (section) => <WorldWorkspace section={section} />,
 };
 
 export default function SectionPage() {
@@ -47,8 +50,7 @@ export default function SectionPage() {
       </header>
 
       <section className="section__list" aria-label="Dashboards">
-        <p className="eyebrow">Dashboards</p>
-        <div className="section__list-rule" />
+        <Ruled below={0}>Dashboards</Ruled>
 
         {section.dashboards.map((dashboard, index) => (
           <Link
@@ -57,7 +59,20 @@ export default function SectionPage() {
             to={dashboardRoute(section, dashboard)}
           >
             <div className="sheet__plate" aria-hidden="true">
+              {/* The number is always drawn and the thumbnail sits over it, so a
+                  dashboard with no rendered chart — or one whose PNG has not
+                  been generated yet — degrades to the plate rather than a gap. */}
               <span className="sheet__plate-no num">{String(index + 1).padStart(2, '0')}</span>
+              <img
+                className="sheet__shot"
+                src={`/thumbnails/${dashboard.id}.png`}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                onError={(event) => {
+                  event.currentTarget.style.display = 'none';
+                }}
+              />
             </div>
 
             <div className="sheet__body">

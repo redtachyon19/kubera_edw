@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -132,14 +133,82 @@ def macro_chart() -> alt.Chart:
     )
 
 
+# ── Card thumbnails ──────────────────────────────────────────────────────────
+# The Dashboards desk draws each embedded report as a card, and a card with a
+# numbered grey plate on it tells the reader nothing about what is inside.
+#
+# These are rendered from the chart rather than screenshotted from the running
+# page, which is the better answer for something displayed at 300px: a shrunk
+# capture of a Streamlit app is mostly chrome, sidebar and unreadable axis text,
+# where the chart is the thing the dashboard is actually for. It also needs no
+# browser, no running dashboards and no 150 MB of Chromium — it reads the
+# warehouse and writes a PNG.
+#
+# Keyed by dashboard id so the file the hub asks for and the file this writes
+# cannot drift apart. A dashboard with no entry here simply has no thumbnail and
+# the card falls back to its plate.
+THUMBNAILS = {
+    "allocation": allocation_chart,
+    "fundamentals": fundamentals_chart,
+    "fx-impact": fx_chart,
+    "macro-overlay": macro_chart,
+}
+
+# The card plate is 16:10, so the render matches it and nothing is cropped.
+THUMB_WIDTH = 640
+THUMB_HEIGHT = 400
+
+HUB_THUMBS = (
+    Path(__file__).resolve().parent.parent / "dashboard_hub" / "hub" / "public" / "thumbnails"
+)
+
+
+def save_thumbnail(chart: alt.Chart, dashboard_id: str) -> None:
+    """Render one chart at card proportions, titleless, into the hub's assets.
+
+    The title is dropped because the card already prints it directly underneath —
+    printing it twice in two typefaces looks like a mistake.
+    """
+    sized = chart.properties(title="", width=THUMB_WIDTH, height=THUMB_HEIGHT)
+    HUB_THUMBS.mkdir(parents=True, exist_ok=True)
+    png = vlc.vegalite_to_png(sized.to_json(), scale=SCALE)
+    path = HUB_THUMBS / f"{dashboard_id}.png"
+    path.write_bytes(png)
+    print(f"  {path.relative_to(path.parents[4])}  ({len(png) / 1024:.0f} KB)")
+
+
+def _registered_dashboards() -> set[str]:
+    """Every dashboard id in the registry, for the coverage warning below."""
+    registry = json.loads(
+        (Path(__file__).resolve().parent.parent / "dashboard_hub" / "dashboards.json").read_text()
+    )
+    return {
+        entry["id"]
+        for section in registry["sections"]
+        for entry in section["dashboards"]
+        if entry.get("kind") != "native" and entry.get("status") == "stub"
+    }
+
+
 def main() -> None:
     alt.themes.register("kubera", theme.chart_theme)
     alt.themes.enable("kubera")
+
     print("Rendering charts from the live warehouse...")
     save(allocation_chart(), "01_portfolio_allocation")
     save(fundamentals_chart(), "02_fundamentals")
     save(fx_chart(), "03_fx_impact")
     save(macro_chart(), "04_macro_overlay")
+
+    print("\nRendering card thumbnails...")
+    for dashboard_id, build in THUMBNAILS.items():
+        save_thumbnail(build(), dashboard_id)
+
+    # A dashboard that goes into service without a thumbnail is easy to miss —
+    # its card silently keeps the plate — so say so rather than leaving it.
+    missing = _registered_dashboards() - set(THUMBNAILS)
+    if missing:
+        print(f"\n  ! in service with no thumbnail: {', '.join(sorted(missing))}")
 
 
 if __name__ == "__main__":

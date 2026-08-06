@@ -22,6 +22,8 @@ import RevenueChart, { SERIES, SERIES_LABEL } from './RevenueChart';
 import type { Series } from './RevenueChart';
 import StatementTable from './StatementTable';
 import type { Row } from './StatementTable';
+import Ruled from '../../components/Ruled';
+import { useFetch } from '../../hooks/useFetch';
 
 // `key` marks the lines a statement is actually read for — what shows before the
 // table is expanded. The rule for choosing them: a line earns its place if a
@@ -139,12 +141,8 @@ export default function CompanyDetail({
   onBack: () => void;
   onOpen: (symbol: string) => void;
 }) {
-  const [company, setCompany] = useState<Company | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
 
   const [range, setRange] = useState<PriceWindow>('5Y');
-  const [history, setHistory] = useState<History | null>(null);
   const [cadence, setCadence] = useState<Cadence>('annual');
   // All three from the start: revenue alone says how big a company is, and the
   // steps down to gross profit and to what is finally kept are the whole
@@ -161,8 +159,6 @@ export default function CompanyDetail({
         : SERIES.filter((item) => current.includes(item) || item === series),
     );
   }
-  const [revenue, setRevenue] = useState<RevenueHistory | null>(null);
-  const [revenueError, setRevenueError] = useState<string | null>(null);
   // Opens on everything: the whole point of reading the filings is the run of
   // history behind them, and a reader can always narrow it.
   const [span, setSpan] = useState<number | null>(null);
@@ -171,61 +167,47 @@ export default function CompanyDetail({
   // quoted in and therefore the honest default.
   const [unit, setUnit] = useState<string | null>(null);
 
-  useEffect(() => {
-    const controller = new AbortController();
-    setLoading(true);
-    setError(null);
-    setCompany(null);
-    fetchCompany(symbol, unit ?? undefined, controller.signal)
-      .then(setCompany)
-      .catch((err: Error) => {
-        if (err.name !== 'AbortError') setError(err.message);
-      })
-      .finally(() => setLoading(false));
-    return () => controller.abort();
-  }, [symbol, unit]);
+  const {
+    data: company,
+    loading,
+    error,
+  } = useFetch<Company>(
+    (signal) => fetchCompany(symbol, unit ?? undefined, signal),
+    [symbol, unit],
+  );
 
   // A different company has a different native currency, so a unit chosen for
   // the last one should not follow the reader onto this one.
   useEffect(() => setUnit(null), [symbol]);
 
-  useEffect(() => {
-    const controller = new AbortController();
-    fetchHistory([symbol], range, controller.signal)
-      .then(setHistory)
-      .catch(() => setHistory(null));
-    return () => controller.abort();
-  }, [symbol, range]);
+  const { data: history } = useFetch<History>(
+    (signal) => fetchHistory([symbol], range, signal),
+    [symbol, range],
+  );
+
+  const filings = useFetch<RevenueHistory>((signal) => fetchRevenue(symbol, signal), [symbol]);
+
+  // A request that did not come back says nothing about the company. Falling
+  // into the same empty state as a listing that files nothing once reported a
+  // stale API as "Apple does not file statements" — a transport failure dressed
+  // up as a finding — so an error keeps its own name and shows the empty series.
+  const revenueError = filings.error;
+  const revenue = filings.error ? EMPTY_REVENUE : filings.data;
 
   useEffect(() => {
-    const controller = new AbortController();
-    setRevenue(null);
-    setRevenueError(null);
+    const history = filings.data;
     setSpan(null);
-    fetchRevenue(symbol, controller.signal)
-      .then((history) => {
-        setRevenue(history);
-        // Open on whichever cadence covers the most ground for this filer.
-        setShown(history.default);
-        // And only on the lines it actually reports — a bank publishes no gross
-        // profit, and a legend entry reading "—" is not information.
-        const points = history[history.default].points;
-        const carried = SERIES.filter((series) =>
-          points.some((point) => point[series] !== null && point[series] !== undefined),
-        );
-        setShownSeries(carried.length > 0 ? carried : [...SERIES]);
-      })
-      .catch((err: Error) => {
-        // A request that did not come back says nothing about the company. It
-        // used to fall into the same empty state as a listing that files
-        // nothing, which reported a stale API as "Apple does not file
-        // statements" — a transport failure dressed up as a finding.
-        if (err.name === 'AbortError') return;
-        setRevenueError(err.message);
-        setRevenue(EMPTY_REVENUE);
-      });
-    return () => controller.abort();
-  }, [symbol]);
+    if (!history) return;
+    // Open on whichever cadence covers the most ground for this filer.
+    setShown(history.default);
+    // And only on the lines it actually reports — a bank publishes no gross
+    // profit, and a legend entry reading "—" is not information.
+    const points = history[history.default].points;
+    const carried = SERIES.filter((series) =>
+      points.some((point) => point[series] !== null && point[series] !== undefined),
+    );
+    setShownSeries(carried.length > 0 ? carried : [...SERIES]);
+  }, [filings.data]);
 
   const line = history?.series[0] ?? null;
   const colours = useMemo(
@@ -607,12 +589,11 @@ export default function CompanyDetail({
 
       {(sectors.length > 0 || peers.length > 0) && (
         <section className="co__peers" aria-label="Related names">
-          <p className="eyebrow">
+          <Ruled>
             {sectors.length > 0
               ? `Also in ${sectors.map((s) => s.name).join(', ')}`
               : 'Related names'}
-          </p>
-          <div className="sectors__news-rule" />
+          </Ruled>
           <div className="co__peerlist">
             {peers.map((peer) => (
               <button
@@ -629,11 +610,11 @@ export default function CompanyDetail({
         </section>
       )}
 
-      <section className="co__news" aria-label="Company coverage">
-        <p className="eyebrow">Coverage</p>
-        <div className="sectors__news-rule" />
-        <NewsFeed source={{ symbol }} empty="No recent coverage for this company." />
-      </section>
+      <NewsFeed
+        source={{ symbol }}
+        empty="No recent coverage for this company."
+        label="Company coverage"
+      />
 
       <p className="stock__footnote">
         Prices are split- and dividend-adjusted. Every amount on this page is shown in{' '}

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { countLive, org, sectionRoute, sections, totals } from '../config/dashboards';
 import './HomePage.css';
+import Ruled from '../components/Ruled';
 
 export default function HomePage() {
   return (
@@ -35,8 +36,7 @@ export default function HomePage() {
       </section>
 
       <section className="home__index" id="sections">
-        <p className="eyebrow">Index</p>
-        <div className="home__index-rule" />
+        <Ruled below={40}>Index</Ruled>
 
         <div className="home__grid">
           {sections.map((section) => (

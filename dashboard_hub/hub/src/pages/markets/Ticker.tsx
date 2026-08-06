@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import Emblem from '../../components/Emblem';
 import type { TapeEntry } from '../../config/dashboards';
 import './Ticker.css';
 
@@ -35,8 +36,12 @@ function format(entry: TapeEntry, quote: Quote): { price: string; move: string }
 }
 
 /**
- * The live tape. Only the Markets desk mounts it — a scrolling quote strip over
- * annual filings or a dbt test list would be noise.
+ * The live tape, mounted by any desk that declares one.
+ *
+ * What runs across it is the desk's own subject: securities on Markets, the
+ * largest issuers on Companies, national indices and their currencies on World.
+ * The Dashboards index has none — a scrolling quote strip over a list of reports
+ * would be noise.
  *
  * The marquee is duplicated once and translated by exactly half its width, which
  * is what makes the loop seamless. Motion stops on hover so a figure can be
@@ -95,6 +100,14 @@ export default function Ticker({ entries }: { entries: TapeEntry[] }) {
     const direction = quote.changePct > 0 ? 'up' : quote.changePct < 0 ? 'down' : '';
     return (
       <span className="tape__item" key={entry.symbol}>
+        {entry.emblem && (
+          <Emblem
+            kind={entry.emblem.startsWith('flag:') ? 'flag' : 'logo'}
+            id={entry.emblem.slice(entry.emblem.indexOf(':') + 1)}
+            name={entry.label}
+            size={13}
+          />
+        )}
         <span className="tape__label">{entry.label}</span>
         <span className="tape__price num">{price}</span>
         <span className={`tape__move num ${direction}`}>{move}</span>

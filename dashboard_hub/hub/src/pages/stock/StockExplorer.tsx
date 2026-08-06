@@ -5,6 +5,10 @@ import type { History, Period, SearchResult, Series } from './api';
 import PriceChart from './PriceChart';
 import type { Scale } from './PriceChart';
 import './StockExplorer.css';
+import { useFetch } from '../../hooks/useFetch';
+import { useUrlList, useUrlState } from '../../hooks/useUrlState';
+
+const DEFAULT_BASKET = ['AAPL', 'MSFT'];
 
 const SCALES: { id: Scale; label: string; hint: string }[] = [
   {
@@ -19,6 +23,8 @@ const SCALES: { id: Scale; label: string; hint: string }[] = [
     hint: 'Log axis — use this over ten years, where one big winner flattens the rest.',
   },
 ];
+
+const SCALE_IDS = SCALES.map((option) => option.id);
 
 const UP_SHADES = ['var(--up)', 'var(--up-2)', 'var(--up-3)'];
 const DOWN_SHADES = ['var(--down)', 'var(--down-2)', 'var(--down-3)'];
@@ -52,28 +58,39 @@ export interface StockExplorerProps {
 }
 
 export default function StockExplorer({ symbols: given, onSymbolsChange }: StockExplorerProps = {}) {
-  const [own, setOwn] = useState<string[]>(['AAPL', 'MSFT']);
+  // Uncontrolled — the standalone route — reads the same query string the desk
+  // writes, so both addresses carry a basket and both can be sent on.
+  const [own, setOwn] = useUrlList('symbols', DEFAULT_BASKET);
   const symbols = given ?? own;
-  const setSymbols = useCallback(
-    (next: string[] | ((current: string[]) => string[])) => {
-      const resolve = (current: string[]) =>
-        typeof next === 'function' ? (next as (c: string[]) => string[])(current) : next;
-      if (onSymbolsChange) onSymbolsChange(resolve(symbols));
-      else setOwn(resolve);
-    },
-    [onSymbolsChange, symbols],
-  );
-  const [period, setPeriod] = useState<Period>('5Y');
-  const [scale, setScale] = useState<Scale>('price');
-  const [withGold, setWithGold] = useState(true);
+
+  // The basket can be controlled from above — Markets holds it so it survives
+  // being navigated away from — and an update has to resolve against whatever is
+  // on screen *now*. Kept in a ref rather than in a dependency list: `add` and
+  // `remove` are handed to chips that outlive any one render, and a callback
+  // holding an old basket rewrote it wholesale, so removing one chip silently
+  // took every symbol added since the page opened with it.
+  const latest = useRef({ symbols, onSymbolsChange });
+  latest.current = { symbols, onSymbolsChange };
+
+  const setSymbols = useCallback((next: string[] | ((current: string[]) => string[])) => {
+    const { symbols: current, onSymbolsChange: notify } = latest.current;
+    const resolved = typeof next === 'function' ? next(current) : next;
+    if (notify) notify(resolved);
+    else setOwn(resolved);
+  }, []);
+  const [period, setPeriod] = useUrlState<Period>('period', '5Y', { valid: PERIODS });
+  const [scale, setScale] = useUrlState<Scale>('scale', 'price', { valid: SCALE_IDS });
+
+  // Gold rides along as a flag rather than as a symbol: it is a house overlay
+  // with its own colour and its own chip, not something you searched for.
+  const [gold, setGold] = useUrlState('gold', 'on', { valid: ['on', 'off'] });
+  const withGold = gold === 'on';
+  const setWithGold = useCallback((on: boolean) => setGold(on ? 'on' : 'off'), [setGold]);
 
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [searching, setSearching] = useState(false);
 
-  const [history, setHistory] = useState<History | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const boxRef = useRef<HTMLDivElement>(null);
 
   const wanted = useMemo(
@@ -103,22 +120,12 @@ export default function StockExplorer({ symbols: given, onSymbolsChange }: Stock
     };
   }, [query]);
 
-  useEffect(() => {
-    if (wanted.length === 0) {
-      setHistory(null);
-      return;
-    }
-    const controller = new AbortController();
-    setLoading(true);
-    setError(null);
-    fetchHistory(wanted, period, controller.signal)
-      .then(setHistory)
-      .catch((err: Error) => {
-        if (err.name !== 'AbortError') setError(err.message);
-      })
-      .finally(() => setLoading(false));
-    return () => controller.abort();
-  }, [wanted, period]);
+  const chart = useFetch<History>((signal) => fetchHistory(wanted, period, signal), [wanted, period], {
+    skip: wanted.length === 0,
+  });
+  const history = chart.data;
+  const loading = chart.loading;
+  const error = chart.error;
 
   // Close the results list on an outside click, the way a search field should.
   useEffect(() => {
@@ -129,16 +136,30 @@ export default function StockExplorer({ symbols: given, onSymbolsChange }: Stock
     return () => document.removeEventListener('mousedown', onClick);
   }, []);
 
-  const add = useCallback((symbol: string) => {
-    setSymbols((current) => (current.includes(symbol) ? current : [...current, symbol]));
-    setQuery('');
-    setResults([]);
-  }, []);
+  const add = useCallback(
+    (symbol: string) => {
+      setSymbols((current) => (current.includes(symbol) ? current : [...current, symbol]));
+      setQuery('');
+      setResults([]);
+    },
+    [setSymbols],
+  );
 
   const remove = useCallback(
     (symbol: string) => setSymbols((current) => current.filter((s) => s !== symbol)),
-    [],
+    [setSymbols],
   );
+
+  // Clear the basket out and the desk falls back to gold, not to the two names it
+  // happened to open with — an empty chart should read as the house default, and
+  // somebody else's Apple position is not that.
+  // Only on the basket emptying, deliberately: were `withGold` a dependency too,
+  // switching gold off on an empty desk would immediately switch it back on and
+  // the chip would look broken.
+  useEffect(() => {
+    if (symbols.length === 0 && !withGold) setWithGold(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [symbols.length]);
 
   const series = history?.series ?? [];
   const colours = useMemo(() => colourSeries(series), [series]);
@@ -202,7 +223,7 @@ export default function StockExplorer({ symbols: given, onSymbolsChange }: Stock
           <button
             type="button"
             className={`stock__chip stock__chip--gold${withGold ? ' is-on' : ''}`}
-            onClick={() => setWithGold((on) => !on)}
+            onClick={() => setWithGold(!withGold)}
           >
             Gold {withGold ? '×' : '+'}
           </button>

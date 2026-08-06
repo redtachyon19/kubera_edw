@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 
 import NewsFeed from '../../components/NewsFeed';
 import { PERIODS } from '../stock/api';
@@ -8,6 +8,8 @@ import Sparkline from './Sparkline';
 import { fetchSector, fetchSectors } from './sectorApi';
 import type { Pair, SectorCard, SectorDetail } from './sectorApi';
 import './Sectors.css';
+import { useFetch } from '../../hooks/useFetch';
+import { useUrlState } from '../../hooks/useUrlState';
 
 const pct = (v: number | null, digits = 1) =>
   v === null || !isFinite(v) ? '—' : `${v >= 0 ? '+' : ''}${(v * 100).toFixed(digits)}%`;
@@ -22,41 +24,22 @@ const sign = (v: number | null) => (v === null ? '' : v > 0 ? 'up' : v < 0 ? 'do
  * grid. Any of it can be pushed into the Explorer to chart.
  */
 export default function Sectors({ onCompare }: { onCompare?: (symbols: string[]) => void }) {
-  const [period, setPeriod] = useState<Period>('1Y');
-  const [cards, setCards] = useState<SectorCard[]>([]);
-  const [openSlug, setOpenSlug] = useState<string | null>(null);
-  const [detail, setDetail] = useState<SectorDetail | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [period, setPeriod] = useUrlState<Period>('sectorPeriod', '1Y', { valid: PERIODS });
+  // Opening a sector is somewhere you went, so it earns a history entry: Back
+  // returns to the grid rather than off the desk altogether.
+  const [openSlug, setOpenSlug] = useUrlState('sector', '', { push: true });
 
-  useEffect(() => {
-    const controller = new AbortController();
-    setLoading(true);
-    setError(null);
-    fetchSectors(period, controller.signal)
-      .then(setCards)
-      .catch((err: Error) => {
-        if (err.name !== 'AbortError') setError(err.message);
-      })
-      .finally(() => setLoading(false));
-    return () => controller.abort();
-  }, [period]);
+  const list = useFetch<SectorCard[]>((signal) => fetchSectors(period, signal), [period]);
+  const opened = useFetch<SectorDetail>(
+    (signal) => fetchSector(openSlug, period, signal),
+    [openSlug, period],
+    { skip: !openSlug },
+  );
 
-  useEffect(() => {
-    if (!openSlug) {
-      setDetail(null);
-      return;
-    }
-    const controller = new AbortController();
-    setLoading(true);
-    fetchSector(openSlug, period, controller.signal)
-      .then(setDetail)
-      .catch((err: Error) => {
-        if (err.name !== 'AbortError') setError(err.message);
-      })
-      .finally(() => setLoading(false));
-    return () => controller.abort();
-  }, [openSlug, period]);
+  const cards = list.data ?? [];
+  const detail = openSlug ? opened.data : null;
+  const loading = list.loading || opened.loading;
+  const error = list.error ?? opened.error;
 
   const ranked = [...cards].sort(
     (a, b) => (b.averageReturn ?? -Infinity) - (a.averageReturn ?? -Infinity),
@@ -116,7 +99,7 @@ export default function Sectors({ onCompare }: { onCompare?: (symbols: string[])
     return (
       <div className={`sectors${loading ? ' is-loading' : ''}`}>
         <div className="sectors__bar">
-          <button type="button" className="sectors__back" onClick={() => setOpenSlug(null)}>
+          <button type="button" className="sectors__back" onClick={() => setOpenSlug('')}>
             &larr; All sectors
           </button>
           {periodBar}
@@ -183,28 +166,33 @@ export default function Sectors({ onCompare }: { onCompare?: (symbols: string[])
           </tbody>
         </table>
 
-        <div className="sectors__pairs">
-          <div>
-            <p className="eyebrow">Travel together</p>
-            <ul className="sectors__pairlist">{strongest.map(pairRow)}</ul>
-          </div>
-          <div>
-            <p className="eyebrow">Least related</p>
-            <ul className="sectors__pairlist">{loosest.map(pairRow)}</ul>
+        {/* The grid and the two lists are one reading — the lists are the grid's
+            extremes, named — so they sit side by side. The grid had been alone on
+            a full-width row with half the page blank beside it. */}
+        <div className="sectors__relate">
+          <CorrelationMatrix
+            labels={detail.labels}
+            matrices={detail.matrices}
+            onPick={(a, b) => compare([a, b])}
+          />
+
+          <div className="sectors__pairs">
+            <div>
+              <p className="eyebrow">Travel together</p>
+              <ul className="sectors__pairlist">{strongest.map(pairRow)}</ul>
+            </div>
+            <div>
+              <p className="eyebrow">Least related</p>
+              <ul className="sectors__pairlist">{loosest.map(pairRow)}</ul>
+            </div>
           </div>
         </div>
 
-        <CorrelationMatrix
-          labels={detail.labels}
-          matrices={detail.matrices}
-          onPick={(a, b) => compare([a, b])}
+        <NewsFeed
+          source={{ slug: detail.slug }}
+          empty="No recent coverage for this sector."
+          label="Sector coverage"
         />
-
-        <section className="sectors__news" aria-label="Sector coverage">
-          <p className="eyebrow">Coverage</p>
-          <div className="sectors__news-rule" />
-          <NewsFeed source={{ slug: detail.slug }} empty="No recent coverage for this sector." />
-        </section>
 
         <p className="stock__footnote">
           {detail.observations} daily observations, {detail.downDays} of them down days for the

@@ -94,3 +94,15 @@
   font-size: 0.84rem;
   color: var(--ink-3);
 }
+
+/* The coverage block: heading, hairline, feed.
+   
+   Spacing lives here rather than on each page's section, so the rule sits the
+   same distance from its label everywhere. It is set with margins on the rule
+   itself and no gap on the container — a flex `gap` on the parent would stack
+   with these and push the line off centre, which is exactly what happened when
+   Companies wrapped this markup in a gapped column. */
+.news-block {
+  display: block;
+}
+

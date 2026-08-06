@@ -114,6 +114,10 @@
   --down-2: #8f3d2a;
   --down-3: #a3255c;
 
+  /* The World desk's green, deliberately the same green the tape prints gains
+     in — aliased rather than copied so the two can never drift apart. */
+  --jade: var(--up);
+
   --accent: var(--gold);
 
   color-scheme: light;
@@ -143,6 +147,8 @@
   --down: #f0645a;
   --down-2: #d2864f;
   --down-3: #e0619b;
+
+  --jade: var(--up);
 
   color-scheme: dark;
 }

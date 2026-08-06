@@ -105,11 +105,7 @@ def test_filed_panel_is_absent_for_an_unindexed_name() -> None:
     """
     indexed = set(warehouse.holdings())
     subject = next(
-        (
-            entry["symbol"]
-            for entry in market_data.companies()
-            if entry["symbol"] not in indexed
-        ),
+        (entry["symbol"] for entry in market_data.companies() if entry["symbol"] not in indexed),
         None,
     )
     assert subject, "every browsable name is indexed — pick another fixture"

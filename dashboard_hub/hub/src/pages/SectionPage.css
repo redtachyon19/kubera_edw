@@ -45,12 +45,6 @@
   color: var(--ink-2);
 }
 
-.section__list-rule {
-  height: 1px;
-  background: var(--rule);
-  margin: 14px 0 0;
-}
-
 /* Each dashboard is a ruled sheet: engraved plate on the left, entry on the right. */
 .sheet {
   display: grid;
@@ -168,5 +162,36 @@
   .sheet {
     grid-template-columns: 1fr;
     gap: 22px;
+  }
+}
+
+/* The rendered chart, laid over the numbered plate. Absolutely positioned so it
+   covers the number rather than displacing it — when the image is missing it
+   simply never paints and the plate shows through. */
+.sheet__shot {
+  position: absolute;
+  inset: 9px;
+  width: calc(100% - 18px);
+  height: calc(100% - 18px);
+  object-fit: cover;
+  object-position: top left;
+  background: var(--surface);
+  /* Held back at rest so a wall of cards reads as a list rather than a gallery,
+     and brought up under the cursor — the same rule the company marks follow. */
+  filter: grayscale(100%) contrast(0.94);
+  opacity: 0.72;
+  transition:
+    filter 160ms ease,
+    opacity 160ms ease;
+}
+
+.sheet:hover .sheet__shot {
+  filter: none;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet__shot {
+    transition: none;
   }
 }

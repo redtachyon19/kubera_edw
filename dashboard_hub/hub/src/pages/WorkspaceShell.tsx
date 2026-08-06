@@ -1,8 +1,8 @@
 import type { CSSProperties, ReactNode } from 'react';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import type { Dashboard, Section } from '../config/dashboards';
+import { useUrlState } from '../hooks/useUrlState';
 import Ticker from './markets/Ticker';
 import './Workspace.css';
 
@@ -28,7 +28,12 @@ export interface WorkspaceShellProps {
  */
 export default function WorkspaceShell({ section, children }: WorkspaceShellProps) {
   const live = section.dashboards.filter((entry) => entry.status === 'stub');
-  const [activeId, setActiveId] = useState(live[0]?.id ?? '');
+  // Which view is up is part of what you are looking at, so it goes in the
+  // address — a desk's four lenses are otherwise one URL between them.
+  const [activeId, setActiveId] = useUrlState('view', live[0]?.id ?? '', {
+    valid: live.map((entry) => entry.id),
+    push: true,
+  });
   const active = live.find((entry) => entry.id === activeId) ?? live[0];
 
   return (

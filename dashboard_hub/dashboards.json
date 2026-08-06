@@ -22,6 +22,149 @@
   },
   "sections": [
     {
+      "slug": "world",
+      "name": "World",
+      "accent": "#3FBF74",
+      "metal": "jade",
+      "tagline": "Economies & Trade",
+      "description": "Governments, currencies, bilateral trade and the energy complex behind them.",
+      "layout": "workspace",
+      "tape": [
+        {
+          "symbol": "^GSPC",
+          "label": "S&P 500",
+          "emblem": "flag:USA"
+        },
+        {
+          "symbol": "^N225",
+          "label": "Nikkei 225",
+          "emblem": "flag:JPN"
+        },
+        {
+          "symbol": "^GDAXI",
+          "label": "DAX",
+          "emblem": "flag:DEU"
+        },
+        {
+          "symbol": "^FTSE",
+          "label": "FTSE 100",
+          "emblem": "flag:GBR"
+        },
+        {
+          "symbol": "000001.SS",
+          "label": "SSE Composite",
+          "emblem": "flag:CHN"
+        },
+        {
+          "symbol": "^BSESN",
+          "label": "Sensex",
+          "emblem": "flag:IND"
+        },
+        {
+          "symbol": "^KS11",
+          "label": "KOSPI",
+          "emblem": "flag:KOR"
+        },
+        {
+          "symbol": "^BVSP",
+          "label": "Bovespa",
+          "emblem": "flag:BRA"
+        },
+        {
+          "symbol": "^FCHI",
+          "label": "CAC 40",
+          "emblem": "flag:FRA"
+        },
+        {
+          "symbol": "^AXJO",
+          "label": "ASX 200",
+          "emblem": "flag:AUS"
+        },
+        {
+          "symbol": "EURUSD=X",
+          "label": "EUR/USD",
+          "emblem": "flag:DEU"
+        },
+        {
+          "symbol": "JPY=X",
+          "label": "USD/JPY",
+          "emblem": "flag:JPN"
+        },
+        {
+          "symbol": "GBPUSD=X",
+          "label": "GBP/USD",
+          "emblem": "flag:GBR"
+        },
+        {
+          "symbol": "CNY=X",
+          "label": "USD/CNY",
+          "emblem": "flag:CHN"
+        },
+        {
+          "symbol": "GC=F",
+          "label": "Gold"
+        }
+      ],
+      "dashboards": [
+        {
+          "id": "governments",
+          "title": "Governments",
+          "module": "governments",
+          "status": "stub",
+          "kind": "native",
+          "blurb": "Inflation, growth, unemployment and currency for 212 countries, on a rotatable globe.",
+          "source": "World Bank, WITS and Yahoo — rendered natively by the hub",
+          "marts": [
+            "fact_macro_indicators",
+            "dim_country"
+          ],
+          "planned": []
+        },
+        {
+          "id": "trade",
+          "title": "Trade",
+          "module": "trade",
+          "status": "stub",
+          "kind": "native",
+          "blurb": "Bilateral flows from World Bank WITS — who sells to whom, which way the balance runs, and what each economy trades.",
+          "source": "World Bank, WITS and Yahoo — rendered natively by the hub",
+          "marts": [
+            "fact_macro_indicators",
+            "dim_country"
+          ],
+          "planned": []
+        },
+        {
+          "id": "world-sectors",
+          "title": "Sectors",
+          "module": "world_sectors",
+          "status": "stub",
+          "kind": "native",
+          "blurb": "The ten global sector funds ranked, plus the same window read by region.",
+          "source": "World Bank, WITS and Yahoo — rendered natively by the hub",
+          "marts": [
+            "fact_macro_indicators",
+            "dim_country"
+          ],
+          "planned": []
+        },
+        {
+          "id": "energy",
+          "title": "Energy",
+          "module": "energy",
+          "status": "stub",
+          "kind": "native",
+          "blurb": "Crude, both gas benchmarks, refined products, the metals that price them and the broad basket.",
+          "source": "World Bank, WITS and Yahoo — rendered natively by the hub",
+          "marts": [
+            "fact_macro_indicators",
+            "dim_country"
+          ],
+          "planned": []
+        }
+      ]
+    },
+    {
       "slug": "markets",
       "name": "Markets",
       "accent": "#E2B84F",
@@ -39,38 +182,6 @@
           "marts": [],
           "planned": [],
           "kind": "native"
-        },
-        {
-          "id": "world",
-          "title": "World",
-          "module": "world",
-          "status": "stub",
-          "kind": "native",
-          "blurb": "Every government on one globe — inflation, growth and unemployment against what each currency and stock market is actually doing — and the sectors leading across all of them.",
-          "source": "World Bank macro via the warehouse, FX and indices live from Yahoo — rendered natively by the hub",
-          "marts": [
-            "fact_macro_indicators",
-            "dim_country"
-          ],
-          "planned": []
-        },
-        {
-          "id": "macro-overlay",
-          "title": "Macro Overlay",
-          "module": "macro_overlay",
-          "status": "stub",
-          "port": 8515,
-          "blurb": "The economic backdrop behind every country in the portfolio.",
-          "marts": [
-            "fact_macro_indicators",
-            "fact_gold_price",
-            "dim_country"
-          ],
-          "planned": [
-            "GDP growth, CPI inflation and unemployment by country",
-            "IMF vs World Bank divergence as a data-quality check",
-            "Gold safe-haven benchmark overlay"
-          ]
         }
       ],
       "layout": "workspace",
@@ -88,29 +199,29 @@
           "label": "Dow"
         },
         {
-          "symbol": "^FTSE",
-          "label": "FTSE 100"
+          "symbol": "^RUT",
+          "label": "Russell 2000"
         },
         {
-          "symbol": "^N225",
-          "label": "Nikkei 225"
+          "symbol": "^VIX",
+          "label": "VIX"
         },
         {
-          "symbol": "GC=F",
-          "label": "Gold"
+          "symbol": "^TNX",
+          "label": "US 10Y",
+          "format": "rate"
+        },
+        {
+          "symbol": "DX-Y.NYB",
+          "label": "Dollar index"
         },
         {
           "symbol": "CL=F",
           "label": "WTI Crude"
         },
         {
-          "symbol": "EURUSD=X",
-          "label": "EUR/USD"
-        },
-        {
-          "symbol": "^TNX",
-          "label": "US 10Y",
-          "format": "rate"
+          "symbol": "HG=F",
+          "label": "Copper"
         },
         {
           "symbol": "BTC-USD",
@@ -140,6 +251,123 @@
             "dim_company"
           ],
           "planned": []
+        }
+      ],
+      "tape": [
+        {
+          "symbol": "AAPL",
+          "label": "AAPL"
+        },
+        {
+          "symbol": "MSFT",
+          "label": "MSFT"
+        },
+        {
+          "symbol": "NVDA",
+          "label": "NVDA"
+        },
+        {
+          "symbol": "GOOGL",
+          "label": "GOOGL"
+        },
+        {
+          "symbol": "AMZN",
+          "label": "AMZN"
+        },
+        {
+          "symbol": "META",
+          "label": "META"
+        },
+        {
+          "symbol": "TSLA",
+          "label": "TSLA"
+        },
+        {
+          "symbol": "BRK-B",
+          "label": "BRK-B"
+        },
+        {
+          "symbol": "JPM",
+          "label": "JPM"
+        },
+        {
+          "symbol": "V",
+          "label": "V"
+        },
+        {
+          "symbol": "WMT",
+          "label": "WMT"
+        },
+        {
+          "symbol": "LLY",
+          "label": "LLY"
+        },
+        {
+          "symbol": "XOM",
+          "label": "XOM"
+        },
+        {
+          "symbol": "TSM",
+          "label": "TSM"
+        }
+      ]
+    },
+    {
+      "slug": "portfolio",
+      "name": "Portfolio",
+      "accent": "#CD7F32",
+      "metal": "bronze",
+      "tagline": "Construction & Risk",
+      "description": "Build a portfolio from anything indexed, then measure what it actually did.",
+      "dashboards": [
+        {
+          "id": "portfolio-analytics",
+          "title": "Portfolio Analytics",
+          "module": "portfolio_analytics",
+          "status": "planned",
+          "kind": "native",
+          "blurb": "Assemble a portfolio, weight it, and read its return, risk, concentration and attribution against a benchmark or against gold.",
+          "source": "Yahoo live, priced in any currency",
+          "marts": [
+            "fact_financials",
+            "dim_company"
+          ],
+          "planned": [
+            "Weights and rebalancing",
+            "Return, volatility, Sharpe and drawdown",
+            "Correlation between positions",
+            "Concentration and sector/country/currency exposure",
+            "Contribution to return"
+          ]
+        }
+      ],
+      "layout": "workspace"
+    },
+    {
+      "slug": "dashboards",
+      "name": "Dashboards",
+      "accent": "#CFD8DE",
+      "metal": "silver",
+      "tagline": "Embedded Reports",
+      "description": "Standalone dashboards, each its own service behind the hub. Open one to read it in place.",
+      "dashboards": [
+        {
+          "id": "macro-overlay",
+          "title": "Macro Overlay",
+          "module": "macro_overlay",
+          "status": "stub",
+          "port": 8515,
+          "blurb": "Gold against the macro series, for the countries the warehouse indexes.",
+          "marts": [
+            "fact_macro_indicators",
+            "fact_gold_price",
+            "dim_country"
+          ],
+          "planned": [
+            "GDP growth, CPI inflation and unemployment by country",
+            "IMF vs World Bank divergence as a data-quality check",
+            "Gold safe-haven benchmark overlay"
+          ]
         },
         {
           "id": "fundamentals",
@@ -174,17 +402,7 @@
             "Applied year-end FX rate per reporting currency",
             "Business growth split from translation effect"
           ]
-        }
-      ]
-    },
-    {
-      "slug": "portfolio",
-      "name": "Portfolio",
-      "accent": "#CD7F32",
-      "metal": "bronze",
-      "tagline": "Positions & Exposure",
-      "description": "Composition, concentration and the mandate screens applied to the warehouse.",
-      "dashboards": [
+        },
         {
           "id": "allocation",
           "title": "Portfolio Allocation",
@@ -203,42 +421,6 @@
             "Holding / country / currency count KPIs"
           ]
         },
-        {
-          "id": "risk",
-          "title": "Risk & Concentration",
-          "module": "risk",
-          "status": "planned",
-          "blurb": "Concentration limits, correlation and downside exposure.",
-          "marts": [],
-          "planned": [
-            "Country and sector concentration against limits",
-            "Cross-holding correlation matrix",
-            "Value-at-risk and stress scenarios"
-          ]
-        },
-        {
-          "id": "esg",
-          "title": "ESG Exposure",
-          "module": "esg",
-          "status": "planned",
-          "blurb": "Environmental, social and governance screening across the warehouse.",
-          "marts": [],
-          "planned": [
-            "Portfolio-weighted emissions intensity",
-            "Governance flags by holding",
-            "Screening exclusions and coverage gaps"
-          ]
-        }
-      ]
-    },
-    {
-      "slug": "warehouse",
-      "name": "Warehouse",
-      "accent": "#CFD8DE",
-      "metal": "silver",
-      "tagline": "Data Integrity",
-      "description": "Provenance, freshness and test coverage behind every figure in the warehouse.",
-      "dashboards": [
         {
           "id": "data-quality",
           "title": "Data Quality",

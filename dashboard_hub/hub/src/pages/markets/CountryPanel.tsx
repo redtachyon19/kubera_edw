@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
-
 import Emblem from '../../components/Emblem';
 import TimeChart from '../../components/TimeChart';
+import { useFetch } from '../../hooks/useFetch';
 import { fetchCountry, index, move, rate, tone, usd } from './worldApi';
 import type { CountryDetail } from './worldApi';
 import './CountryPanel.css';
@@ -26,23 +25,11 @@ export default function CountryPanel({
   period: string;
   onClose: () => void;
 }) {
-  const [detail, setDetail] = useState<CountryDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    setLoading(true);
-    setError(null);
-    setDetail(null);
-    fetchCountry(iso3, period, controller.signal)
-      .then(setDetail)
-      .catch((err: Error) => {
-        if (err.name !== 'AbortError') setError(err.message);
-      })
-      .finally(() => setLoading(false));
-    return () => controller.abort();
-  }, [iso3, period]);
+  const {
+    data: detail,
+    loading,
+    error,
+  } = useFetch<CountryDetail>((signal) => fetchCountry(iso3, period, signal), [iso3, period]);
 
   const profile = detail?.profile ?? null;
   const pp = detail?.purchasingPower;

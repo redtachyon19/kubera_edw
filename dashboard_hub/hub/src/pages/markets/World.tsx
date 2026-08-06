@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import Emblem from '../../components/Emblem';
 import Globe from '../../components/Globe';
 import type { GlobePoint } from '../../components/Globe';
+import { useFetch } from '../../hooks/useFetch';
 import { PERIODS } from '../stock/api';
 import type { Period } from '../stock/api';
 import CountryPanel from './CountryPanel';
@@ -21,24 +22,16 @@ import {
   tone,
 } from './worldApi';
 import type {
-  Composition,
+  CountryDetail,
   EnergyPanel,
   Metric,
-  TradeFlows,
   WorldCountry,
   WorldSectors,
   WorldSnapshot,
 } from './worldApi';
 import './World.css';
 
-type Lens = 'governments' | 'trade' | 'sectors' | 'energy';
-
-const LENS_LABEL: Record<Lens, string> = {
-  governments: 'Governments',
-  trade: 'Trade',
-  sectors: 'Sectors',
-  energy: 'Energy',
-};
+export type Lens = 'governments' | 'trade' | 'sectors' | 'energy';
 
 /** Sort orders offered over the country table. */
 type SortKey = 'name' | Metric;
@@ -59,8 +52,7 @@ type SortKey = 'name' | Metric;
  * government's last published inflation print and what its currency has done
  * since is the interesting part, not a defect to be smoothed over.
  */
-export default function World() {
-  const [lens, setLens] = useState<Lens>('governments');
+export default function World({ lens }: { lens: Lens }) {
   const [period, setPeriod] = useState<Period>('1Y');
   const [metric, setMetric] = useState<Metric>('market');
   const [sortKey, setSortKey] = useState<SortKey>('market');
@@ -68,66 +60,34 @@ export default function World() {
   // for inflation is the low end, and the interesting end is the other one —
   // so clicking the active column turns it around.
   const [reversed, setReversed] = useState(false);
-  const [snapshot, setSnapshot] = useState<WorldSnapshot | null>(null);
-  const [sectors, setSectors] = useState<WorldSectors | null>(null);
-  const [energy, setEnergy] = useState<EnergyPanel | null>(null);
   const [reporter, setReporter] = useState('USA');
-  const [flows, setFlows] = useState<TradeFlows | null>(null);
-  const [composition, setComposition] = useState<Composition | null>(null);
-  const [tradeLoading, setTradeLoading] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const controller = new AbortController();
-    setLoading(true);
-    setError(null);
-    Promise.all([
-      fetchWorld(period, controller.signal),
-      fetchWorldSectors(period, controller.signal),
-    ])
-      .then(([world, legs]) => {
-        setSnapshot(world);
-        setSectors(legs);
-      })
-      .catch((err: Error) => {
-        if (err.name !== 'AbortError') setError(err.message);
-      })
-      .finally(() => setLoading(false));
-    return () => controller.abort();
-  }, [period]);
+  // The globe and the sector table share a window, so they share a request and
+  // one loading flag rather than flickering independently.
+  const base = useFetch<[WorldSnapshot, WorldSectors]>(
+    (signal) => Promise.all([fetchWorld(period, signal), fetchWorldSectors(period, signal)]),
+    [period],
+  );
 
-  // Energy is its own lens and its own request — the governments view should not
-  // wait on the pits, and vice versa.
-  useEffect(() => {
-    if (lens !== 'energy') return undefined;
-    const controller = new AbortController();
-    fetchEnergy(period, controller.signal)
-      .then(setEnergy)
-      .catch((err: Error) => {
-        if (err.name !== 'AbortError') setError(err.message);
-      });
-    return () => controller.abort();
-  }, [lens, period]);
+  // Energy and trade are each their own lens and their own request — the
+  // governments view should not wait on the pits, and neither loads until its
+  // tab is the one on screen.
+  const pits = useFetch<EnergyPanel>((signal) => fetchEnergy(period, signal), [period], {
+    skip: lens !== 'energy',
+  });
+  const flows = useFetch<CountryDetail>(
+    (signal) => fetchCountry(reporter, period, signal),
+    [reporter, period],
+    { skip: lens !== 'trade' },
+  );
 
-  // Trade is annual and does not move with the period selector, so it is keyed
-  // only on which country is reporting.
-  useEffect(() => {
-    if (lens !== 'trade') return undefined;
-    const controller = new AbortController();
-    setTradeLoading(true);
-    fetchCountry(reporter, period, controller.signal)
-      .then((detail) => {
-        setFlows(detail.trade);
-        setComposition(detail.composition);
-      })
-      .catch((err: Error) => {
-        if (err.name !== 'AbortError') setError(err.message);
-      })
-      .finally(() => setTradeLoading(false));
-    return () => controller.abort();
-  }, [lens, reporter, period]);
+  const snapshot = base.data?.[0] ?? null;
+  const sectors = base.data?.[1] ?? null;
+  const energy = pits.data;
+  const loading = base.loading || pits.loading;
+  const tradeLoading = flows.loading;
+  const error = base.error ?? pits.error ?? flows.error;
 
   const spec = METRIC[metric];
 
@@ -203,23 +163,7 @@ export default function World() {
     </div>
   );
 
-  const header = (
-    <header className="world__head">
-      <div className="world__lens" role="group" aria-label="View">
-        {(Object.keys(LENS_LABEL) as Lens[]).map((option) => (
-          <button
-            key={option}
-            type="button"
-            className={lens === option ? 'is-on' : ''}
-            onClick={() => setLens(option)}
-          >
-            {LENS_LABEL[option]}
-          </button>
-        ))}
-      </div>
-      {periodBar}
-    </header>
-  );
+  const header = <header className="world__head">{periodBar}</header>;
 
   if (error) {
     return (
@@ -397,8 +341,8 @@ export default function World() {
           countries={snapshot?.countries ?? []}
           reporter={reporter}
           onReporter={setReporter}
-          flows={flows}
-          composition={composition}
+          flows={flows.data?.trade ?? null}
+          composition={flows.data?.composition ?? null}
           loading={tradeLoading}
         />
       ) : lens === 'energy' ? (

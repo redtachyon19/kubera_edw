@@ -52,7 +52,7 @@ make setup && make demo && make hub
 | `make lint` | `ruff check` + `ruff format --check` |
 | `make verify` | Re-checks environment: python, deps, lint, tests, dbt connection |
 | `make universe` | Re-verifies every company against SEC EDGAR |
-| `make screenshots` | Re-renders the dashboard charts from the live warehouse |
+| `make screenshots` | Re-renders the README charts **and** the Dashboards card thumbnails |
 | `make clean` | Removes build artefacts (keeps landed raw data and the venv) |
 
 ---
@@ -447,18 +447,65 @@ both halves and Ctrl+C stops them together.
 Navigation is two levels — the top bar holds **sections**, and each section holds its
 **dashboards**:
 
-| Desk | Metal | Dashboards |
+| Desk | Unit of analysis | Views |
 |---|---|---|
-| **Markets** | gold | Stock Explorer (native, with Sectors) · World (native) · Macro Overlay |
+| **Markets** | a security | Stock Explorer, with Sectors below it |
+| **Companies** | an issuer | Company Explorer |
+| **World** | an economy | Governments · Trade · Sectors · Energy |
+| **Portfolio** | a set you assembled | Portfolio Analytics *(building)* |
+| **Dashboards** | — | The embedded reports, as a card index |
 
-The **World** desk carries four lenses — Governments, Trade, Sectors and Energy — described below.
-| **Companies** | silver | Company Explorer (native) · Fundamentals · FX Impact |
-| **Portfolio** | bronze | Portfolio Allocation · Risk & Concentration · ESG Exposure |
-| **Warehouse** | silver | Data Quality · Pipeline Health |
+Each desk divides by **what a row means**, which is what makes placement obvious rather than
+arbitrary. Markets is about securities; World is about economies. Those were one desk until
+World outgrew it — at 1,061 lines against the Explorer's 588 it was the largest surface in the
+app while being reachable only through a tab inside another one.
 
-Two of those desks are **workspaces** rather than indexes. A report desk holds sheets you
-open, read and leave, so a list is right for it. Companies and Markets are live and stateful —
-browse, open, compare, hand off — so their views switch in place and keep their state, which
+Two pieces of the hub are shared rather than repeated, because they were repeated first and it
+showed. `<Ruled>` is the one labelled hairline — it had four implementations whose top margins
+had drifted to 12px and 14px for the same gesture, and one page borrowed another page's class,
+inheriting a margin tuned for a container it was not in. `useFetch` is the one request effect:
+make an `AbortController`, raise a loading flag, call, catch, check `err.name` against
+`'AbortError'`, lower the flag, return the abort. That appeared **fifteen times across eight
+files**, with the abort guard in eleven of them — eleven chances to omit it and set state on an
+unmounted view. It is now three, all of them genuinely different behaviour: two trailing-edge
+debounced searches and one poller.
+
+The guard is the reason it earns a hook rather than a convention. Aborting a request rejects its
+promise, so a view navigated away from mid-flight lands in the `catch` like any real failure;
+without the check it renders an error for a request nobody was waiting for. `useFetch` also
+takes `skip`, which is what lets the World desk hold back the energy and trade requests until
+their tab is the one on screen.
+
+Each live desk runs its own **tape** — the scrolling quote strip under the masthead — carrying
+that desk's subject rather than one global set of symbols:
+
+- **Markets** is the US session and what a securities desk watches beside it: the three
+  benchmarks, breadth (Russell 2000), volatility (VIX), the risk-free rate, the dollar it is all
+  priced in, and the risk assets.
+- **Companies** runs the largest issuers by **ticker** — on a desk whose whole subject is issuers, the symbol is what a reader scans for, and it fits more of the tape on screen.
+- **World** runs ten national benchmarks and the four major currency pairs, each under its flag.
+
+They were not always distinct. When World was promoted out of Markets it took the national
+indices and the FX crosses with it, and half of what was left on Markets — FTSE, Nikkei,
+EUR/USD, gold — now read as World's material sitting on the wrong desk. Only the S&P is shared
+now, because it is genuinely the headline of both. Dashboards has no tape; a scrolling quote
+strip over a list of reports would be noise.
+
+A tape entry may name an `emblem` as `logo:TICKER` or `flag:ISO3`, kept separate from the quote
+symbol because the two are often not the same thing — the Nikkei's mark is Japan's flag, not
+`^N225`. Only World uses it. Company marks were tried on the Companies tape and taken off
+again: at 13px on a moving strip a logo crowds the symbol without identifying it. They stay on
+the grid, where the cards hold still and the marks have room.
+
+**Dashboards** is the index of embedded surfaces. Every Streamlit page lives there as a card;
+clicking one opens it in place. It exists because those pages are a different kind of thing —
+their own processes, their own framework, operational rather than interactive — and mixing them
+into the native desks made both harder to navigate.
+
+Four of the five are **workspaces** rather than indexes. An index holds sheets you open, read
+and leave, so a card grid is right for it — that is Dashboards. Markets, Companies, World and
+Portfolio are live and stateful — browse, open, compare, hand off — so their views switch in
+place and keep their state, which
 is what `"layout": "workspace"` declares in the registry.
 
 ```
@@ -819,6 +866,19 @@ prints the command that fixes it, rather than crashing.
 These are **rendered, not screenshotted**. `scripts/generate_screenshots.py` queries the live
 warehouse, rebuilds each chart with Altair, and rasterizes the Vega-Lite spec via `vl_convert` —
 so they cannot drift from the data. Regenerate with `make screenshots`.
+
+The same run also writes **card thumbnails** to `dashboard_hub/hub/public/thumbnails/<id>.png`,
+keyed by dashboard id so the file the hub asks for and the file the script writes cannot drift
+apart. The Dashboards desk draws these on its cards — greyed at rest, full colour on hover, the
+same rule the company marks follow.
+
+They are **rendered from the chart, not screenshotted from the running page**. A capture of a
+live Streamlit app shown at 300px is mostly chrome, sidebar and unreadable axis text, where the
+chart is the thing the dashboard exists for. It also means no browser, no running dashboards and
+no 150 MB of Chromium in the toolchain — the script reads the warehouse and writes a PNG. A
+dashboard with no entry in `THUMBNAILS` simply has no image and its card falls back to the
+numbered plate, which is what the two uncommissioned ones do; the script prints a warning if one
+goes into service without a thumbnail.
 
 Metabase is available as a containerized alternative (`docker compose up bi`, port 3001), but
 Streamlit is the primary, reproducible deliverable.

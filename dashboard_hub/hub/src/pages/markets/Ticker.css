@@ -86,3 +86,19 @@
     overflow-x: auto;
   }
 }
+
+/* The mark sits inside the item so it scrolls with its label rather than
+   floating over the strip. Small enough to read as punctuation, not decoration. */
+.tape__item .emblem {
+  margin-right: 0.42rem;
+  transform: translateY(1px);
+}
+
+/* The tape is already a fast-moving strip; graduating marks from grey to colour
+   on hover would fight the motion, so they stay coloured and simply dim with the
+   rest of the item. */
+.tape__item .emblem--logo,
+.tape__item .emblem--flag {
+  filter: none;
+  opacity: 0.85;
+}

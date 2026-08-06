@@ -172,10 +172,31 @@
   border-color: var(--ink);
 }
 
+/* Correlation grid on the left at the size it deserves, the two pair lists in a
+   column beside it. Below the breakpoint the pair lists go back to sitting two
+   abreast under the grid, which is the only shape that fits a narrow page. */
+.sectors__relate {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.78fr);
+  align-items: start;
+  gap: 30px 46px;
+}
+
 .sectors__pairs {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 28px;
+  grid-template-columns: 1fr;
+  gap: 26px;
+}
+
+@media (max-width: 1080px) {
+  .sectors__relate {
+    grid-template-columns: 1fr;
+  }
+
+  .sectors__pairs {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 28px;
+  }
 }
 
 .sectors__pairlist {
@@ -214,9 +235,19 @@
   overflow-x: auto;
 }
 
+/* Fixed layout with a stated corner width: the cells then divide whatever the
+   column gives them, so the grid grows with the page instead of sitting at a
+   fixed 38px and leaving the rest of the row empty. */
 .corr__table {
+  width: 100%;
+  min-width: 430px;
+  table-layout: fixed;
   border-collapse: collapse;
   font-size: 0.68rem;
+}
+
+.corr__corner {
+  width: 62px;
 }
 
 .corr__table th {
@@ -245,13 +276,12 @@
 }
 
 .corr__cell {
-  width: 38px;
-  height: 30px;
+  height: 42px;
   text-align: center;
   border: 1px solid var(--paper);
   color: var(--ink);
   cursor: pointer;
-  font-size: 0.62rem;
+  font-size: 0.72rem;
 }
 
 .corr__cell.is-self {
@@ -359,8 +389,3 @@
 }
 
 /* ── Sector coverage ───────────────────────────────────────────────────────── */
-.sectors__news-rule {
-  height: 1px;
-  background: var(--rule);
-  margin: 12px 0 0;
-}

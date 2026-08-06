@@ -49,6 +49,11 @@ export default defineConfig({
   // below are what let an import reach outside this Vite root.
   resolve: { alias: { '@registry': REGISTRY } },
   server: {
+    // Localhost-only unless HUB_HOST is set. `npm run dev:lan` sets it to
+    // 0.0.0.0 so other machines on the network can reach the hub; the Streamlit
+    // dashboards and the market API stay bound to localhost and are only
+    // reachable through the proxy entries above.
+    host: process.env.HUB_HOST ?? 'localhost',
     port: 5173,
     strictPort: true,
     fs: { allow: [ROOT_DIR] },

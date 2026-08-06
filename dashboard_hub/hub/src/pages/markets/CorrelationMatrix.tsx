@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { useUrlState } from '../../hooks/useUrlState';
 import { METHOD_HINT, METHOD_LABEL, METHODS } from './sectorApi';
 import type { Method } from './sectorApi';
 
@@ -21,7 +22,9 @@ export default function CorrelationMatrix({
   onPick?: (a: string, b: string) => void;
 }) {
   const [hover, setHover] = useState<{ row: number; col: number } | null>(null);
-  const [method, setMethod] = useState<Method>('pearson');
+  // Which reading of correlation is on screen travels with the link — a downside
+  // grid and a Pearson grid are different claims about the same names.
+  const [method, setMethod] = useUrlState<Method>('corr', 'pearson', { valid: METHODS });
   const available = METHODS.filter((m) => (matrices[m]?.length ?? 0) > 0);
   const active = matrices[method]?.length ? method : (available[0] ?? 'pearson');
   const matrix = matrices[active] ?? [];
@@ -56,7 +59,7 @@ export default function CorrelationMatrix({
       <table className="corr__table">
         <thead>
           <tr>
-            <th />
+            <th className="corr__corner" />
             {labels.map((label, col) => (
               <th key={label} className={hover?.col === col ? 'is-lit' : undefined}>
                 {label}

@@ -1,26 +1,25 @@
-import { useState } from 'react';
-
 import EmbeddedDashboard from '../../components/EmbeddedDashboard';
 import { isNative } from '../../config/dashboards';
 import type { Dashboard, Section } from '../../config/dashboards';
+import { useUrlList } from '../../hooks/useUrlState';
 import WorkspaceShell from '../WorkspaceShell';
 import Explorer from './Explorer';
-import World from './World';
+
+const DEFAULT_BASKET = ['AAPL', 'MSFT'];
 
 /**
- * The Markets desk: search, sweep, compare, and the world behind it.
+ * The Markets desk: securities. Search one, chart it, sweep its sector.
  *
- * The basket lives here rather than inside the Explorer so it survives a move to
- * the World desk and back — that persistence is the reason these views share a
- * surface instead of being separate destinations.
+ * The basket lives here rather than inside the Explorer so it survives being
+ * navigated away from and back — and in the query string rather than in state,
+ * so the desk you are looking at is an address you can send to somebody.
  */
 export default function MarketsWorkspace({ section }: { section: Section }) {
-  const [basket, setBasket] = useState<string[]>(['AAPL', 'MSFT']);
+  const [basket, setBasket] = useUrlList('symbols', DEFAULT_BASKET);
 
   function body(dashboard: Dashboard | undefined) {
     if (!dashboard) return <p className="ws__empty">Nothing is running on this desk yet.</p>;
 
-    if (dashboard.id === 'world') return <World />;
     if (isNative(dashboard)) {
       return <Explorer symbols={basket} onSymbolsChange={setBasket} />;
     }

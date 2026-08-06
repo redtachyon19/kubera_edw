@@ -59,7 +59,7 @@ company-universe:  ## Rebuild dashboard_hub/companies.json after editing sectors
 backfill:  ## Add a company to the warehouse: make backfill TICKER=NVDA (or drain the queue)
 	$(VENV)/python -m ingestion.backfill $(TICKER)
 
-screenshots:  ## Re-render the README charts from the live warehouse
+screenshots:  ## Re-render the README charts and the Dashboards card thumbnails
 	$(VENV)/python scripts/generate_screenshots.py
 
 clean:  ## Remove build artefacts (keeps landed raw data and the venv)

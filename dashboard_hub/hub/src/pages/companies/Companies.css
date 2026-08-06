@@ -233,12 +233,6 @@
 .co__financials,
 .co__filed,
 .co__peers,
-.co__news {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
 .co__chart {
   padding: 18px 20px 12px;
   background: var(--surface);

@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import Emblem from '../../components/Emblem';
 import Select from '../../components/Select';
+import { useFetch } from '../../hooks/useFetch';
 import { PERIODS, searchSymbols } from '../stock/api';
 import type { Period, SearchResult } from '../stock/api';
 import CompanyDetail from './CompanyDetail';
@@ -53,9 +54,6 @@ export default function Companies() {
   const open = params.get('company');
 
   const [period, setPeriod] = useState<Period>('1Y');
-  const [cards, setCards] = useState<CompanyCard[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const [query, setQuery] = useState('');
   const [remote, setRemote] = useState<SearchResult[]>([]);
@@ -80,18 +78,12 @@ export default function Companies() {
     [setParams],
   );
 
-  useEffect(() => {
-    const controller = new AbortController();
-    setLoading(true);
-    setError(null);
-    fetchCompanies(period, controller.signal)
-      .then(setCards)
-      .catch((err: Error) => {
-        if (err.name !== 'AbortError') setError(err.message);
-      })
-      .finally(() => setLoading(false));
-    return () => controller.abort();
-  }, [period]);
+  const {
+    data: fetched,
+    loading,
+    error,
+  } = useFetch<CompanyCard[]>((signal) => fetchCompanies(period, signal), [period]);
+  const cards = fetched ?? [];
 
   // Anything the grid cannot match is looked up live, so the box opens any
   // listing rather than only the ones already in the universe.
