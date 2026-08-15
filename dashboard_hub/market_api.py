@@ -24,6 +24,9 @@ to Yahoo directly.
     GET /api/market/world-energy?period=1Y
     GET /api/market/world-country?iso3=JPN&period=5Y
     GET /api/market/world-trade?iso3=JPN
+    GET /api/market/weather
+    GET /api/market/storms
+    GET /api/market/fires
     GET /api/market/logo?symbol=AAPL      -> image bytes
     GET /api/market/flag?iso3=JPN         -> image bytes
 """
@@ -53,7 +56,7 @@ try:
 except ImportError:  # pragma: no cover — python-dotenv ships with the project
     pass
 
-from dashboard_hub.lib import filings, imagery, market_data, trade, world  # noqa: E402
+from dashboard_hub.lib import filings, imagery, market_data, trade, weather, world  # noqa: E402
 
 PORT = 8600
 
@@ -171,6 +174,21 @@ class Handler(BaseHTTPRequestHandler):
                         "composition": trade.composition(iso3),
                     }
                 )
+                return
+
+            # Every layer in one payload: the upstream call is the same size
+            # whether the desk wants one metric or all of them, so switching
+            # layer should not cost a round trip.
+            if parsed.path == "/api/market/weather":
+                self._send(weather.snapshot())
+                return
+
+            if parsed.path == "/api/market/storms":
+                self._send(weather.storms())
+                return
+
+            if parsed.path == "/api/market/fires":
+                self._send(weather.fires())
                 return
 
             if parsed.path == "/api/market/revenue":

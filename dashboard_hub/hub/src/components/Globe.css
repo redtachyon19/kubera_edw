@@ -91,6 +91,61 @@
   stroke-width: 1.5;
 }
 
+/* A cyclone is the one thing on this globe that is drawn rather than measured,
+   so it gets the only filled mark on the page — at the size of a hurricane it
+   has to be findable on a spinning sphere without hunting for it. */
+.globe__storm-arm {
+  fill: var(--storm);
+  stroke: none;
+}
+
+.globe__storm-eye {
+  fill: var(--paper);
+  stroke: var(--storm);
+  stroke-width: 1.1;
+}
+
+/* Where it is going, not where it has been: the NHC publishes a bearing and a
+   speed, and a forecast track is a shapefile this page does not download. */
+.globe__storm-heading {
+  stroke: var(--storm);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 3 3;
+  opacity: 0.75;
+}
+
+.globe__storm-hit {
+  fill: transparent;
+  cursor: pointer;
+}
+
+.globe__storm.is-active .globe__storm-arm {
+  fill: var(--storm-bright);
+}
+
+.globe__storm.is-active .globe__storm-eye {
+  stroke: var(--storm-bright);
+}
+
+/* A fire is a flame with a hotter core. The outline is what keeps it legible
+   over the temperature layer, where the globe underneath it is already red. */
+.globe__fire-body {
+  fill: var(--fire);
+  stroke: var(--paper);
+  stroke-width: 0.9;
+}
+
+.globe__fire-core {
+  fill: var(--fire-bright);
+  stroke: none;
+}
+
+.globe__storm.is-fire.is-active .globe__fire-body {
+  fill: var(--fire-bright);
+  stroke: var(--ink);
+}
+
 .globe__readout {
   display: flex;
   flex-direction: column;

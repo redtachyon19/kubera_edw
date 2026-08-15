@@ -9,6 +9,9 @@ import type { Period } from '../stock/api';
 import CountryPanel from './CountryPanel';
 import EnergyLens from './EnergyLens';
 import TradeLens from './TradeLens';
+import WeatherLens from './WeatherLens';
+import { fetchFires, fetchStorms, fetchWeather } from './weatherApi';
+import type { FireReport, StormReport, WeatherSnapshot } from './weatherApi';
 import {
   METRIC,
   METRICS,
@@ -31,7 +34,7 @@ import type {
 } from './worldApi';
 import './World.css';
 
-export type Lens = 'governments' | 'trade' | 'sectors' | 'energy';
+export type Lens = 'governments' | 'trade' | 'sectors' | 'energy' | 'weather';
 
 /** Sort orders offered over the country table. */
 type SortKey = 'name' | Metric;
@@ -82,12 +85,21 @@ export default function World({ lens }: { lens: Lens }) {
     { skip: lens !== 'trade' },
   );
 
+  // Weather is the one lens with no window: it is what the sky is doing now, so
+  // it does not key on `period` and does not refetch when the period bar moves.
+  // Conditions and cyclones load together so the desk has one loading flag.
+  const sky = useFetch<[WeatherSnapshot, StormReport, FireReport]>(
+    (signal) => Promise.all([fetchWeather(signal), fetchStorms(signal), fetchFires(signal)]),
+    [],
+    { skip: lens !== 'weather' },
+  );
+
   const snapshot = base.data?.[0] ?? null;
   const sectors = base.data?.[1] ?? null;
   const energy = pits.data;
   const loading = base.loading || pits.loading;
   const tradeLoading = flows.loading;
-  const error = base.error ?? pits.error ?? flows.error;
+  const error = base.error ?? pits.error ?? flows.error ?? sky.error;
 
   const spec = METRIC[metric];
 
@@ -163,7 +175,10 @@ export default function World({ lens }: { lens: Lens }) {
     </div>
   );
 
-  const header = <header className="world__head">{periodBar}</header>;
+  // Weather has no window to choose. A 1Y/5Y bar over a reading taken fifteen
+  // minutes ago would be a control that does nothing, on a page whose whole
+  // claim is that it is showing you now.
+  const header = <header className="world__head">{lens !== 'weather' && periodBar}</header>;
 
   if (error) {
     return (
@@ -347,6 +362,13 @@ export default function World({ lens }: { lens: Lens }) {
         />
       ) : lens === 'energy' ? (
         <EnergyLens panel={energy} period={period} loading={loading} />
+      ) : lens === 'weather' ? (
+        <WeatherLens
+          snapshot={sky.data?.[0] ?? null}
+          report={sky.data?.[1] ?? null}
+          fireReport={sky.data?.[2] ?? null}
+          loading={sky.loading}
+        />
       ) : (
         <SectorLens sectors={sectors} period={period} loading={loading} />
       )}

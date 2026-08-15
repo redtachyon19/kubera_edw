@@ -118,6 +118,19 @@
      in — aliased rather than copied so the two can never drift apart. */
   --jade: var(--up);
 
+  /* Weather. A temperature is a physical scale and not a verdict, so it runs
+     cold to hot instead of borrowing the gain/loss ramp — 30°C is not a rally
+     and a cold capital is not a loss. Storm purple is chosen to sit off both
+     ramps, so a cyclone can never be mistaken for either end of a reading. */
+  --cold: #2f6f9e;
+  --hot: #c2482b;
+  --storm: #7d3a9e;
+  --storm-bright: #9d55c4;
+  /* Amber rather than the brick red of --hot: a fire sits on top of the
+     temperature layer, and the two must not be the same colour. */
+  --fire: #d1620a;
+  --fire-bright: #f0a02a;
+
   --accent: var(--gold);
 
   color-scheme: light;
@@ -149,6 +162,13 @@
   --down-3: #e0619b;
 
   --jade: var(--up);
+
+  --cold: #5fa8dc;
+  --hot: #f0724f;
+  --storm: #c07be0;
+  --storm-bright: #e0b0f5;
+  --fire: #ff9f2e;
+  --fire-bright: #ffd98a;
 
   color-scheme: dark;
 }

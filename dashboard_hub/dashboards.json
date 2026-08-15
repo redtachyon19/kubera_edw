@@ -161,6 +161,17 @@
             "dim_country"
           ],
           "planned": []
+        },
+        {
+          "id": "weather",
+          "title": "Weather",
+          "module": "weather",
+          "status": "stub",
+          "kind": "native",
+          "blurb": "Live conditions at 212 capitals on the globe — temperature, feels-like, humidity, precipitation and wind — with the world's significant wildfires, active tropical cyclones, and every capital currently reporting a thunderstorm.",
+          "source": "Open-Meteo worldwide, GDACS for wildfires, NOAA National Hurricane Center for Atlantic and Pacific cyclones — rendered natively by the hub",
+          "marts": [],
+          "planned": []
         }
       ]
     },

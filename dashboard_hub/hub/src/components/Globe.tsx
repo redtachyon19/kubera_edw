@@ -15,6 +15,41 @@ export interface GlobePoint {
   detail: string;
 }
 
+/**
+ * A system drawn on top of the countries — a tropical cyclone, not a reading.
+ *
+ * Marks are their own layer because they are not a value at a country: they sit
+ * at sea, they move, and their size means wind speed rather than position on a
+ * ramp. Feeding them through `points` would have put a storm in the country
+ * table and coloured it as if it were an economic metric.
+ */
+export interface GlobeMark {
+  id: string;
+  /** Which glyph is drawn. The silhouettes are what tell the two apart. */
+  kind: 'cyclone' | 'fire';
+  lat: number;
+  lon: number;
+  label: string;
+  detail: string;
+  /**
+   * 0–1, how large the glyph draws: Saffir-Simpson category for a cyclone,
+   * burned area for a fire. One number because the globe should not have to
+   * know what either scale means.
+   */
+  weight: number;
+  /** Degrees clockwise from north. Cyclones only; null for anything static. */
+  heading: number | null;
+}
+
+/** Which two colours the ramp runs between. */
+export interface GlobePalette {
+  low: string;
+  high: string;
+}
+
+/** Gains green, losses red — what every desk but the weather one wants. */
+const DIRECTION: GlobePalette = { low: 'var(--down)', high: 'var(--up)' };
+
 interface Props {
   points: GlobePoint[];
   /** The value that sits at the middle of the colour ramp. */
@@ -27,6 +62,15 @@ interface Props {
   onSelect: (iso3: string | null) => void;
   /** Printed under the readout, e.g. "CPI inflation, 2025". */
   caption: string;
+  /**
+   * Ramp colours. Defaults to gains/losses; weather overrides it, because a
+   * cold capital is not a loss and 30°C is not a rally.
+   */
+  palette?: GlobePalette;
+  /** Systems drawn over the countries. */
+  marks?: GlobeMark[];
+  /** Idle text under the readout, when nothing is hovered or pinned. */
+  hint?: string;
 }
 
 const SIZE = 720;
@@ -218,6 +262,75 @@ function ramp(value: number, midpoint: number, spread: number, higherIsBetter: b
   return higherIsBetter ? t : -t;
 }
 
+/**
+ * A point `distance` degrees along the great circle from (lat, lon) at `bearing`.
+ *
+ * The heading arrow is drawn between this point and the storm rather than at a
+ * screen-space angle, because north is not up on a rotated globe — an arrow
+ * drawn at `heading` degrees from vertical would point somewhere else entirely
+ * the moment the reader spins or tilts it.
+ */
+function advance(lat: number, lon: number, bearing: number, distance: number) {
+  const d = distance * RAD;
+  const theta = bearing * RAD;
+  const phi = lat * RAD;
+  const lambda = lon * RAD;
+
+  const sinPhi2 = Math.sin(phi) * Math.cos(d) + Math.cos(phi) * Math.sin(d) * Math.cos(theta);
+  const phi2 = Math.asin(Math.max(-1, Math.min(1, sinPhi2)));
+  const lambda2 =
+    lambda +
+    Math.atan2(
+      Math.sin(theta) * Math.sin(d) * Math.cos(phi),
+      Math.cos(d) - Math.sin(phi) * sinPhi2,
+    );
+
+  return { lat: phi2 / RAD, lon: lambda2 / RAD };
+}
+
+/**
+ * The cyclone glyph: an eye and two arms, which is the symbol every weather map
+ * uses and the only one a reader recognises at this size.
+ *
+ * One arm is drawn here and the second is the same path turned half a turn by
+ * the caller — a pair is what reads as rotation, where a single hook reads as a
+ * comma and four arms read as a flower.
+ */
+function arm(radius: number): string {
+  const r = radius;
+  return [
+    `M0 0`,
+    `C${(r * 0.2).toFixed(1)} ${(-r * 0.55).toFixed(1)},`,
+    `${(r * 0.72).toFixed(1)} ${(-r * 0.92).toFixed(1)},`,
+    `${r.toFixed(1)} ${(-r * 0.3).toFixed(1)}`,
+    `C${(r * 0.68).toFixed(1)} ${(-r * 0.42).toFixed(1)},`,
+    `${(r * 0.34).toFixed(1)} ${(-r * 0.26).toFixed(1)},`,
+    `0 0`,
+    'Z',
+  ].join(' ');
+}
+
+/**
+ * The flame glyph: a leaf with a drawn-out tip, filled.
+ *
+ * A fire is told from a cyclone by silhouette, not by colour. On a globe whose
+ * temperature layer is already a blue-to-red ramp, "an orange thing" is not a
+ * signal — a shape is.
+ */
+function flame(radius: number): string {
+  const r = radius;
+  return [
+    `M0 ${(-r).toFixed(1)}`,
+    `C${(r * 0.64).toFixed(1)} ${(-r * 0.4).toFixed(1)},`,
+    `${(r * 0.6).toFixed(1)} ${(r * 0.36).toFixed(1)},`,
+    `0 ${(r * 0.76).toFixed(1)}`,
+    `C${(-r * 0.6).toFixed(1)} ${(r * 0.36).toFixed(1)},`,
+    `${(-r * 0.64).toFixed(1)} ${(-r * 0.4).toFixed(1)},`,
+    `0 ${(-r).toFixed(1)}`,
+    'Z',
+  ].join(' ');
+}
+
 export default function Globe({
   points,
   midpoint,
@@ -226,9 +339,13 @@ export default function Globe({
   selected,
   onSelect,
   caption,
+  palette = DIRECTION,
+  marks,
+  hint = 'Drag to rotate · click a country to pin it',
 }: Props) {
   const [rotation, setRotation] = useState<Rotation>({ lon: -10, lat: 18 });
   const [hovered, setHovered] = useState<string | null>(null);
+  const [hoveredMark, setHoveredMark] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
   const frame = useRef<number>(0);
   const last = useRef<{ x: number; y: number } | null>(null);
@@ -288,6 +405,22 @@ export default function Globe({
     [points, rotation],
   );
 
+  // Storms are projected on the same clock as the countries, so a spin moves the
+  // whole scene as one object rather than sliding the systems over the map.
+  const systems = useMemo(
+    () =>
+      (marks ?? [])
+        .map((mark) => {
+          const at = project(mark.lat, mark.lon, rotation);
+          const ahead =
+            mark.heading === null ? null : advance(mark.lat, mark.lon, mark.heading, 6);
+          return { mark, ...at, tip: ahead ? project(ahead.lat, ahead.lon, rotation) : null };
+        })
+        .filter((m) => m.z > 0)
+        .sort((a, b) => a.z - b.z),
+    [marks, rotation],
+  );
+
   const meridians = useMemo(
     () => [-150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150, 180].map((lon) => arc(rotation, lon, true)),
     [rotation],
@@ -300,6 +433,10 @@ export default function Globe({
 
   const active = hovered ?? selected;
   const readout = active ? points.find((p) => p.iso3 === active) ?? null : null;
+  // A storm sits on top of the countries, so it wins the readout too — pointing
+  // at a hurricane and being told the weather in the country behind it would be
+  // the wrong answer to an unambiguous question.
+  const markReadout = hoveredMark ? (marks ?? []).find((m) => m.id === hoveredMark) ?? null : null;
 
   return (
     <div className={`globe${dragging ? ' is-dragging' : ''}`}>
@@ -357,8 +494,8 @@ export default function Globe({
                 style={{
                   fill: has
                     ? t >= 0
-                      ? `color-mix(in oklab, var(--up) ${Math.round(28 + t * 72)}%, var(--globe-neutral))`
-                      : `color-mix(in oklab, var(--down) ${Math.round(28 - t * 72)}%, var(--globe-neutral))`
+                      ? `color-mix(in oklab, ${palette.high} ${Math.round(28 + t * 72)}%, var(--globe-neutral))`
+                      : `color-mix(in oklab, ${palette.low} ${Math.round(28 - t * 72)}%, var(--globe-neutral))`
                     : 'var(--globe-neutral)',
                   opacity: depth,
                 }}
@@ -372,16 +509,75 @@ export default function Globe({
             );
           })}
         </g>
+
+        {/* Above the countries: a storm is over the map, not a property of it. */}
+        <g className="globe__marks">
+          {systems.map(({ mark, x, y, z, tip }) => {
+            const depth = 0.55 + 0.45 * z;
+            // Weight is the whole point of the size: a category 5 has to be
+            // obviously larger than a tropical storm. The floor matters as much
+            // as the ceiling — a country dot reaches ~10, so anything under that
+            // makes a named event the least visible thing on its own layer.
+            const radius = (11 + Math.max(0, Math.min(1, mark.weight)) * 13) * (0.72 + 0.28 * z);
+            const isActive = mark.id === hoveredMark;
+            const fire = mark.kind === 'fire';
+
+            return (
+              <g
+                key={mark.id}
+                className={`globe__storm${fire ? ' is-fire' : ''}${isActive ? ' is-active' : ''}`}
+                style={{ opacity: depth }}
+                onPointerEnter={() => setHoveredMark(mark.id)}
+                onPointerLeave={() => setHoveredMark((h) => (h === mark.id ? null : h))}
+              >
+                {/* Drawn first so the glyph covers the root of its own arrow. */}
+                {tip && tip.z > 0 && (
+                  <line
+                    className="globe__storm-heading"
+                    x1={x}
+                    y1={y}
+                    x2={tip.x}
+                    y2={tip.y}
+                  />
+                )}
+                <g transform={`translate(${x.toFixed(1)} ${y.toFixed(1)})`}>
+                  {fire ? (
+                    <>
+                      <path className="globe__fire-body" d={flame(radius)} />
+                      {/* The hot core is what stops a small flame reading as a
+                          plain teardrop at the size a distant fire draws. */}
+                      <path className="globe__fire-core" d={flame(radius * 0.46)} />
+                    </>
+                  ) : (
+                    <>
+                      <path className="globe__storm-arm" d={arm(radius)} />
+                      <path className="globe__storm-arm" d={arm(radius)} transform="rotate(180)" />
+                      <circle className="globe__storm-eye" r={Math.max(1.4, radius * 0.15)} />
+                    </>
+                  )}
+                </g>
+                {/* The glyphs are thin and have holes; this is what the pointer
+                    actually has to hit for the readout to be usable. */}
+                <circle className="globe__storm-hit" cx={x} cy={y} r={radius * 1.15} />
+              </g>
+            );
+          })}
+        </g>
       </svg>
 
       <div className="globe__readout" aria-live="polite">
-        {readout ? (
+        {markReadout ? (
+          <>
+            <span className="globe__readout-name">{markReadout.label}</span>
+            <span className="globe__readout-value">{markReadout.detail}</span>
+          </>
+        ) : readout ? (
           <>
             <span className="globe__readout-name">{readout.name}</span>
             <span className="globe__readout-value">{readout.detail}</span>
           </>
         ) : (
-          <span className="globe__readout-idle">Drag to rotate · click a country to pin it</span>
+          <span className="globe__readout-idle">{hint}</span>
         )}
         <span className="globe__readout-caption">{caption}</span>
       </div>

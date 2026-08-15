@@ -11,6 +11,7 @@ const LENS: Record<string, Lens> = {
   trade: 'trade',
   'world-sectors': 'sectors',
   energy: 'energy',
+  weather: 'weather',
 };
 
 /**

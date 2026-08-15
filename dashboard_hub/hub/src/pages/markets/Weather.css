@@ -1,0 +1,360 @@
+/* The weather lens. It borrows the world desk's layer switcher, globe frame and
+   legend wholesale — it is the same desk looking at a different field, and a
+   second set of controls that looked almost the same would be worse than none. */
+
+.weather__swatch {
+  width: 1.6rem;
+  height: 0.42rem;
+  display: inline-block;
+}
+
+.weather__swatch.is-mid {
+  background: var(--globe-neutral);
+}
+
+.weather__section-title {
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 0.5rem;
+}
+
+.weather__note {
+  font-size: 0.78rem;
+  line-height: 1.65;
+  color: var(--ink-4);
+  margin: 0.6rem 0 0;
+  max-width: 68ch;
+}
+
+.weather__quiet {
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--ink-3);
+  margin: 0;
+  max-width: 68ch;
+}
+
+/* ---- the pinned capital ---------------------------------------------- */
+
+.weather__pinned {
+  border: 1px solid var(--rule-strong);
+  border-left: 2px solid var(--accent);
+  background: var(--surface);
+  padding: 1rem 1.1rem;
+  margin: 1.4rem 0 0;
+}
+
+.weather__pinned-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  margin: 0 0 0.9rem;
+  color: var(--ink);
+}
+
+.weather__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.9rem 1.4rem;
+  margin: 0;
+}
+
+.weather__fact dt {
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 0.2rem;
+}
+
+.weather__fact dd {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--ink);
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.weather__close {
+  margin-top: 1rem;
+  background: none;
+  border: 1px solid var(--rule-strong);
+  padding: 0.35rem 0.9rem;
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  cursor: pointer;
+}
+
+.weather__close:hover {
+  color: var(--ink);
+  border-color: var(--ink-3);
+}
+
+/* ---- cyclones --------------------------------------------------------- */
+
+.weather__storms,
+.weather__fires,
+.weather__bands {
+  margin-top: 1.8rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--rule);
+}
+
+/* ---- wildfires -------------------------------------------------------- */
+
+.weather__fire-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.weather__fire-list li {
+  display: grid;
+  grid-template-columns: 1.4rem minmax(10rem, 1fr) 5.5rem 4.5rem 6rem;
+  gap: 0.9rem;
+  align-items: baseline;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.84rem;
+}
+
+.weather__fire-flag {
+  display: inline-flex;
+  align-items: center;
+}
+
+.weather__fire-name {
+  color: var(--ink-2);
+}
+
+/* Still burning is the row that matters; contained is history. */
+.weather__fire-list li.is-burning .weather__fire-name {
+  color: var(--ink);
+}
+
+.weather__fire-area {
+  font-family: var(--font-mono);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.weather__fire-alert {
+  font-family: var(--font-display);
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.weather__fire-alert.is-red {
+  color: var(--down);
+}
+
+.weather__fire-alert.is-orange {
+  color: var(--fire);
+}
+
+.weather__fire-state {
+  font-family: var(--font-display);
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.weather__fire-list li.is-burning .weather__fire-state {
+  color: var(--fire);
+}
+
+.weather__storm-error {
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--down);
+  margin: 0;
+  max-width: 68ch;
+}
+
+.weather__storm-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.weather__storm-list li {
+  display: grid;
+  grid-template-columns: minmax(6rem, 1fr) minmax(9rem, 1.2fr) auto auto minmax(7rem, auto) auto;
+  gap: 0.9rem;
+  align-items: baseline;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.84rem;
+}
+
+/* A named hurricane is not the same news as a tropical depression, and the list
+   has to say so before it is read. */
+.weather__storm-list li.is-hurricane .weather__storm-name {
+  color: var(--storm);
+}
+
+.weather__storm-name {
+  font-family: var(--font-display);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.weather__storm-kind,
+.weather__storm-move,
+.weather__storm-basin {
+  color: var(--ink-3);
+}
+
+.weather__storm-wind,
+.weather__storm-pressure {
+  font-family: var(--font-mono);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ---- live conditions -------------------------------------------------- */
+
+.weather__band-list {
+  list-style: none;
+  margin: 0.8rem 0 0;
+  padding: 0;
+}
+
+.weather__band {
+  display: grid;
+  grid-template-columns: 8rem 3rem 1fr;
+  gap: 0.8rem;
+  align-items: baseline;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.weather__band-name {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.weather__band.is-thunderstorm .weather__band-name {
+  color: var(--storm);
+}
+
+.weather__band-count {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.weather__band-places {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.weather__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: none;
+  border: 1px solid var(--rule-strong);
+  padding: 0.2rem 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.76rem;
+  color: var(--ink-2);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.weather__chip:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.weather__chip.is-more {
+  border-style: dashed;
+  color: var(--ink-4);
+  cursor: default;
+}
+
+/* ---- extremes --------------------------------------------------------- */
+
+.weather__extremes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1.6rem;
+  margin-top: 1.8rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--rule);
+}
+
+.weather__extreme-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.weather__extreme-list button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--rule);
+  padding: 0.45rem 0;
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  color: var(--ink-2);
+  cursor: pointer;
+  text-align: left;
+}
+
+.weather__extreme-list button:hover {
+  color: var(--ink);
+}
+
+.weather__extreme-name {
+  flex: 1;
+}
+
+.weather__extreme-value {
+  font-family: var(--font-mono);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 720px) {
+  .weather__storm-list li {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem 0.9rem;
+  }
+
+  .weather__band {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+  }
+
+  .weather__fire-list li {
+    grid-template-columns: 1.4rem 1fr auto;
+    gap: 0.4rem 0.7rem;
+  }
+}
