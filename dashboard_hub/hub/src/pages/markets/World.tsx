@@ -15,7 +15,6 @@ import type { FireReport, StormReport, WeatherSnapshot } from './weatherApi';
 import {
   METRIC,
   METRICS,
-  fetchCountry,
   fetchEnergy,
   fetchWorld,
   fetchWorldSectors,
@@ -25,7 +24,6 @@ import {
   tone,
 } from './worldApi';
 import type {
-  CountryDetail,
   EnergyPanel,
   Metric,
   WorldCountry,
@@ -63,7 +61,6 @@ export default function World({ lens }: { lens: Lens }) {
   // for inflation is the low end, and the interesting end is the other one —
   // so clicking the active column turns it around.
   const [reversed, setReversed] = useState(false);
-  const [reporter, setReporter] = useState('USA');
   const [selected, setSelected] = useState<string | null>(null);
 
   // The globe and the sector table share a window, so they share a request and
@@ -79,11 +76,6 @@ export default function World({ lens }: { lens: Lens }) {
   const pits = useFetch<EnergyPanel>((signal) => fetchEnergy(period, signal), [period], {
     skip: lens !== 'energy',
   });
-  const flows = useFetch<CountryDetail>(
-    (signal) => fetchCountry(reporter, period, signal),
-    [reporter, period],
-    { skip: lens !== 'trade' },
-  );
 
   // Weather is the one lens with no window: it is what the sky is doing now, so
   // it does not key on `period` and does not refetch when the period bar moves.
@@ -98,8 +90,7 @@ export default function World({ lens }: { lens: Lens }) {
   const sectors = base.data?.[1] ?? null;
   const energy = pits.data;
   const loading = base.loading || pits.loading;
-  const tradeLoading = flows.loading;
-  const error = base.error ?? pits.error ?? flows.error ?? sky.error;
+  const error = base.error ?? pits.error ?? sky.error;
 
   const spec = METRIC[metric];
 
@@ -110,7 +101,7 @@ export default function World({ lens }: { lens: Lens }) {
       .map((country) => {
         const value = spec.value(country);
         return {
-          iso3: country.iso3,
+          id: country.iso3,
           name: country.name,
           lat: country.lat,
           lon: country.lon,
@@ -175,10 +166,15 @@ export default function World({ lens }: { lens: Lens }) {
     </div>
   );
 
-  // Weather has no window to choose. A 1Y/5Y bar over a reading taken fifteen
-  // minutes ago would be a control that does nothing, on a page whose whole
-  // claim is that it is showing you now.
-  const header = <header className="world__head">{lens !== 'weather' && periodBar}</header>;
+  // Weather and Trade have no window to choose. A 1Y/5Y bar over a reading taken
+  // fifteen minutes ago would be a control that does nothing, on a page whose
+  // whole claim is that it is showing you now — and the trade desk carries fixed
+  // windows of its own (90 days on the globe, five years in a port's history)
+  // that a period bar would appear to change and would not.
+  const WINDOWLESS: Lens[] = ['weather', 'trade'];
+  const header = (
+    <header className="world__head">{!WINDOWLESS.includes(lens) && periodBar}</header>
+  );
 
   if (error) {
     return (
@@ -352,14 +348,7 @@ export default function World({ lens }: { lens: Lens }) {
           </div>
         </>
       ) : lens === 'trade' ? (
-        <TradeLens
-          countries={snapshot?.countries ?? []}
-          reporter={reporter}
-          onReporter={setReporter}
-          flows={flows.data?.trade ?? null}
-          composition={flows.data?.composition ?? null}
-          loading={tradeLoading}
-        />
+        <TradeLens countries={snapshot?.countries ?? []} />
       ) : lens === 'energy' ? (
         <EnergyLens panel={energy} period={period} loading={loading} />
       ) : lens === 'weather' ? (

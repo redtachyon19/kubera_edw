@@ -81,7 +81,7 @@ export default function WeatherLens({
       .map((place) => {
         const value = spec.value(place);
         return {
-          iso3: place.iso3,
+          id: place.iso3,
           name: place.capital ? `${place.capital}, ${place.name}` : place.name,
           lat: place.lat,
           lon: place.lon,

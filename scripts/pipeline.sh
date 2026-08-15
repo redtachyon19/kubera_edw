@@ -10,12 +10,20 @@ TARGET="${1:-dev}"
 PY="$ROOT/.venv/bin/python"
 DBT="$ROOT/.venv/bin/dbt"
 
+# `ci` is the offline fixture build and the only DuckDB target left; dev and
+# prod are both Postgres and differ only in which server POSTGRES_HOST names.
 case "$TARGET" in
-  dev|ci) LOAD_TARGET=duckdb ;;
-  prod)   LOAD_TARGET=postgres ;;
+  ci)        LOAD_TARGET=duckdb ;;
+  dev|prod)  LOAD_TARGET=postgres ;;
   *) echo "unknown target '$TARGET' (dev | ci | prod)" >&2; exit 2 ;;
 esac
 export LOAD_TARGET
+
+# A dev run against a server that is not up fails four steps later, inside dbt,
+# with a connection error that reads like a credentials problem.
+if [ "$TARGET" = "dev" ]; then
+  "$PY" scripts/local_postgres.py start
+fi
 
 step() { printf "\n\033[1;34m==>\033[0m \033[1m%s\033[0m\n" "$*"; }
 

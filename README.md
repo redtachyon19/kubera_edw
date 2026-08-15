@@ -45,8 +45,10 @@ make setup && make demo && make hub
 | `make setup` | Installs `uv`, Python 3.12, `.venv`, and all dependencies. No admin password. |
 | `make demo` | Builds the warehouse from committed fixtures — **no keys, no network** |
 | `make hub` | Serves the research terminal at http://localhost:5173 (hub + every dashboard) |
-| `make pipeline` | Full live pipeline into local DuckDB (needs `.env` keys) |
-| `make prod` | Full live pipeline into hosted Postgres / Neon |
+| `make db-up` | Starts the local Postgres warehouse on `localhost:5432` |
+| `make db-down` | Stops it. `make db-status` reports size; `make db-psql` opens a shell |
+| `make pipeline` | Full live pipeline into local Postgres (needs `.env` keys) |
+| `make prod` | Full live pipeline into a hosted Postgres server |
 | `make orchestrate` | Serves the Dagster UI at http://localhost:3000 |
 | `make test` | Python suite + every dbt test |
 | `make lint` | `ruff check` + `ruff format --check` |
@@ -84,7 +86,7 @@ kubera_edw/
 │   ├── macros/                   #   generate_schema_name, type_money (cross-adapter money type)
 │   ├── tests/                    #   4 custom data tests beyond schema tests
 │   ├── dbt_project.yml           #   layer materializations + schema routing
-│   └── profiles.yml              #   dev (DuckDB) | ci (DuckDB) | prod (Postgres/Neon)
+│   └── profiles.yml              #   dev (Postgres) | ci (DuckDB) | prod (Postgres)
 │
 ├── orchestration/
 │   ├── dagster_pipeline.py       # 41 assets, 2 jobs, 1 failure sensor, 06:00 daily schedule
@@ -157,11 +159,31 @@ genuinely **E → L → T**: extract to files, load to `raw.*`, transform in dbt
 | **Google News RSS** | Per-country economy and market headlines | `news.google.com/rss` | none | read live by the hub, cached 30 min |
 | **Google favicons / DuckDuckGo** | Company logos, by domain | `google.com/s2/favicons` | none | `data/image_cache/`, 30-day TTL |
 | **flagcdn** | Country flags, by ISO2 | `flagcdn.com` | none | `data/image_cache/`, 30-day TTL |
+| **IMF PortWatch** | Daily port and chokepoint activity since 2019, plus port→country flows by industry | `services9.arcgis.com/…` | none | `portwatch/**/*.parquet` |
+| **US Census** | US trade by port of entry × partner × HS chapter, monthly | `api.census.gov/data/timeseries/intltrade` | `CENSUS_API_KEY`² | `census_trade/**/*.parquet` |
 | **Alpha Vantage** | Daily equity prices + gold proxy | `alphavantage.co` | `ALPHA_VANTAGE_API_KEY` | `av_<TICKER>.json` |
 | **FRED** | Gold benchmark (see note) | `api.stlouisfed.org/fred` | `FRED_API_KEY` | `gold_lbma_fixing.json` |
 
 ¹ SEC requires no key but **does** require a descriptive `SEC_EDGAR_USER_AGENT` identifying the
 requester, in the form `"Name email@example.com"`. Requests without it are rejected.
+
+² Census's published free tier ("500 requests per IP per day, no key") is **out of date**. As of
+August 2026 every data endpoint under `api.census.gov` 302-redirects to `missing_key.html`
+without one; only the `variables.json` metadata is still open. The key is free and instant. With
+it absent, `census_trade_client` logs and returns, and the dbt models that read it disable
+themselves via `enabled: env_var('CENSUS_API_KEY', '') != ''` — the global PortWatch layer does
+not depend on it.
+
+**PortWatch note.** Every table is named "Daily" and the service refreshes **weekly**, Tuesdays
+around 09:00 ET, with an observed lag of about five days — so it is a trend instrument, not a
+live feed, and the desk prints the date its numbers stop at rather than implying otherwise. Two
+traps are worth knowing: its `date` field is typed `DateOnly` but returns a `"YYYY-MM-DD"` string
+where every other ArcGIS date is epoch milliseconds, while its *disruption* dates really are
+epoch milliseconds; and its `export`/`import` fields are named from the **partner country's**
+point of view, so a port's `import` row is cargo *leaving* that port. Staging translates the
+latter into port-relative `inbound`/`outbound` — see `stg_portwatch__trade_ribbons.sql`, which
+shows the arithmetic that proves it. Licence: attribution required, bulk redistribution **not**
+granted, which is why the figures are served from our own warehouse rather than proxied.
 
 **Gold note.** The original source, FRED series `GOLDAMGBD228NLBM` (LBMA daily fixing), no longer
 exists — FRED returns `400 The series does not exist`. The default backend is now the **GLD ETF**
@@ -381,30 +403,40 @@ The same dbt project builds against three targets, selected by `--target`:
 
 | Target | Adapter | Location | Used for |
 |---|---|---|---|
-| `dev` | DuckDB | `data/kubera_edw.duckdb` (or `$DUCKDB_PATH`) | Local development |
+| `dev` | Postgres | `localhost:5432`, cluster in `data/pgdata` | Local development |
 | `ci` | DuckDB | `dbt/target/ci.duckdb` | Offline CI + `make demo` |
-| `prod` | Postgres | Neon (or any Postgres) via `$POSTGRES_*` | Hosted warehouse |
+| `prod` | Postgres | Any server via `$POSTGRES_*` | Hosted warehouse |
 
-`load_raw.py` picks its writer from `LOAD_TARGET` — `duckdb` for dev/ci, `postgres` for prod —
-so the Python loader and dbt stay pointed at the same place.
+**The warehouse is PostgreSQL.** `dev` and `prod` differ only in which server they point at —
+same models, same SQL, same schemas — so promoting from this laptop to a hosted server is a
+change of host and nothing else, and the SQL stays plain enough to lift into Snowflake or
+Databricks after that. `ci` stays on DuckDB so `make demo` builds from committed fixtures with
+no network, no credentials and no server to start.
+
+`load_raw.py` picks its writer from `LOAD_TARGET` — `postgres` by default, `duckdb` only for the
+offline `ci` path — so the Python loader and dbt stay pointed at the same place.
 
 ### Local
 
 ```bash
-make pipeline          # extract -> seeds -> load -> dbt build, into DuckDB
+make db-up             # start Postgres (first run also initialises the cluster)
+make pipeline          # extract -> seeds -> load -> dbt build
 ```
 
-### Hosted (Neon Postgres)
+There is no system Postgres to install and no Docker required: `pgserver` ships a real
+PostgreSQL 16 build as a Python wheel, and `scripts/local_postgres.py` runs it against a data
+directory in `data/pgdata` (gitignored). `docker-compose.yml` still defines an equivalent
+`warehouse` service if you would rather use containers — both read the same `POSTGRES_*`
+variables, so nothing else changes.
 
-Set the connection parts in `.env` (`POSTGRES_HOST`, `POSTGRES_USER`, `POSTGRES_PASSWORD`,
+### Hosted
+
+Point `.env` at the server (`POSTGRES_HOST`, `POSTGRES_USER`, `POSTGRES_PASSWORD`,
 `POSTGRES_DB`, `PGSSLMODE=require`), then:
 
 ```bash
 make prod
 ```
-
-Neon specifics — sslmode, connection strings, and why the loader parses files in Python rather
-than letting SQL read them — are covered in [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ### Containers
 
@@ -976,9 +1008,10 @@ nothing is hardcoded.
 | `ALPHA_VANTAGE_API_KEY` | Prices + gold | Free tier ≈ 25 requests/day; caching covers the universe |
 | `FRED_API_KEY` | FRED gold path | Free. Only needed if you pass an explicit `series_id`. |
 | `PRICES_BACKEND` | optional | `alpha_vantage` (default) or `stooq` |
-| `DUCKDB_PATH` | optional | Overrides the dev warehouse location |
-| `POSTGRES_*` | `prod` target | Host, port, user, password, db, schema |
-| `PGSSLMODE` | Neon | `require` |
+| `DUCKDB_PATH` | optional | Overrides the offline `ci` warehouse location |
+| `POSTGRES_*` | warehouse | Host, port, user, password, db, schema. Defaults to the local cluster |
+| `PGSSLMODE` | warehouse | `disable` locally, `require` against a server |
+| `CENSUS_API_KEY` | US port trade | Free. Without it the US trade layer and its dbt models switch off |
 | `RAW_DATA_DIR` | optional | Overrides `data/raw/` |
 | `DBT_TARGET` | containers | `prod` in docker-compose |
 

@@ -574,3 +574,379 @@
   align-items: center;
   gap: 0.45rem;
 }
+
+/* ── The trade desk ──────────────────────────────────────────────────────────
+   Three layers over one globe, with a league table beside it and a detail panel
+   below. The globe is the index; the panel is the answer. */
+
+.trade__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1rem 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Provenance sits in the toolbar rather than buried at the foot of the page.
+   These figures are weekly and lag the sea by days, and a desk that looks live
+   while showing week-old data is worse than one that says so. */
+.trade__asof {
+  margin-left: auto;
+  text-align: right;
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  line-height: 1.45;
+  color: var(--ink-4);
+}
+
+.trade__stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 1.75rem;
+  align-items: start;
+}
+
+.trade__globe {
+  min-width: 0;
+}
+
+.trade__legend {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.76rem;
+  color: var(--ink-3);
+}
+
+.trade__legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.trade__swatch {
+  width: 0.85rem;
+  height: 0.24rem;
+  border-radius: 0.12rem;
+  flex: none;
+}
+
+/* A flow with no dominant cargo is dashed everywhere it appears, so the legend
+   and the globe agree about what "mixed" looks like. */
+.trade__swatch.is-mixed {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--goods-other) 0 4px,
+    transparent 4px 7px
+  );
+}
+
+.trade__list {
+  min-width: 0;
+}
+
+.trade__rows {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  max-height: 30rem;
+  overflow-y: auto;
+}
+
+.trade__rows li {
+  display: grid;
+  grid-template-columns: minmax(7rem, 1.6fr) minmax(3rem, 1fr) auto auto;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.3rem 0.35rem;
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+}
+
+.trade__rows.is-compact {
+  max-height: 20rem;
+}
+
+.trade__rows li:hover {
+  background: var(--surface-sunk);
+}
+
+.trade__rows li.is-pinned {
+  background: var(--surface-sunk);
+  box-shadow: inset 2px 0 0 var(--ink);
+}
+
+.trade__rowname {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trade__arrow {
+  color: var(--ink-4);
+  padding: 0 0.1rem;
+}
+
+.trade__bar {
+  position: relative;
+  height: 0.4rem;
+  background: var(--surface-sunk);
+  border-radius: 0.2rem;
+  overflow: hidden;
+}
+
+.trade__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--ink-3);
+  border-radius: 0.2rem;
+}
+
+.trade__rowvalue {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.trade__rowchange {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-align: right;
+  white-space: nowrap;
+  min-width: 3.4rem;
+}
+
+.trade__rowtag {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: var(--ink-4);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.trade__note,
+.trade__hint {
+  font-family: var(--font-body);
+  font-size: 0.76rem;
+  line-height: 1.5;
+  color: var(--ink-4);
+  margin: 0.6rem 0 0;
+}
+
+.trade__hint {
+  text-align: center;
+  padding: 1.5rem 0;
+}
+
+/* ── Detail panel ── */
+
+.trade__panel {
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 2px solid var(--rule-strong);
+}
+
+.trade__panelhead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.trade__panelhead h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  margin: 0;
+}
+
+.trade__panelsub {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--ink-4);
+  margin: 0.2rem 0 0;
+}
+
+.trade__close {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--ink-4);
+  cursor: pointer;
+  padding: 0 0.25rem;
+}
+
+.trade__close:hover {
+  color: var(--ink);
+}
+
+/* The headline numbers. Given room to breathe rather than squeezed into the
+   table, because these are what the panel was opened to find out. */
+.trade__figures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem 2.25rem;
+  margin: 1rem 0 1.25rem;
+}
+
+.trade__figure {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.trade__figlabel {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.trade__figvalue {
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+}
+
+.trade__fignote {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-3);
+}
+
+.trade__industries {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: var(--ink-2);
+  margin: 0 0 1rem;
+}
+
+.trade__cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: 1.75rem;
+  margin-top: 1.5rem;
+}
+
+.trade__partners {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  gap: 1rem;
+}
+
+.trade__partners h5 {
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin: 0;
+}
+
+.trade__partners .trade__rows li {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.trade__mix {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+}
+
+.trade__mix li {
+  display: grid;
+  grid-template-columns: minmax(9rem, 1.4fr) minmax(3rem, 1fr) auto auto;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.28rem 0;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+}
+
+.trade__mixlabel {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trade__events {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+}
+
+.trade__events li {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+}
+
+/* GDACS alert levels. Colour AND the word, never colour alone. */
+.trade__alert {
+  flex: none;
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  padding: 0.12rem 0.35rem;
+  border-radius: 0.15rem;
+  border: 1px solid currentColor;
+  color: var(--ink-4);
+}
+
+.trade__alert.is-red {
+  color: var(--down);
+}
+
+.trade__alert.is-orange {
+  color: var(--gold);
+}
+
+.trade__link {
+  margin-top: 1.25rem;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: var(--ink-2);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.trade__link:hover {
+  color: var(--ink);
+}
+
+@media (max-width: 62rem) {
+  .trade__stage {
+    grid-template-columns: 1fr;
+  }
+
+  .trade__asof {
+    margin-left: 0;
+    text-align: left;
+  }
+}

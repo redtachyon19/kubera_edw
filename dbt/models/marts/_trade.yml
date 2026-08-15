@@ -1,0 +1,257 @@
+version: 2
+
+# The trade desk: ports, chokepoints, the ribbons between them, and what
+# disrupted them. Sourced from IMF PortWatch throughout, plus US Census customs
+# detail where CENSUS_API_KEY is set.
+#
+# Attribution obligations, since they are easy to lose track of and both are
+# licence terms rather than courtesies:
+#   * IMF PortWatch — attribution required, bulk redistribution NOT granted.
+#     Served from our own warehouse, never proxied upstream.
+#   * US Census — public domain, no attribution required.
+
+models:
+  - name: dim_port
+    description: >
+      One row per port PortWatch tracks, with its position, its industry mix and its
+      trailing 90-day activity window. The join table for everything else on the desk —
+      the daily feed carries no coordinates at all.
+    columns:
+      - name: port_key
+        tests: [not_null, unique]
+      - name: port_id
+        tests: [not_null, unique]
+      - name: port_name
+        tests: [not_null]
+      - name: country_iso3
+        tests: [not_null]
+      - name: latitude
+        description: Constrained because a port that cannot be placed cannot be drawn.
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments: {min_value: -90, max_value: 90}
+      - name: longitude
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments: {min_value: -180, max_value: 180}
+      - name: tonnage_rank
+        tests: [not_null, unique]
+      - name: is_catalogued
+        description: >
+          False for ports that appear only as the endpoint of a trade link and have no row
+          in PortWatch's own ports database — Dunedin is the one such port today. They are
+          drawable (the link carries coordinates) but have no reference detail or activity
+          history.
+        tests: [not_null]
+      - name: share_country_maritime_export
+        description: >
+          Fraction, not percent — the source publishes 0–100 and staging divides it down so
+          every share in the warehouse reads the same way. Range-tested to keep it that way.
+        tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 0, max_value: 1}
+      - name: share_country_maritime_import
+        tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 0, max_value: 1}
+
+  - name: dim_chokepoint
+    description: >
+      The 28 maritime chokepoints, with trailing transit and deadweight windows against
+      both the previous quarter and the same quarter a year earlier.
+    columns:
+      - name: chokepoint_key
+        tests: [not_null, unique]
+      - name: chokepoint_id
+        tests: [not_null, unique]
+      - name: chokepoint_name
+        tests: [not_null]
+      - name: latitude
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments: {min_value: -90, max_value: 90}
+      - name: longitude
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments: {min_value: -180, max_value: 180}
+
+  - name: dim_industry
+    description: >
+      The thirteen goods categories both trade layers colour by. PortWatch names them
+      directly; Census HS chapters are mapped onto the same names through
+      seed_hs_industry, so one legend serves both.
+    columns:
+      - name: industry_key
+        tests: [not_null, unique]
+      - name: industry_name
+        tests: [not_null, unique]
+      - name: industry_order
+        description: Fixes each category's palette slot so colours never move between builds.
+        tests: [not_null, unique]
+
+  - name: fact_port_activity_daily
+    description: >
+      One row per port per day from 2019-01-01 — port calls and import/export metric tons,
+      each split by vessel class. Incremental with a 45-day reload window, because
+      PortWatch revises recent days as late AIS arrives.
+    columns:
+      - name: port_activity_key
+        tests: [not_null, unique]
+      - name: activity_date
+        tests: [not_null]
+      - name: port_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_port')
+                field: port_id
+      - name: total_tons
+        description: Never negative — a port cannot unload a negative cargo.
+        tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 0}
+
+  - name: fact_port_activity_weekly
+    description: >
+      Weekly rollup — the series the charts read. Carries a 13-week trailing mean and the
+      same week a year earlier, so seasonality can be read off directly.
+    columns:
+      - name: port_week_key
+        tests: [not_null, unique]
+      - name: week_start
+        tests: [not_null]
+      - name: port_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_port')
+                field: port_id
+      - name: share_of_country_tons
+        tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 0, max_value: 1}
+
+  - name: fact_chokepoint_transits_daily
+    description: >
+      Daily transits and aggregate deadweight through each chokepoint. Built whole rather
+      than incrementally: its trailing averages and year-ago columns are window functions
+      over full history, which an incremental slice would silently truncate.
+    columns:
+      - name: chokepoint_transit_key
+        tests: [not_null, unique]
+      - name: transit_date
+        tests: [not_null]
+      - name: chokepoint_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_chokepoint')
+                field: chokepoint_id
+
+  - name: fact_trade_ribbon
+    description: >
+      One row per port → partner-country → direction link: two endpoints with coordinates,
+      a daily USD value for thickness, and a dominant industry for colour. What the globe
+      draws.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [port_id, partner_country_iso3, flow_direction]
+    columns:
+      - name: trade_ribbon_key
+        tests: [not_null, unique]
+      - name: port_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_port')
+                field: port_id
+      - name: flow_direction
+        description: >
+          Relative to the PORT, not the partner: outbound is port → partner country, inbound is
+          partner → port. The source's own export/import fields are named from the partner's
+          point of view and are translated in staging — see stg_portwatch__trade_ribbons.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [inbound, outbound]
+      - name: value_usd_daily
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 0}
+      - name: top_industry_share
+        tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 0, max_value: 1}
+
+  - name: fact_trade_ribbon_industry
+    description: >
+      The goods breakdown behind each ribbon — what opens when a link is clicked, and the
+      same table read the other way round when the question is which routes carry a given
+      industry.
+    columns:
+      - name: trade_ribbon_industry_key
+        tests: [not_null, unique]
+      - name: industry_name
+        description: >
+          Inner-joined to dim_industry upstream, so this test fails loudly if PortWatch
+          ever renames a category rather than quietly dropping those rows.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_industry')
+                field: industry_name
+      - name: share_of_link
+        tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 0, max_value: 1}
+
+  - name: fact_port_disruption
+    description: >
+      Events that closed or degraded a port, one row per affected port. Used to annotate
+      the activity charts — an unexplained notch in a tonnage series reads as a data fault.
+    columns:
+      - name: port_disruption_key
+        tests: [not_null, unique]
+      - name: event_id
+        tests: [not_null]
+      - name: alert_level
+        tests:
+          - accepted_values:
+              arguments:
+                values: [RED, ORANGE, GREEN]
+      - name: duration_days
+        tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 1}
+
+  - name: fact_us_port_trade_monthly
+    description: >
+      US customs detail — port of entry × partner country × HS chapter, monthly from 2013,
+      rolled up to the shared thirteen industries. Disabled unless CENSUS_API_KEY is set.
+    columns:
+      - name: us_port_trade_key
+        tests: [not_null, unique]
+      - name: trade_month
+        tests: [not_null]
+      - name: flow_direction
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [import, export]
+      - name: value_usd
+        tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 0}

@@ -1,10 +1,31 @@
 
+# The warehouse is PostgreSQL. `dev` and `prod` differ only in which server they
+# point at — the same models, the same SQL, the same schemas — so promoting the
+# warehouse from this laptop to a hosted server is a change of host and nothing
+# else. Keeping both on one engine is also what keeps the models portable to
+# Snowflake or Databricks later: nothing here can quietly come to depend on a
+# DuckDB-only function and still pass locally.
+#
+# `ci` is the exception and stays on DuckDB deliberately. `make demo` builds the
+# whole warehouse from committed fixtures with no network, no credentials and no
+# server to start, which is what makes a clean checkout runnable in one command.
+
 kubera_edw:
   target: dev
   outputs:
+    # Local Postgres, started by `make db-up` (scripts/local_postgres.py).
+    # Loopback, no TLS — hence the sslmode default of `disable` here against
+    # `require` in prod.
     dev:
-      type: duckdb
-      path: "{{ env_var('DUCKDB_PATH', '../data/kubera_edw.duckdb') }}"
+      type: postgres
+      host: "{{ env_var('POSTGRES_HOST', 'localhost') }}"
+      port: "{{ env_var('POSTGRES_PORT', '5432') | int }}"
+      user: "{{ env_var('POSTGRES_USER', 'kubera') }}"
+      password: "{{ env_var('POSTGRES_PASSWORD', '') }}"
+      dbname: "{{ env_var('POSTGRES_DB', 'kubera_edw') }}"
+      schema: "{{ env_var('POSTGRES_SCHEMA', 'public') }}"
+      sslmode: "{{ env_var('PGSSLMODE', 'disable') }}"
+      connect_timeout: 30
       threads: 4
 
     ci:
@@ -12,6 +33,8 @@ kubera_edw:
       path: "target/ci.duckdb"
       threads: 4
 
+    # A managed server. Identical to `dev` apart from where it points and the
+    # fact that TLS is not optional there.
     prod:
       type: postgres
       host: "{{ env_var('POSTGRES_HOST') }}"

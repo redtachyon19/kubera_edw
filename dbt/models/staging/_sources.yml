@@ -23,3 +23,40 @@ sources:
         description: Daily OHLCV from the Stooq or Alpha Vantage backend.
       - name: imf_macro
         description: IMF DataMapper cross-check indicators, scoped to universe countries.
+
+      # ── Trade ───────────────────────────────────────────────────────────────
+      # Landed as Parquet by ingestion/portwatch_client.py and
+      # ingestion/census_trade_client.py, then streamed in by
+      # ingestion/load_trade.py. Everything below refreshes weekly except the
+      # Census tables, which are monthly.
+      - name: portwatch_ports
+        description: >
+          The 2,065 ports IMF PortWatch tracks — name, ISO3, lat/lon, LOCODE, top three
+          industries, and each port's share of its country's seaborne trade. The join
+          table: the daily activity feed carries no geometry at all.
+      - name: portwatch_chokepoints
+        description: The 28 maritime chokepoints, same shape as the ports reference.
+      - name: portwatch_port_daily
+        description: >
+          One row per port per day from 2019-01-01. Port calls and import/export metric
+          tons, each split by vessel class. ~5.7M rows, republished weekly on Tuesdays.
+      - name: portwatch_chokepoint_daily
+        description: >
+          One row per chokepoint per day from 2019-01-01 — transit counts and aggregate
+          DWT capacity by vessel class.
+      - name: portwatch_trade_ribbons
+        description: >
+          Port → partner-country trade links valued in USD/day across 13 named industries
+          with their HS sections. Both endpoints carry coordinates. A static snapshot
+          republished whole, not a series. Source calls these "value at risk".
+      - name: portwatch_disruptions
+        description: >
+          Events that closed or degraded a port, mostly GDACS-sourced. Alert level,
+          severity, and a semicolon-delimited list of the port ids each one hit.
+      - name: census_port_trade_imports
+        description: >
+          US imports by port of entry × partner country × HS chapter, monthly from 2013.
+          Only landed when CENSUS_API_KEY is set; the models reading it disable themselves
+          otherwise.
+      - name: census_port_trade_exports
+        description: US exports, same grain and the same key requirement as the imports table.

@@ -42,6 +42,40 @@ seeds:
           ticker: varchar
           trade_date: date
 
+      # Trade fixtures. Both overrides below exist because DuckDB's CSV sniffer
+      # gets these wrong in ways that only surface at seed time:
+      #   * PortWatch's disruption dates are epoch MILLISECONDS, which overflow
+      #     a 32-bit INTEGER — the sniffer picks INTEGER and the load fails.
+      #   * Its `date` column arrives as a "YYYY-MM-DD" string and the staging
+      #     models cast it themselves, so it is held as text to match what the
+      #     Parquet loader puts in Postgres.
+      portwatch_disruptions:
+        +column_types:
+          eventid: bigint
+          fromdate: bigint
+          todate: bigint
+          editdate: bigint
+          affectedports: varchar
+      portwatch_port_daily:
+        +column_types:
+          date: varchar
+          portid: varchar
+      portwatch_chokepoint_daily:
+        +column_types:
+          date: varchar
+          portid: varchar
+      portwatch_ports:
+        +column_types:
+          portid: varchar
+          locode: varchar
+      portwatch_chokepoints:
+        +column_types:
+          portid: varchar
+      portwatch_trade_ribbons:
+        +column_types:
+          from_portid: varchar
+          hs_section: varchar
+
 target-path: "target"
 clean-targets:
   - "target"

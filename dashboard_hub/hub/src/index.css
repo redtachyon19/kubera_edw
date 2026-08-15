@@ -98,6 +98,18 @@
   --rule: #ddd9cf;
   --rule-strong: #b9b4a7;
 
+  /* Cargo colours for the trade desk's ribbons.
+     Three hues, not thirteen: ribbons cross freely on a sphere, so any two can
+     end up adjacent, and three is the most that clears colour-vision separation
+     under that condition in BOTH themes. Everything outside these three draws
+     neutral, and the legend and readout always name the cargo in words — the
+     colour is a shortcut, never the only way to tell two flows apart.
+     Validated as a set against the globe's face, not against the page. */
+  --goods-machinery: #2a78d6;
+  --goods-mineral: #eb6834;
+  --goods-vehicles: #1baf7a;
+  --goods-other: #8e8a7f;
+
   /* Gold darkens on light stock so it reads as ink, not highlighter. */
   --gold: #8a6a12;
   --gold-bright: #b08f28;
@@ -146,6 +158,13 @@
   --ink-4: #605d55;
   --rule: #262523;
   --rule-strong: #3d3b36;
+
+  /* The same three hues re-stepped for the dark globe face — chosen for that
+     band and validated against it, not flipped or lightened automatically. */
+  --goods-machinery: #3987e5;
+  --goods-mineral: #d95926;
+  --goods-vehicles: #199e70;
+  --goods-other: #6f6c63;
 
   /* Inverted: gold brightens to hold contrast against black. */
   --gold: #e2b84f;

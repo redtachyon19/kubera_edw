@@ -60,3 +60,6 @@ dashboard_hub/hub/dist/
 .vscode/
 .claude/
 *.swp
+
+# Local Postgres cluster — the warehouse itself, never committed.
+data/pgdata/

@@ -126,8 +126,8 @@
           "module": "trade",
           "status": "stub",
           "kind": "native",
-          "blurb": "Bilateral flows from World Bank WITS — who sells to whom, which way the balance runs, and what each economy trades.",
-          "source": "World Bank, WITS and Yahoo — rendered natively by the hub",
+          "blurb": "Seaborne trade on a rotatable globe: 2,065 ports, the 28 maritime chokepoints, and the flows between them drawn as ribbons — thickness for value, colour for cargo. Click any port, ribbon, chokepoint or country for its history since 2019.",
+          "source": "IMF PortWatch — AIS-derived port calls and tonnage for 2,065 ports and 28 chokepoints, plus port-to-country flows valued by industry. Built into the warehouse by dbt and republished weekly on Tuesdays; bilateral customs values from World Bank WITS.",
           "marts": [
             "fact_macro_indicators",
             "dim_country"

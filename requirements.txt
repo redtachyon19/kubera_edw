@@ -9,6 +9,9 @@ PyYAML>=6.0
 
 duckdb>=1.0
 psycopg2-binary>=2.9
+# Ships a real PostgreSQL 16 build as a wheel, so the warehouse runs locally
+# without Docker, Homebrew or an admin password. See scripts/local_postgres.py.
+pgserver>=0.1.4
 
 dbt-core>=1.11,<1.12
 dbt-duckdb>=1.8

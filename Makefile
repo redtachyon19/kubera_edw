@@ -3,7 +3,7 @@ SHELL := /bin/bash
 VENV  := .venv/bin
 DBT   := DBT_PROFILES_DIR=. ../$(VENV)/dbt
 
-.PHONY: help setup demo pipeline prod hub hub-dashboards orchestrate test lint verify screenshots universe company-universe backfill clean
+.PHONY: help setup demo db-up db-down db-status db-psql pipeline prod hub hub-dashboards orchestrate test lint verify screenshots universe company-universe backfill clean
 
 help:  ## Show this help
 	@echo "Kubera_EDW"
@@ -23,10 +23,22 @@ demo:  ## Build the warehouse from committed fixtures — NO API keys, NO networ
 	@echo "    Warehouse built at dbt/target/ci.duckdb with no external calls."
 	@echo "    For live data: add keys to .env, then 'make pipeline'."
 
-pipeline:  ## Full live pipeline into the local DuckDB warehouse (needs .env keys)
+db-up:  ## Start the local Postgres warehouse on localhost:5432
+	$(VENV)/python scripts/local_postgres.py start
+
+db-down:  ## Stop the local Postgres warehouse
+	$(VENV)/python scripts/local_postgres.py stop
+
+db-status:  ## Is the warehouse up, and how big is it
+	$(VENV)/python scripts/local_postgres.py status
+
+db-psql:  ## Open a psql shell on the warehouse
+	$(VENV)/python scripts/local_postgres.py psql
+
+pipeline:  ## Full live pipeline into the local Postgres warehouse (needs .env keys)
 	bash scripts/pipeline.sh dev
 
-prod:  ## Full live pipeline into hosted Postgres / Neon (needs .env credentials)
+prod:  ## Full live pipeline into a hosted Postgres server (needs .env credentials)
 	bash scripts/pipeline.sh prod
 
 hub:  ## Serve the research terminal at http://localhost:5173 (hub + every dashboard)

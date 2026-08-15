@@ -326,7 +326,10 @@ def _write_postgres(tables: dict[str, pd.DataFrame]) -> str:
 
 
 def load_all(target: str | None = None) -> dict[str, int]:
-    target = target or os.environ.get("LOAD_TARGET", "duckdb")
+    # Postgres is the warehouse; DuckDB survives only as the offline CI target,
+    # which sets LOAD_TARGET explicitly. Defaulting the other way meant a plain
+    # `python -m ingestion.load_raw` quietly filled a DuckDB file nothing reads.
+    target = target or os.environ.get("LOAD_TARGET", "postgres")
     tables = {
         "companies": parse_companies(),
         "sec_edgar_facts": parse_sec_facts(),

@@ -24,6 +24,11 @@ to Yahoo directly.
     GET /api/market/world-energy?period=1Y
     GET /api/market/world-country?iso3=JPN&period=5Y
     GET /api/market/world-trade?iso3=JPN
+    GET /api/market/trade-overview            -> ports, ribbons, chokepoints for the globe
+    GET /api/market/trade-port?portId=port1
+    GET /api/market/trade-ribbon?portId=port1&partner=CHN&direction=export
+    GET /api/market/trade-chokepoint?id=chokepoint1
+    GET /api/market/trade-country?iso3=JPN
     GET /api/market/weather
     GET /api/market/storms
     GET /api/market/fires
@@ -56,7 +61,15 @@ try:
 except ImportError:  # pragma: no cover — python-dotenv ships with the project
     pass
 
-from dashboard_hub.lib import filings, imagery, market_data, trade, weather, world  # noqa: E402
+from dashboard_hub.lib import (  # noqa: E402
+    filings,
+    imagery,
+    maritime,
+    market_data,
+    trade,
+    weather,
+    world,
+)
 
 PORT = 8600
 
@@ -174,6 +187,71 @@ class Handler(BaseHTTPRequestHandler):
                         "composition": trade.composition(iso3),
                     }
                 )
+                return
+
+            # ── The trade desk ──────────────────────────────────────────────
+            # Warehouse-backed, unlike world-trade above, which reads WITS live.
+            # One overview call carries every layer the globe can draw, for the
+            # same reason the weather routes do: switching layer is a click, not
+            # a reason to go back to the server.
+            if parsed.path == "/api/market/trade-overview":
+                payload = maritime.overview()
+                if not payload["ports"]:
+                    # An unbuilt warehouse is a specific, fixable state, and
+                    # saying so beats an empty globe with no explanation.
+                    self._send(
+                        {
+                            "error": "the trade marts are not built — run `make pipeline`",
+                            "ports": [],
+                            "ribbons": [],
+                            "chokepoints": [],
+                        },
+                        status=503,
+                    )
+                    return
+                self._send(payload)
+                return
+
+            if parsed.path == "/api/market/trade-port":
+                port_id = (params.get("portId") or [""])[0]
+                if not port_id:
+                    self._send({"error": "a portId is required"}, status=400)
+                    return
+                self._send(maritime.port(port_id))
+                return
+
+            if parsed.path == "/api/market/trade-ribbon":
+                self._send(
+                    maritime.ribbon(
+                        (params.get("portId") or [""])[0],
+                        (params.get("partner") or [""])[0],
+                        (params.get("direction") or ["export"])[0],
+                    )
+                )
+                return
+
+            if parsed.path == "/api/market/trade-chokepoint":
+                chokepoint_id = (params.get("id") or [""])[0]
+                if not chokepoint_id:
+                    self._send({"error": "a chokepoint id is required"}, status=400)
+                    return
+                self._send(maritime.chokepoint(chokepoint_id))
+                return
+
+            if parsed.path == "/api/market/trade-country":
+                iso3 = (params.get("iso3") or [""])[0]
+                if len(iso3) != 3:
+                    self._send({"error": "a three-letter country code is required"}, status=400)
+                    return
+                # Warehouse only, and deliberately so. This route once also
+                # returned WITS bilateral values beside the seaborne figures.
+                # The warehouse half answers in about 0.1s; the WITS half is a
+                # live third-party call that was observed hanging well past ten
+                # minutes, and it was holding the whole response open for two
+                # fields the trade panel never read. WITS still backs the
+                # governments lens through /api/market/world-country, which is
+                # where a reader actually asks for bilateral customs values.
+                self._send(maritime.country(iso3))
                 return
 
             # Every layer in one payload: the upstream call is the same size

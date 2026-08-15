@@ -8,6 +8,7 @@ from dagster import (
     AssetExecutionContext,
     AssetKey,
     AssetOut,
+    AssetSelection,
     Backoff,
     DefaultScheduleStatus,
     DefaultSensorStatus,
@@ -32,11 +33,14 @@ from dagster_dbt import DagsterDbtTranslator, DbtCliResource, DbtProject, dbt_as
 
 from ingestion import (
     backfill,
+    census_trade_client,
     fx_client,
     generate_seeds,
     gold_price_client,
     imf_client,
     load_raw,
+    load_trade,
+    portwatch_client,
     prices_client,
     sec_edgar_client,
     world_bank_client,
@@ -54,6 +58,11 @@ RAW_TABLES = [
     "market_prices",
     "imf_macro",
 ]
+
+# The trade desk's raw tables. Separate from RAW_TABLES because they are loaded
+# by a different path — streamed from Parquet rather than built as DataFrames —
+# and refresh on their own cadence rather than the daily one.
+TRADE_RAW_TABLES = list(load_trade.DATASETS)
 
 NETWORK_RETRY = RetryPolicy(max_retries=3, delay=30, backoff=Backoff.EXPONENTIAL)
 
@@ -129,6 +138,69 @@ def gold_price_source(context: AssetExecutionContext) -> None:
 def market_price_source(context: AssetExecutionContext) -> None:
     """Daily prices. Requires ALPHA_VANTAGE_API_KEY (Stooq is bot-gated)."""
     _run_extractor(context, prices_client, "prices")
+
+
+# ── Trade ────────────────────────────────────────────────────────────────────
+#
+# PortWatch is the spine of the trade desk and refreshes weekly, on Tuesdays
+# around 09:00 ET, despite every one of its tables being named "Daily". Census
+# lands monthly with the FT-900. Both extractors are incremental against what is
+# already on disk, so running them more often than their sources publish costs a
+# few requests and changes nothing — which is why they are safe to leave in the
+# full-refresh job as well as on their own schedules.
+
+
+@asset(group_name="extract", retry_policy=NETWORK_RETRY, compute_kind="python")
+def portwatch_source(context: AssetExecutionContext) -> None:
+    """IMF PortWatch: ports, chokepoints, daily activity, ribbons and disruptions.
+
+    A cold start is a ~1,500-request backfill across 92 months and takes the best
+    part of an hour; every run after that is a couple of dozen requests for the
+    months that have moved.
+    """
+    _run_extractor(context, portwatch_client, "portwatch")
+
+
+@asset(group_name="extract", retry_policy=NETWORK_RETRY, compute_kind="python")
+def census_trade_source(context: AssetExecutionContext) -> None:
+    """US port-level customs trade. Requires CENSUS_API_KEY.
+
+    Skips cleanly without the key rather than failing the run — the global
+    PortWatch layer does not depend on it, and the dbt models that read it
+    disable themselves on the same condition.
+    """
+    _run_extractor(context, census_trade_client, "census_trade")
+
+
+@multi_asset(
+    outs={name: AssetOut(key=AssetKey(name), is_required=False) for name in TRADE_RAW_TABLES},
+    deps=[portwatch_source, census_trade_source],
+    group_name="load",
+    compute_kind="python",
+)
+def trade_raw_tables(context: AssetExecutionContext):
+    """Stream the landed Parquet into the warehouse `raw` schema.
+
+    Split from `raw_tables` because port activity alone is 5.7M rows: it is
+    pushed through Postgres COPY straight from Parquet rather than assembled as
+    a DataFrame and inserted, which is the difference between a minute and an
+    hour.
+    """
+    counts = load_trade.load_all()
+    context.log.info("loaded %s", {k: v for k, v in counts.items() if v})
+
+    for table in TRADE_RAW_TABLES:
+        rows = counts.get(table, 0)
+        if not rows:
+            context.log.warning("%s: 0 rows (source not landed)", table)
+        yield Output(
+            value=None,
+            output_name=table,
+            metadata={
+                "rows": MetadataValue.int(rows),
+                "status": MetadataValue.text("loaded" if rows else "empty"),
+            },
+        )
 
 
 @asset(group_name="load", compute_kind="python")
@@ -211,6 +283,19 @@ kubera_job = define_asset_job(
     description="Full refresh: extract every source, load raw, then build and test the warehouse.",
 )
 
+# The trade desk on its own. Its sources publish weekly and monthly, so pulling
+# them through the daily job would be ~1,500 wasted requests a week against a
+# public IMF host for data that has not changed.
+trade_job = define_asset_job(
+    name="trade_refresh",
+    selection=(
+        AssetSelection.assets(portwatch_source, census_trade_source, trade_raw_tables).downstream()
+    ),
+    description=(
+        "Refresh ports, chokepoints, ribbons and disruptions, then rebuild the trade marts."
+    ),
+)
+
 
 # ── Backfill on request ──────────────────────────────────────────────────────
 #
@@ -272,6 +357,19 @@ daily_schedule = ScheduleDefinition(
     description="Daily warehouse refresh.",
 )
 
+# PortWatch publishes Tuesdays around 09:00 ET with a lag of several days. This
+# runs at 14:00 ET — late enough that a slipped publication has still landed,
+# early enough that the desk has the new week by the afternoon. Pinned to New
+# York rather than the host's timezone so it does not drift by an hour twice a
+# year relative to the source it is chasing.
+trade_schedule = ScheduleDefinition(
+    job=trade_job,
+    cron_schedule="0 14 * * 2",
+    execution_timezone="America/New_York",
+    default_status=DefaultScheduleStatus.STOPPED,
+    description="Weekly trade refresh, timed to PortWatch's Tuesday publication.",
+)
+
 defs = Definitions(
     assets=[
         sec_edgar_source,
@@ -280,12 +378,15 @@ defs = Definitions(
         imf_source,
         gold_price_source,
         market_price_source,
+        portwatch_source,
+        census_trade_source,
         dbt_seed_files,
         raw_tables,
+        trade_raw_tables,
         kubera_dbt_assets,
     ],
-    jobs=[kubera_job, backfill_job],
-    schedules=[daily_schedule],
+    jobs=[kubera_job, trade_job, backfill_job],
+    schedules=[daily_schedule, trade_schedule],
     sensors=[kubera_run_failure_sensor, backfill_request_sensor],
     resources={
         "dbt": DbtCliResource(

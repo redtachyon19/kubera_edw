@@ -1,0 +1,212 @@
+country_iso3,country_iso2,country_name,wb_region,income_level,capital_city,latitude,longitude,loaded_at,source_file
+ABW,AW,Aruba,Latin America & Caribbean,High income,Oranjestad,12.5167,-70.0167,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+AFG,AF,Afghanistan,"Middle East, North Africa, Afghanistan & Pakistan",Low income,Kabul,34.5228,69.1761,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+AGO,AO,Angola,Sub-Saharan Africa,Lower middle income,Luanda,-8.81155,13.242,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+ALB,AL,Albania,Europe & Central Asia,Upper middle income,Tirane,41.3317,19.8172,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+AND,AD,Andorra,Europe & Central Asia,High income,Andorra la Vella,42.5075,1.5218,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+ARE,AE,United Arab Emirates,"Middle East, North Africa, Afghanistan & Pakistan",High income,Abu Dhabi,24.4764,54.3705,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+ARG,AR,Argentina,Latin America & Caribbean,Upper middle income,Buenos Aires,-34.6118,-58.4173,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+ARM,AM,Armenia,Europe & Central Asia,Upper middle income,Yerevan,40.1596,44.509,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+ASM,AS,American Samoa,East Asia & Pacific,High income,Pago Pago,-14.2846,-170.691,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+ATG,AG,Antigua and Barbuda,Latin America & Caribbean,High income,Saint John's,17.1175,-61.8456,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+AUS,AU,Australia,East Asia & Pacific,High income,Canberra,-35.282,149.129,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+AUT,AT,Austria,Europe & Central Asia,High income,Vienna,48.2201,16.3798,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+AZE,AZ,Azerbaijan,Europe & Central Asia,Upper middle income,Baku,40.3834,49.8932,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+BDI,BI,Burundi,Sub-Saharan Africa,Low income,Bujumbura,-3.3784,29.3639,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+BEL,BE,Belgium,Europe & Central Asia,High income,Brussels,50.8371,4.36761,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+BEN,BJ,Benin,Sub-Saharan Africa,Lower middle income,Porto-Novo,6.4779,2.6323,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+BFA,BF,Burkina Faso,Sub-Saharan Africa,Low income,Ouagadougou,12.3605,-1.53395,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+BGD,BD,Bangladesh,South Asia,Lower middle income,Dhaka,23.7055,90.4113,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+BGR,BG,Bulgaria,Europe & Central Asia,High income,Sofia,42.7105,23.3238,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+BHR,BH,Bahrain,"Middle East, North Africa, Afghanistan & Pakistan",High income,Manama,26.1921,50.5354,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+BHS,BS,"Bahamas, The",Latin America & Caribbean,High income,Nassau,25.0661,-77.339,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+BIH,BA,Bosnia and Herzegovina,Europe & Central Asia,Upper middle income,Sarajevo,43.8607,18.4214,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+BLR,BY,Belarus,Europe & Central Asia,Upper middle income,Minsk,53.9678,27.5766,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+BLZ,BZ,Belize,Latin America & Caribbean,Upper middle income,Belmopan,17.2534,-88.7713,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+BMU,BM,Bermuda,North America,High income,Hamilton,32.3293,-64.706,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+BOL,BO,Bolivia,Latin America & Caribbean,Lower middle income,La Paz,-13.9908,-66.1936,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+BRA,BR,Brazil,Latin America & Caribbean,Upper middle income,Brasilia,-15.7801,-47.9292,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+BRB,BB,Barbados,Latin America & Caribbean,High income,Bridgetown,13.0935,-59.6105,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+BRN,BN,Brunei Darussalam,East Asia & Pacific,High income,Bandar Seri Begawan,4.94199,114.946,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+BTN,BT,Bhutan,South Asia,Lower middle income,Thimphu,27.5768,89.6177,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+BWA,BW,Botswana,Sub-Saharan Africa,Upper middle income,Gaborone,-24.6544,25.9201,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+CAF,CF,Central African Republic,Sub-Saharan Africa,Low income,Bangui,5.63056,21.6407,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+CAN,CA,Canada,North America,High income,Ottawa,45.4215,-75.6919,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+CHE,CH,Switzerland,Europe & Central Asia,High income,Bern,46.948,7.44821,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+CHL,CL,Chile,Latin America & Caribbean,High income,Santiago,-33.475,-70.6475,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+CHN,CN,China,East Asia & Pacific,Upper middle income,Beijing,40.0495,116.286,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+CIV,CI,Cote d'Ivoire,Sub-Saharan Africa,Lower middle income,Yamoussoukro,5.332,-4.0305,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+CMR,CM,Cameroon,Sub-Saharan Africa,Lower middle income,Yaounde,3.8721,11.5174,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+COD,CD,"Congo, Dem. Rep.",Sub-Saharan Africa,Low income,Kinshasa,-4.325,15.3222,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+COG,CG,"Congo, Rep.",Sub-Saharan Africa,Lower middle income,Brazzaville,-4.2767,15.2662,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+COL,CO,Colombia,Latin America & Caribbean,Upper middle income,Bogota,4.60987,-74.082,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+COM,KM,Comoros,Sub-Saharan Africa,Lower middle income,Moroni,-11.6986,43.2418,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+CPV,CV,Cabo Verde,Sub-Saharan Africa,Upper middle income,Praia,14.9218,-23.5087,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+CRI,CR,Costa Rica,Latin America & Caribbean,High income,San Jose,9.63701,-84.0089,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+CUB,CU,Cuba,Latin America & Caribbean,Upper middle income,Havana,23.1333,-82.3667,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+CYM,KY,Cayman Islands,Latin America & Caribbean,High income,George Town,19.3022,-81.3857,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+CYP,CY,Cyprus,Europe & Central Asia,High income,Nicosia,35.1676,33.3736,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+CZE,CZ,Czechia,Europe & Central Asia,High income,Prague,50.0878,14.4205,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+DEU,DE,Germany,Europe & Central Asia,High income,Berlin,52.5235,13.4115,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+DJI,DJ,Djibouti,"Middle East, North Africa, Afghanistan & Pakistan",Lower middle income,Djibouti,11.5806,43.1425,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+DMA,DM,Dominica,Latin America & Caribbean,Upper middle income,Roseau,15.2976,-61.39,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+DNK,DK,Denmark,Europe & Central Asia,High income,Copenhagen,55.6763,12.5681,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+DOM,DO,Dominican Republic,Latin America & Caribbean,Upper middle income,Santo Domingo,18.479,-69.8908,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+DZA,DZ,Algeria,"Middle East, North Africa, Afghanistan & Pakistan",Upper middle income,Algiers,36.7397,3.05097,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+ECU,EC,Ecuador,Latin America & Caribbean,Upper middle income,Quito,-0.229498,-78.5243,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+EGY,EG,"Egypt, Arab Rep.","Middle East, North Africa, Afghanistan & Pakistan",Lower middle income,Cairo,30.0982,31.2461,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+ERI,ER,Eritrea,Sub-Saharan Africa,Low income,Asmara,15.3315,38.9183,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+ESP,ES,Spain,Europe & Central Asia,High income,Madrid,40.4167,-3.70327,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+EST,EE,Estonia,Europe & Central Asia,High income,Tallinn,59.4392,24.7586,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+ETH,ET,Ethiopia,Sub-Saharan Africa,Low income,Addis Ababa,9.02274,38.7468,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+FIN,FI,Finland,Europe & Central Asia,High income,Helsinki,60.1608,24.9525,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+FJI,FJ,Fiji,East Asia & Pacific,Upper middle income,Suva,-18.1149,178.399,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+FRA,FR,France,Europe & Central Asia,High income,Paris,48.8566,2.35097,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+FRO,FO,Faroe Islands,Europe & Central Asia,High income,Torshavn,61.8926,-6.91181,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+FSM,FM,"Micronesia, Fed. Sts.",East Asia & Pacific,Upper middle income,Palikir,6.91771,158.185,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+GAB,GA,Gabon,Sub-Saharan Africa,Upper middle income,Libreville,0.38832,9.45162,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+GBR,GB,United Kingdom,Europe & Central Asia,High income,London,51.5002,-0.126236,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+GEO,GE,Georgia,Europe & Central Asia,Upper middle income,Tbilisi,41.71,44.793,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+GHA,GH,Ghana,Sub-Saharan Africa,Lower middle income,Accra,5.57045,-0.20795,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+GIN,GN,Guinea,Sub-Saharan Africa,Lower middle income,Conakry,9.51667,-13.7,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+GMB,GM,"Gambia, The",Sub-Saharan Africa,Low income,Banjul,13.4495,-16.5885,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+GNB,GW,Guinea-Bissau,Sub-Saharan Africa,Low income,Bissau,11.8037,-15.1804,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+GNQ,GQ,Equatorial Guinea,Sub-Saharan Africa,Upper middle income,Malabo,3.7523,8.7741,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+GRC,GR,Greece,Europe & Central Asia,High income,Athens,37.9792,23.7166,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+GRD,GD,Grenada,Latin America & Caribbean,Upper middle income,Saint George's,12.0653,-61.7449,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+GRL,GL,Greenland,Europe & Central Asia,High income,Nuuk,64.1836,-51.7214,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+GTM,GT,Guatemala,Latin America & Caribbean,Upper middle income,Guatemala City,14.6248,-90.5328,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+GUM,GU,Guam,East Asia & Pacific,High income,Agana,13.4443,144.794,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+GUY,GY,Guyana,Latin America & Caribbean,High income,Georgetown,6.80461,-58.1548,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+HKG,HK,"Hong Kong SAR, China",East Asia & Pacific,High income,,22.3964,114.109,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+HND,HN,Honduras,Latin America & Caribbean,Lower middle income,Tegucigalpa,15.1333,-87.4667,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+HRV,HR,Croatia,Europe & Central Asia,High income,Zagreb,45.8069,15.9614,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+HTI,HT,Haiti,Latin America & Caribbean,Lower middle income,Port-au-Prince,18.5392,-72.3288,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+HUN,HU,Hungary,Europe & Central Asia,High income,Budapest,47.4984,19.0408,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+IDN,ID,Indonesia,East Asia & Pacific,Upper middle income,Jakarta,-6.19752,106.83,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+IMN,IM,Isle of Man,Europe & Central Asia,High income,Douglas,54.1509,-4.47928,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+IND,IN,India,South Asia,Lower middle income,New Delhi,28.6353,77.225,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+IRL,IE,Ireland,Europe & Central Asia,High income,Dublin,53.3441,-6.26749,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+IRN,IR,"Iran, Islamic Rep.","Middle East, North Africa, Afghanistan & Pakistan",Upper middle income,Tehran,35.6878,51.4447,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+IRQ,IQ,Iraq,"Middle East, North Africa, Afghanistan & Pakistan",Upper middle income,Baghdad,33.3302,44.394,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+ISL,IS,Iceland,Europe & Central Asia,High income,Reykjavik,64.1353,-21.8952,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+ISR,IL,Israel,"Middle East, North Africa, Afghanistan & Pakistan",High income,,31.7717,35.2035,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+ITA,IT,Italy,Europe & Central Asia,High income,Rome,41.8955,12.4823,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+JAM,JM,Jamaica,Latin America & Caribbean,Upper middle income,Kingston,17.9927,-76.792,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+JOR,JO,Jordan,"Middle East, North Africa, Afghanistan & Pakistan",Upper middle income,Amman,31.9497,35.9263,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+JPN,JP,Japan,East Asia & Pacific,High income,Tokyo,35.67,139.77,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+KAZ,KZ,Kazakhstan,Europe & Central Asia,Upper middle income,Astana,51.1879,71.4382,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+KEN,KE,Kenya,Sub-Saharan Africa,Lower middle income,Nairobi,-1.27975,36.8126,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+KGZ,KG,Kyrgyz Republic,Europe & Central Asia,Lower middle income,Bishkek,42.8851,74.6057,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+KHM,KH,Cambodia,East Asia & Pacific,Lower middle income,Phnom Penh,11.5556,104.874,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+KIR,KI,Kiribati,East Asia & Pacific,Lower middle income,Tarawa,1.32905,172.979,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+KNA,KN,St. Kitts and Nevis,Latin America & Caribbean,High income,Basseterre,17.3,-62.7309,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+KOR,KR,"Korea, Rep.",East Asia & Pacific,High income,Seoul,37.5323,126.957,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+KWT,KW,Kuwait,"Middle East, North Africa, Afghanistan & Pakistan",High income,Kuwait City,29.3721,47.9824,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+LAO,LA,Lao PDR,East Asia & Pacific,Lower middle income,Vientiane,18.5826,102.177,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+LBN,LB,Lebanon,"Middle East, North Africa, Afghanistan & Pakistan",Lower middle income,Beirut,33.8872,35.5134,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+LBR,LR,Liberia,Sub-Saharan Africa,Low income,Monrovia,6.30039,-10.7957,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+LBY,LY,Libya,"Middle East, North Africa, Afghanistan & Pakistan",Upper middle income,Tripoli,32.8578,13.1072,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+LCA,LC,St. Lucia,Latin America & Caribbean,Upper middle income,Castries,14,-60.9832,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+LIE,LI,Liechtenstein,Europe & Central Asia,High income,Vaduz,47.1411,9.52148,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+LKA,LK,Sri Lanka,South Asia,Upper middle income,Colombo,6.92148,79.8528,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+LSO,LS,Lesotho,Sub-Saharan Africa,Lower middle income,Maseru,-29.5208,27.7167,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+LTU,LT,Lithuania,Europe & Central Asia,High income,Vilnius,54.6896,25.2799,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+LUX,LU,Luxembourg,Europe & Central Asia,High income,Luxembourg,49.61,6.1296,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+LVA,LV,Latvia,Europe & Central Asia,High income,Riga,56.9465,24.1048,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+MAC,MO,"Macao SAR, China",East Asia & Pacific,High income,,22.1667,113.55,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+MAR,MA,Morocco,"Middle East, North Africa, Afghanistan & Pakistan",Lower middle income,Rabat,33.9905,-6.8704,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+MCO,MC,Monaco,Europe & Central Asia,High income,Monaco,43.7325,7.41891,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+MDA,MD,Moldova,Europe & Central Asia,Upper middle income,Chisinau,47.0167,28.8497,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+MDG,MG,Madagascar,Sub-Saharan Africa,Low income,Antananarivo,-20.4667,45.7167,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+MDV,MV,Maldives,South Asia,Upper middle income,Male,4.1742,73.5109,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+MEX,MX,Mexico,Latin America & Caribbean,Upper middle income,Mexico City,19.427,-99.1276,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+MHL,MH,Marshall Islands,East Asia & Pacific,Upper middle income,Majuro,7.11046,171.135,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+MKD,MK,North Macedonia,Europe & Central Asia,Upper middle income,Skopje,42.0024,21.4361,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+MLI,ML,Mali,Sub-Saharan Africa,Low income,Bamako,13.5667,-7.50034,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+MLT,MT,Malta,"Middle East, North Africa, Afghanistan & Pakistan",High income,Valletta,35.9042,14.5189,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+MMR,MM,Myanmar,East Asia & Pacific,Lower middle income,Naypyidaw,21.914,95.9562,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+MNE,ME,Montenegro,Europe & Central Asia,Upper middle income,Podgorica,42.4602,19.2595,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+MNG,MN,Mongolia,East Asia & Pacific,Upper middle income,Ulaanbaatar,47.9129,106.937,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+MNP,MP,Northern Mariana Islands,East Asia & Pacific,High income,Saipan,15.1935,145.765,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+MOZ,MZ,Mozambique,Sub-Saharan Africa,Low income,Maputo,-25.9664,32.5713,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+MRT,MR,Mauritania,Sub-Saharan Africa,Lower middle income,Nouakchott,18.2367,-15.9824,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+MUS,MU,Mauritius,Sub-Saharan Africa,Upper middle income,Port Louis,-20.1605,57.4977,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+MWI,MW,Malawi,Sub-Saharan Africa,Low income,Lilongwe,-13.9899,33.7703,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+MYS,MY,Malaysia,East Asia & Pacific,Upper middle income,Kuala Lumpur,3.12433,101.684,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+NAM,NA,Namibia,Sub-Saharan Africa,Lower middle income,Windhoek,-22.5648,17.0931,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+NCL,NC,New Caledonia,East Asia & Pacific,High income,Noum'ea,-22.2677,166.464,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+NER,NE,Niger,Sub-Saharan Africa,Low income,Niamey,13.514,2.1073,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+NGA,NG,Nigeria,Sub-Saharan Africa,Lower middle income,Abuja,9.05804,7.48906,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+NIC,NI,Nicaragua,Latin America & Caribbean,Lower middle income,Managua,12.1475,-86.2734,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+NLD,NL,Netherlands,Europe & Central Asia,High income,Amsterdam,52.3738,4.89095,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+NOR,NO,Norway,Europe & Central Asia,High income,Oslo,59.9138,10.7387,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+NPL,NP,Nepal,South Asia,Lower middle income,Kathmandu,27.6939,85.3157,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+NRU,NR,Naoero,East Asia & Pacific,High income,Yaren District,-0.5477,166.920867,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+NZL,NZ,New Zealand,East Asia & Pacific,High income,Wellington,-41.2865,174.776,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+OMN,OM,Oman,"Middle East, North Africa, Afghanistan & Pakistan",High income,Muscat,23.6105,58.5874,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+PAK,PK,Pakistan,"Middle East, North Africa, Afghanistan & Pakistan",Lower middle income,Islamabad,30.5167,72.8,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+PAN,PA,Panama,Latin America & Caribbean,High income,Panama City,8.99427,-79.5188,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+PER,PE,Peru,Latin America & Caribbean,Upper middle income,Lima,-12.0931,-77.0465,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+PHL,PH,Philippines,East Asia & Pacific,Upper middle income,Manila,14.5515,121.035,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+PLW,PW,Palau,East Asia & Pacific,High income,Koror,7.34194,134.479,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+PNG,PG,Papua New Guinea,East Asia & Pacific,Lower middle income,Port Moresby,-9.47357,147.194,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+POL,PL,Poland,Europe & Central Asia,High income,Warsaw,52.26,21.02,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+PRI,PR,Puerto Rico (US),Latin America & Caribbean,High income,San Juan,18.23,-66,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+PRK,KP,"Korea, Dem. People's Rep.",East Asia & Pacific,Low income,Pyongyang,39.0319,125.754,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+PRT,PT,Portugal,Europe & Central Asia,High income,Lisbon,38.7072,-9.13552,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+PRY,PY,Paraguay,Latin America & Caribbean,Upper middle income,Asuncion,-25.3005,-57.6362,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+PYF,PF,French Polynesia,East Asia & Pacific,High income,Papeete,-17.535,-149.57,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+QAT,QA,Qatar,"Middle East, North Africa, Afghanistan & Pakistan",High income,Doha,25.2948,51.5082,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+ROU,RO,Romania,Europe & Central Asia,High income,Bucharest,44.4479,26.0979,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+RUS,RU,Russian Federation,Europe & Central Asia,High income,Moscow,55.7558,37.6176,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+RWA,RW,Rwanda,Sub-Saharan Africa,Low income,Kigali,-1.95325,30.0587,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+SAU,SA,Saudi Arabia,"Middle East, North Africa, Afghanistan & Pakistan",High income,Riyadh,24.6748,46.6977,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+SDN,SD,Sudan,Sub-Saharan Africa,Low income,Khartoum,15.5932,32.5363,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+SEN,SN,Senegal,Sub-Saharan Africa,Lower middle income,Dakar,14.7247,-17.4734,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+SGP,SG,Singapore,East Asia & Pacific,High income,Singapore,1.28941,103.85,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+SLB,SB,Solomon Islands,East Asia & Pacific,Lower middle income,Honiara,-9.42676,159.949,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+SLE,SL,Sierra Leone,Sub-Saharan Africa,Low income,Freetown,8.4821,-13.2134,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+SLV,SV,El Salvador,Latin America & Caribbean,Upper middle income,San Salvador,13.7034,-89.2073,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+SMR,SM,San Marino,Europe & Central Asia,High income,San Marino,43.9322,12.4486,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+SOM,SO,"Somalia, Fed. Rep.",Sub-Saharan Africa,Low income,Mogadishu,2.07515,45.3254,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+SRB,RS,Serbia,Europe & Central Asia,Upper middle income,Belgrade,44.8024,20.4656,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+SSD,SS,South Sudan,Sub-Saharan Africa,Low income,Juba,4.85,31.6,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+STP,ST,Sao Tome and Principe,Sub-Saharan Africa,Lower middle income,Sao Tome,0.20618,6.6071,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+SUR,SR,Suriname,Latin America & Caribbean,Upper middle income,Paramaribo,5.8232,-55.1679,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+SVK,SK,Slovak Republic,Europe & Central Asia,High income,Bratislava,48.1484,17.1073,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+SVN,SI,Slovenia,Europe & Central Asia,High income,Ljubljana,46.0546,14.5044,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+SWE,SE,Sweden,Europe & Central Asia,High income,Stockholm,59.3327,18.0645,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+SWZ,SZ,Eswatini,Sub-Saharan Africa,Lower middle income,Mbabane,-26.5225,31.4659,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+SYC,SC,Seychelles,Sub-Saharan Africa,High income,Victoria,-4.6309,55.4466,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+SYR,SY,Syrian Arab Republic,"Middle East, North Africa, Afghanistan & Pakistan",Low income,Damascus,33.5146,36.3119,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+TCA,TC,Turks and Caicos Islands,Latin America & Caribbean,High income,Grand Turk,21.4602778,-71.141389,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+TCD,TD,Chad,Sub-Saharan Africa,Low income,N'Djamena,12.1048,15.0445,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+TGO,TG,Togo,Sub-Saharan Africa,Lower middle income,Lome,6.1228,1.2255,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+THA,TH,Thailand,East Asia & Pacific,Upper middle income,Bangkok,13.7308,100.521,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+TJK,TJ,Tajikistan,Europe & Central Asia,Lower middle income,Dushanbe,38.5878,68.7864,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+TKM,TM,Turkmenistan,Europe & Central Asia,Upper middle income,Ashgabat,37.9509,58.3794,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+TLS,TL,Timor-Leste,East Asia & Pacific,Lower middle income,Dili,-8.56667,125.567,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+TON,TO,Tonga,East Asia & Pacific,Upper middle income,Nuku'alofa,-21.136,-175.216,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+TTO,TT,Trinidad and Tobago,Latin America & Caribbean,High income,Port-of-Spain,10.6596,-61.4789,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+TUN,TN,Tunisia,"Middle East, North Africa, Afghanistan & Pakistan",Lower middle income,Tunis,36.7899,10.21,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+TUR,TR,Turkiye,Europe & Central Asia,Upper middle income,Ankara,39.7153,32.3606,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+TUV,TV,Tuvalu,East Asia & Pacific,Upper middle income,Funafuti,-8.6314877,179.089567,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+TZA,TZ,Tanzania,Sub-Saharan Africa,Lower middle income,Dodoma,-6.17486,35.7382,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+UGA,UG,Uganda,Sub-Saharan Africa,Low income,Kampala,0.314269,32.5729,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+UKR,UA,Ukraine,Europe & Central Asia,Upper middle income,Kiev,50.4536,30.5038,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+URY,UY,Uruguay,Latin America & Caribbean,High income,Montevideo,-34.8941,-56.0675,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+USA,US,United States,North America,High income,Washington D.C.,38.8895,-77.032,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+UZB,UZ,Uzbekistan,Europe & Central Asia,Lower middle income,Tashkent,41.3052,69.269,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+VCT,VC,St. Vincent and the Grenadines,Latin America & Caribbean,Upper middle income,Kingstown,13.2035,-61.2653,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+VEN,VE,"Venezuela, RB",Latin America & Caribbean,Lower middle income,Caracas,9.08165,-69.8371,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+VGB,VG,British Virgin Islands,Latin America & Caribbean,High income,Road Town,18.431389,-64.623056,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+VIR,VI,Virgin Islands (U.S.),Latin America & Caribbean,High income,Charlotte Amalie,18.3358,-64.8963,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+VNM,VN,Viet Nam,East Asia & Pacific,Upper middle income,Hanoi,21.0069,105.825,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+VUT,VU,Vanuatu,East Asia & Pacific,Lower middle income,Port-Vila,-17.7404,168.321,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+WSM,WS,Samoa,East Asia & Pacific,Upper middle income,Apia,-13.8314,-171.752,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+XKX,XK,Kosovo,Europe & Central Asia,Upper middle income,Pristina,42.565,20.926,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+YEM,YE,"Yemen, Rep.","Middle East, North Africa, Afghanistan & Pakistan",Low income,Sana'a,15.352,44.2075,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+ZAF,ZA,South Africa,Sub-Saharan Africa,Upper middle income,Pretoria,-25.746,28.1871,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+ZMB,ZM,Zambia,Sub-Saharan Africa,Lower middle income,Lusaka,-15.3982,28.2937,2026-08-03T19:56:53.662859+00:00,countries_20260803.json
+ZWE,ZW,Zimbabwe,Sub-Saharan Africa,Lower middle income,Harare,-17.8312,31.0672,2026-08-03T19:56:53.662859+00:00,countries_20260803.json

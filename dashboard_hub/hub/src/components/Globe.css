@@ -75,6 +75,49 @@
   stroke-width: 0.9;
 }
 
+/* Trade ribbons. Drawn as open strokes over the sphere, with round caps so an
+   arc that runs off behind the limb ends cleanly rather than in a cut edge.
+
+   Deliberately translucent: on a busy route map a hundred arcs cross the same
+   ocean, and opaque lines would stack into a solid mass where the traffic is
+   densest — which is precisely where the reader is looking. Alpha makes overlap
+   read as density, which is the same thing the thickness is already saying. */
+.globe__ribbon-line {
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-opacity: 0.55;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+  transition: stroke-opacity 120ms ease, stroke-width 120ms ease;
+}
+
+/* A flow with no dominant commodity. Drawn thinner in tone rather than given a
+   colour it has not earned. */
+.globe__ribbon.is-mixed .globe__ribbon-line {
+  stroke: var(--ink-4);
+  stroke-opacity: 0.34;
+  stroke-dasharray: 5 3;
+}
+
+.globe__ribbon.is-active .globe__ribbon-line {
+  stroke-opacity: 1;
+}
+
+/* Invisible, and the only part of a ribbon the pointer can actually hit. */
+.globe__ribbon-hit {
+  fill: none;
+  stroke: transparent;
+  stroke-linecap: round;
+  cursor: pointer;
+}
+
+/* When one ribbon is under the cursor, the rest step back so a single route can
+   be followed across a crowded ocean. */
+.globe__ribbons:hover .globe__ribbon:not(.is-active) .globe__ribbon-line {
+  stroke-opacity: 0.16;
+}
+
 .globe__dot {
   stroke: var(--paper);
   stroke-width: 0.75;
@@ -185,7 +228,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .globe__dot {
+  .globe__dot,
+  .globe__ribbon-line {
     transition: none;
   }
 }

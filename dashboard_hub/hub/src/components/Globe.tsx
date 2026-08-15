@@ -3,9 +3,15 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import LAND from './land.json';
 import './Globe.css';
 
-/** One country on the globe. Anything without a value is drawn as a bare fix. */
+/**
+ * One place on the globe. Anything without a value is drawn as a bare fix.
+ *
+ * `id` rather than `iso3` because this layer is no longer only countries: the
+ * trade desk draws ports and chokepoints through it, which have their own
+ * identifiers. Callers that plot countries still pass an ISO3 and get it back.
+ */
 export interface GlobePoint {
-  iso3: string;
+  id: string;
   name: string;
   lat: number;
   lon: number;
@@ -41,6 +47,30 @@ export interface GlobeMark {
   heading: number | null;
 }
 
+/**
+ * A trade flow drawn as an arc between two places.
+ *
+ * Its own layer for the same reason marks are: a ribbon is not a value *at* a
+ * country, it is a relationship *between* two, and it has two endpoints where
+ * every other thing on this globe has one.
+ */
+export interface GlobeRibbon {
+  id: string;
+  fromLat: number;
+  fromLon: number;
+  toLat: number;
+  toLon: number;
+  /** 0–1. Drives stroke width — the whole point of a ribbon is comparative bulk. */
+  weight: number;
+  /**
+   * Goods colour, or null when the flow is too mixed for one to be honest.
+   * Null draws neutral rather than picking the nominal winner.
+   */
+  colour: string | null;
+  label: string;
+  detail: string;
+}
+
 /** Which two colours the ramp runs between. */
 export interface GlobePalette {
   low: string;
@@ -59,7 +89,7 @@ interface Props {
   /** True when a high value is a good thing, which decides which end is which. */
   higherIsBetter: boolean;
   selected: string | null;
-  onSelect: (iso3: string | null) => void;
+  onSelect: (id: string | null) => void;
   /** Printed under the readout, e.g. "CPI inflation, 2025". */
   caption: string;
   /**
@@ -69,6 +99,11 @@ interface Props {
   palette?: GlobePalette;
   /** Systems drawn over the countries. */
   marks?: GlobeMark[];
+  /** Trade flows drawn as arcs above the surface. */
+  ribbons?: GlobeRibbon[];
+  /** Which ribbon is pinned, if any. */
+  selectedRibbon?: string | null;
+  onSelectRibbon?: (id: string | null) => void;
   /** Idle text under the readout, when nothing is hovered or pinned. */
   hint?: string;
 }
@@ -136,9 +171,12 @@ function densify(ring: Ring): Ring {
 
 const COASTS: Ring[] = (LAND as Ring[]).map(densify);
 
-// Spin slowly until someone takes hold of it, then stop and stay where they left
-// it. An unattended globe that never moves reads as a picture; one that keeps
-// spinning under the cursor is a nuisance.
+// Spin slowly while nobody is looking at it, and stop the moment a cursor
+// arrives — not only once it is dragged. An unattended globe that never moves
+// reads as a picture, but one that keeps turning under the pointer drags its
+// targets out from under the click, and a ribbon you were about to open sails
+// away mid-reach. It resumes from wherever it was left as soon as the cursor
+// goes.
 const IDLE_SPIN = 0.055;
 const DRAG_SCALE = 0.32;
 const MAX_TILT = 78;
@@ -160,6 +198,110 @@ function project(lat: number, lon: number, rotation: Rotation) {
 
   return { x: CENTRE + x * R, y: CENTRE - y * R, z };
 }
+
+/**
+ * The same projection for a point held `altitude` above the surface.
+ *
+ * Ribbons are flown above the globe rather than painted onto it. An arc lying on
+ * the sphere would be fighting the coastlines for the same pixels and would
+ * disappear the instant it crossed a marker; lifted, it reads as a flight over
+ * the surface, which is also what it depicts.
+ *
+ * That lift changes what "hidden" means. A surface point is hidden whenever it
+ * faces away, but a raised point behind the horizon can still be visible over
+ * the top of the globe — which is exactly how a long route should look as it
+ * goes round the back. The occlusion test is therefore the real one: the point
+ * is blocked only if it is behind the centre plane *and* its projected position
+ * falls inside the disc of the sphere.
+ */
+function projectAloft(lat: number, lon: number, rotation: Rotation, altitude: number) {
+  const phi = lat * RAD;
+  const lambda = (lon + rotation.lon) * RAD;
+  const phi0 = rotation.lat * RAD;
+
+  const cosPhi = Math.cos(phi);
+  const ux = cosPhi * Math.sin(lambda);
+  const uy = Math.cos(phi0) * Math.sin(phi) - Math.sin(phi0) * cosPhi * Math.cos(lambda);
+  const uz = Math.sin(phi0) * Math.sin(phi) + Math.cos(phi0) * cosPhi * Math.cos(lambda);
+
+  const radius = 1 + altitude;
+  const x = ux * radius;
+  const y = uy * radius;
+  const z = uz * radius;
+
+  return {
+    x: CENTRE + x * R,
+    y: CENTRE - y * R,
+    z,
+    hidden: z < 0 && Math.sqrt(x * x + y * y) < 1,
+  };
+}
+
+// ── Great circles ────────────────────────────────────────────────────────────
+
+/** Geographic lat/lon to a unit vector in the earth-fixed frame. */
+function toVector(lat: number, lon: number): [number, number, number] {
+  const phi = lat * RAD;
+  const lambda = lon * RAD;
+  const cosPhi = Math.cos(phi);
+  return [cosPhi * Math.cos(lambda), cosPhi * Math.sin(lambda), Math.sin(phi)];
+}
+
+/**
+ * The great-circle path between two points, as `[lat, lon]` samples.
+ *
+ * Spherical linear interpolation, so the result is the actual shortest path over
+ * the sphere rather than a straight line in lat/lon — which on any route with
+ * real east-west extent is a visibly different and wrong curve, and which would
+ * also cross the antimeridian as a seam.
+ *
+ * Sampling is proportional to the arc's length: a short hop needs a handful of
+ * points and a trans-Pacific run needs many, and spending the same on both is
+ * either coarse at one end or wasteful at the other. These are computed in the
+ * earth-fixed frame, so they do not change as the globe turns and are built once
+ * per ribbon rather than once per frame.
+ */
+function greatCircle(
+  fromLat: number,
+  fromLon: number,
+  toLat: number,
+  toLon: number,
+): { points: [number, number][]; span: number } {
+  const a = toVector(fromLat, fromLon);
+  const b = toVector(toLat, toLon);
+
+  const dot = Math.max(-1, Math.min(1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2]));
+  const omega = Math.acos(dot);
+
+  // Coincident endpoints — a port trading with its own country's centroid, or a
+  // rounding collision. There is no arc to draw.
+  if (omega < 1e-6) return { points: [], span: 0 };
+
+  const steps = Math.max(12, Math.min(96, Math.round((omega / Math.PI) * 96)));
+  const sinOmega = Math.sin(omega);
+  const points: [number, number][] = [];
+
+  for (let i = 0; i <= steps; i += 1) {
+    const t = i / steps;
+    const wa = Math.sin((1 - t) * omega) / sinOmega;
+    const wb = Math.sin(t * omega) / sinOmega;
+
+    const x = a[0] * wa + b[0] * wb;
+    const y = a[1] * wa + b[1] * wb;
+    const z = a[2] * wa + b[2] * wb;
+
+    points.push([Math.asin(Math.max(-1, Math.min(1, z))) / RAD, Math.atan2(y, x) / RAD]);
+  }
+
+  return { points, span: omega };
+}
+
+// How high a ribbon flies at its apex, as a fraction of the globe's radius. A
+// long route arcs higher than a short one — which is both how the eye expects
+// distance to read and what keeps a busy region from becoming a stack of
+// identical arcs at the same height.
+const RIBBON_LIFT = 0.055;
+const RIBBON_LIFT_MAX = 0.3;
 
 /** A meridian or parallel, clipped to the visible face. */
 function arc(
@@ -341,12 +483,17 @@ export default function Globe({
   caption,
   palette = DIRECTION,
   marks,
+  ribbons,
+  selectedRibbon = null,
+  onSelectRibbon,
   hint = 'Drag to rotate · click a country to pin it',
 }: Props) {
   const [rotation, setRotation] = useState<Rotation>({ lon: -10, lat: 18 });
   const [hovered, setHovered] = useState<string | null>(null);
   const [hoveredMark, setHoveredMark] = useState<string | null>(null);
+  const [hoveredRibbon, setHoveredRibbon] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
+  const [pointerOver, setPointerOver] = useState(false);
   const frame = useRef<number>(0);
   const last = useRef<{ x: number; y: number } | null>(null);
   const moved = useRef(false);
@@ -355,7 +502,7 @@ export default function Globe({
   // it shares a clock with the projection — the markers and the graticule have
   // to move as one thing.
   useEffect(() => {
-    if (dragging) return undefined;
+    if (dragging || pointerOver) return undefined;
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return undefined;
     let previous = performance.now();
     const tick = (now: number) => {
@@ -366,7 +513,7 @@ export default function Globe({
     };
     frame.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame.current);
-  }, [dragging]);
+  }, [dragging, pointerOver]);
 
   function onPointerDown(event: React.PointerEvent<SVGSVGElement>) {
     (event.target as Element).setPointerCapture?.(event.pointerId);
@@ -421,6 +568,69 @@ export default function Globe({
     [marks, rotation],
   );
 
+  // The arcs themselves, in earth-fixed coordinates. Deliberately keyed on
+  // `ribbons` alone and NOT on rotation: the spin runs at 60fps and re-slerping
+  // three hundred arcs on every frame is the one thing here that would actually
+  // drop frames. Only the projection below is per-frame, and that is arithmetic.
+  const arcs = useMemo(
+    () =>
+      (ribbons ?? [])
+        .map((ribbon) => {
+          const { points: path, span } = greatCircle(
+            ribbon.fromLat,
+            ribbon.fromLon,
+            ribbon.toLat,
+            ribbon.toLon,
+          );
+          return {
+            ribbon,
+            path,
+            // Apex height scales with how far the route actually goes.
+            lift: Math.min(RIBBON_LIFT_MAX, RIBBON_LIFT + (span / Math.PI) * 0.16),
+          };
+        })
+        .filter((arc) => arc.path.length > 1),
+    [ribbons],
+  );
+
+  const drawnRibbons = useMemo(
+    () =>
+      arcs
+        .map(({ ribbon, path, lift }) => {
+          const segments: string[] = [];
+          let current: string[] = [];
+          let depth = -1;
+
+          path.forEach(([lat, lon], index) => {
+            // Zero at both ends and highest in the middle, so a ribbon leaves
+            // and meets the surface at its ports instead of hovering over them.
+            const altitude = lift * Math.sin((index / (path.length - 1)) * Math.PI);
+            const at = projectAloft(lat, lon, rotation, altitude);
+
+            if (at.hidden) {
+              // Behind the globe. Close the run rather than drawing a chord
+              // straight through the planet to wherever it re-emerges.
+              if (current.length > 1) segments.push(current.join(''));
+              current = [];
+              return;
+            }
+
+            depth = Math.max(depth, at.z);
+            current.push(
+              `${current.length ? 'L' : 'M'}${at.x.toFixed(1)} ${at.y.toFixed(1)}`,
+            );
+          });
+          if (current.length > 1) segments.push(current.join(''));
+
+          return { ribbon, d: segments.join(' '), depth };
+        })
+        .filter((arc) => arc.d)
+        // Painter's algorithm again: arcs nearer the reader are drawn last so a
+        // route over the Atlantic sits above one round the far side.
+        .sort((a, b) => a.depth - b.depth),
+    [arcs, rotation],
+  );
+
   const meridians = useMemo(
     () => [-150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150, 180].map((lon) => arc(rotation, lon, true)),
     [rotation],
@@ -432,11 +642,18 @@ export default function Globe({
   const coasts = useMemo(() => coastlines(rotation), [rotation]);
 
   const active = hovered ?? selected;
-  const readout = active ? points.find((p) => p.iso3 === active) ?? null : null;
+  const readout = active ? points.find((p) => p.id === active) ?? null : null;
   // A storm sits on top of the countries, so it wins the readout too — pointing
   // at a hurricane and being told the weather in the country behind it would be
   // the wrong answer to an unambiguous question.
   const markReadout = hoveredMark ? (marks ?? []).find((m) => m.id === hoveredMark) ?? null : null;
+  // A ribbon under the cursor is the most specific thing there — it is drawn
+  // over the ocean where nothing else competes, so pointing at one is always
+  // deliberate.
+  const activeRibbon = hoveredRibbon ?? selectedRibbon;
+  const ribbonReadout = activeRibbon
+    ? (ribbons ?? []).find((r) => r.id === activeRibbon) ?? null
+    : null;
 
   return (
     <div className={`globe${dragging ? ' is-dragging' : ''}`}>
@@ -448,7 +665,15 @@ export default function Globe({
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
-        onPointerLeave={onPointerUp}
+        // `pointerenter`/`pointerleave` rather than `over`/`out`: the latter
+        // pair fires again on every crossing between the globe's own children,
+        // so moving from a ribbon to a marker would read as leaving and the
+        // spin would stutter back on mid-gesture.
+        onPointerEnter={() => setPointerOver(true)}
+        onPointerLeave={() => {
+          setPointerOver(false);
+          onPointerUp();
+        }}
       >
         <defs>
           <radialGradient id="globe-face" cx="34%" cy="30%" r="78%">
@@ -474,6 +699,46 @@ export default function Globe({
 
         <circle cx={CENTRE} cy={CENTRE} r={R} className="globe__limb" />
 
+        {/* Under the port markers: the ribbon is the relationship, the marker is
+            the place, and a place should never be buried under its own traffic. */}
+        <g className="globe__ribbons">
+          {drawnRibbons.map(({ ribbon, d }) => {
+            const isActive = ribbon.id === (hoveredRibbon ?? selectedRibbon);
+            const width = 0.6 + Math.max(0, Math.min(1, ribbon.weight)) * 5.2;
+
+            return (
+              <g
+                key={ribbon.id}
+                className={`globe__ribbon${isActive ? ' is-active' : ''}${
+                  ribbon.colour ? '' : ' is-mixed'
+                }`}
+              >
+                {/* A 1px stroke is almost impossible to hit with a pointer. This
+                    invisible copy is what the cursor actually catches. */}
+                <path
+                  className="globe__ribbon-hit"
+                  d={d}
+                  strokeWidth={Math.max(9, width + 8)}
+                  onPointerEnter={() => setHoveredRibbon(ribbon.id)}
+                  onPointerLeave={() =>
+                    setHoveredRibbon((current) => (current === ribbon.id ? null : current))
+                  }
+                  onClick={() => {
+                    if (moved.current || !onSelectRibbon) return;
+                    onSelectRibbon(selectedRibbon === ribbon.id ? null : ribbon.id);
+                  }}
+                />
+                <path
+                  className="globe__ribbon-line"
+                  d={d}
+                  strokeWidth={isActive ? width + 1.4 : width}
+                  style={ribbon.colour ? { stroke: ribbon.colour } : undefined}
+                />
+              </g>
+            );
+          })}
+        </g>
+
         <g className="globe__points">
           {projected.map(({ point, x, y, z }) => {
             const has = point.value !== null;
@@ -482,11 +747,11 @@ export default function Globe({
             // to sell the curvature; z is already the cosine of that angle.
             const depth = 0.5 + 0.5 * z;
             const radius = (has ? 5.5 + Math.abs(t) * 5 : 3) * (0.72 + 0.28 * z);
-            const isActive = point.iso3 === active;
+            const isActive = point.id === active;
 
             return (
               <circle
-                key={point.iso3}
+                key={point.id}
                 cx={x}
                 cy={y}
                 r={isActive ? radius + 3 : radius}
@@ -499,11 +764,11 @@ export default function Globe({
                     : 'var(--globe-neutral)',
                   opacity: depth,
                 }}
-                onPointerEnter={() => setHovered(point.iso3)}
-                onPointerLeave={() => setHovered((h) => (h === point.iso3 ? null : h))}
+                onPointerEnter={() => setHovered(point.id)}
+                onPointerLeave={() => setHovered((h) => (h === point.id ? null : h))}
                 onClick={() => {
                   // A drag that ends over a marker is not a click on it.
-                  if (!moved.current) onSelect(selected === point.iso3 ? null : point.iso3);
+                  if (!moved.current) onSelect(selected === point.id ? null : point.id);
                 }}
               />
             );
@@ -566,7 +831,12 @@ export default function Globe({
       </svg>
 
       <div className="globe__readout" aria-live="polite">
-        {markReadout ? (
+        {ribbonReadout ? (
+          <>
+            <span className="globe__readout-name">{ribbonReadout.label}</span>
+            <span className="globe__readout-value">{ribbonReadout.detail}</span>
+          </>
+        ) : markReadout ? (
           <>
             <span className="globe__readout-name">{markReadout.label}</span>
             <span className="globe__readout-value">{markReadout.detail}</span>
