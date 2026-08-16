@@ -4,8 +4,11 @@ import Emblem from '../../components/Emblem';
 import Globe from '../../components/Globe';
 import type { GlobePoint, GlobeRibbon } from '../../components/Globe';
 import TimeChart from '../../components/TimeChart';
+import type { TimePoint } from '../../components/TimeChart';
 import { useFetch } from '../../hooks/useFetch';
 import {
+  FINE_COLOUR,
+  INDUSTRY,
   INDUSTRY_LEGEND,
   asOfLabel,
   count,
@@ -15,7 +18,10 @@ import {
   fetchPort,
   fetchRibbon,
   fetchTradeOverview,
+  fetchUsPort,
   industryColour,
+  industryGloss,
+  industryLabel,
   tons,
 } from './tradeApi';
 import type {
@@ -24,6 +30,7 @@ import type {
   PortDetail,
   RibbonDetail,
   TradeOverview,
+  UsPortCommodities,
 } from './tradeApi';
 import { move, usd } from './worldApi';
 import type { WorldCountry } from './worldApi';
@@ -38,9 +45,30 @@ const LAYER_LABEL: Record<Layer, string> = {
   chokepoints: 'Chokepoints',
 };
 
-/** What the ports layer colours by. */
-const PORT_METRICS = ['volume', 'change'] as const;
+/**
+ * What the ports layer measures by.
+ *
+ * Mass and money are different questions and they rank ports differently — a
+ * crude terminal outweighs a container hub and is worth a fraction of it — so
+ * both are offered rather than one standing in for "trade".
+ */
+const PORT_METRICS = ['mass', 'value', 'change'] as const;
 type PortMetric = (typeof PORT_METRICS)[number];
+
+const PORT_METRIC_LABEL: Record<PortMetric, string> = {
+  mass: 'Tonnage',
+  value: 'Value',
+  change: 'Change',
+};
+
+/** What the chokepoints layer measures by. */
+const CHOKE_METRICS = ['capacity', 'transits'] as const;
+type ChokeMetric = (typeof CHOKE_METRICS)[number];
+
+const CHOKE_METRIC_LABEL: Record<ChokeMetric, string> = {
+  capacity: 'Deadweight',
+  transits: 'Transits',
+};
 
 /** Volume is not a gain, so it gets a neutral ramp rather than the green/red one. */
 const VOLUME_PALETTE = { low: 'var(--ink-4)', high: 'var(--gold)' };
@@ -91,7 +119,8 @@ function volumeScale(value: number | null, widest: number): number | null {
  */
 export default function TradeLens({ countries }: { countries: WorldCountry[] }) {
   const [layer, setLayer] = useState<Layer>('flows');
-  const [portMetric, setPortMetric] = useState<PortMetric>('volume');
+  const [portMetric, setPortMetric] = useState<PortMetric>('mass');
+  const [chokeMetric, setChokeMetric] = useState<ChokeMetric>('capacity');
   const [selection, setSelection] = useState<Selection>(null);
 
   const desk = useFetch<TradeOverview>((signal) => fetchTradeOverview(signal), []);
@@ -114,6 +143,10 @@ export default function TradeLens({ countries }: { countries: WorldCountry[] }) 
     () => Math.max(...(data?.ports ?? []).map((p) => p.tons ?? 0), 1),
     [data],
   );
+  const richestPort = useMemo(
+    () => Math.max(...(data?.ports ?? []).map((p) => p.valueDaily ?? 0), 1),
+    [data],
+  );
 
   const ribbons: GlobeRibbon[] = useMemo(() => {
     if (layer !== 'flows' || !data) return [];
@@ -128,7 +161,9 @@ export default function TradeLens({ countries }: { countries: WorldCountry[] }) 
       label: `${r.portName} ${r.direction === 'outbound' ? '→' : '←'} ${r.partnerName}`,
       // The readout names the cargo in words, so identity never rests on the
       // stroke colour alone.
-      detail: `${usd(r.valueAnnual)} a year · ${r.industry ?? 'mixed cargo'}`,
+      detail: r.industry
+        ? `${usd(r.valueAnnual)} a year · ${industryLabel(r.industry)} (${INDUSTRY[r.industry]?.contains ?? ''})`
+        : `${usd(r.valueAnnual)} a year · mixed cargo, none dominant`,
     }));
   }, [layer, data, widestRibbon]);
 
@@ -141,11 +176,18 @@ export default function TradeLens({ countries }: { countries: WorldCountry[] }) 
         name: c.name,
         lat: c.lat,
         lon: c.lon,
-        value: c.capacityChangeYoY === null ? null : c.capacityChangeYoY * 100,
+        value:
+          chokeMetric === 'capacity'
+            ? c.capacityChangeYoY === null
+              ? null
+              : c.capacityChangeYoY * 100
+            : c.transitsChange === null
+              ? null
+              : c.transitsChange * 100,
         detail:
-          c.capacityChangeYoY === null
-            ? `${dwt(c.capacity)} over 90 days`
-            : `${dwt(c.capacity)} · ${move(c.capacityChangeYoY)} on a year ago`,
+          chokeMetric === 'capacity'
+            ? `${dwt(c.capacity)} · ${move(c.capacityChangeYoY)} on a year ago`
+            : `${count(c.transits)} transits · ${move(c.transitsChange)} on the quarter`,
       }));
     }
 
@@ -168,17 +210,21 @@ export default function TradeLens({ countries }: { countries: WorldCountry[] }) 
       lat: p.lat,
       lon: p.lon,
       value:
-        portMetric === 'volume'
+        portMetric === 'mass'
           ? volumeScale(p.tons, widestPort)
-          : p.change === null
-            ? null
-            : p.change * 100,
+          : portMetric === 'value'
+            ? volumeScale(p.valueDaily, richestPort)
+            : p.change === null
+              ? null
+              : p.change * 100,
       detail:
-        portMetric === 'volume'
-          ? `${tons(p.tons)} over 90 days · #${p.rank} worldwide`
-          : `${tons(p.tons)} · ${move(p.change)} on the prior quarter`,
+        portMetric === 'mass'
+          ? `${tons(p.tons)} over 90 days · #${p.rank} by weight`
+          : portMetric === 'value'
+            ? `${usd(p.valueAnnual)} a year · #${p.valueRank} by value`
+            : `${tons(p.tons)} · ${move(p.change)} on the prior quarter`,
     }));
-  }, [layer, data, portMetric, widestPort]);
+  }, [layer, data, portMetric, chokeMetric, widestPort, richestPort]);
 
   const onSelectPoint = useCallback(
     (id: string | null) => {
@@ -227,10 +273,14 @@ export default function TradeLens({ countries }: { countries: WorldCountry[] }) 
     layer === 'flows'
       ? `${data.ribbons.length} largest flows · thickness is value, colour is cargo`
       : layer === 'chokepoints'
-        ? 'Deadweight through each strait, against the same period a year earlier'
-        : portMetric === 'volume'
+        ? chokeMetric === 'capacity'
+          ? 'Deadweight through each strait, against the same period a year earlier'
+          : 'Vessels transiting each strait, against the previous quarter'
+        : portMetric === 'mass'
           ? 'Metric tons across the quay over the last 90 published days'
-          : 'Change against the previous 90 days';
+          : portMetric === 'value'
+            ? 'What that cargo is worth, summed from the trade links'
+            : 'Change against the previous 90 days';
 
   return (
     <div className="trade">
@@ -249,7 +299,7 @@ export default function TradeLens({ countries }: { countries: WorldCountry[] }) 
         </div>
 
         {layer === 'ports' && (
-          <div className="world__metrics" role="group" aria-label="Colour ports by">
+          <div className="world__metrics" role="group" aria-label="Measure ports by">
             {PORT_METRICS.map((option) => (
               <button
                 key={option}
@@ -257,10 +307,38 @@ export default function TradeLens({ countries }: { countries: WorldCountry[] }) 
                 className={portMetric === option ? 'is-on' : ''}
                 onClick={() => setPortMetric(option)}
               >
-                {option === 'volume' ? 'Volume' : 'Change'}
+                {PORT_METRIC_LABEL[option]}
               </button>
             ))}
           </div>
+        )}
+
+        {layer === 'chokepoints' && (
+          <div className="world__metrics" role="group" aria-label="Measure chokepoints by">
+            {CHOKE_METRICS.map((option) => (
+              <button
+                key={option}
+                type="button"
+                className={chokeMetric === option ? 'is-on' : ''}
+                onClick={() => setChokeMetric(option)}
+              >
+                {CHOKE_METRIC_LABEL[option]}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* No toggle on the flows layer, and a word about why rather than a
+            control that silently does nothing: PortWatch values a port-to-country
+            link in dollars only. The one dataset of its that carries tonnage is a
+            different grain and a different set of links, so switching onto it
+            would quietly change which flows are on screen. */}
+        {layer === 'flows' && (
+          <p className="trade__measure-note">
+          Valued in dollars — PortWatch publishes no tonnage per link, and groups cargo into 13 HS
+          sections, so fuels cannot be separated from ores here. A port’s tanker series does split
+          energy out, with history.
+        </p>
         )}
 
         <p className="trade__asof">
@@ -301,14 +379,23 @@ export default function TradeLens({ countries }: { countries: WorldCountry[] }) 
           {layer === 'flows' && (
             <ul className="trade__legend">
               {INDUSTRY_LEGEND.map((entry) => (
-                <li key={entry.name}>
+                <li key={entry.name} title={`${entry.chapters} · ${entry.contains}`}>
                   <span className="trade__swatch" style={{ background: entry.colour }} />
-                  {entry.name}
+                  <span className="trade__legendtext">
+                    {entry.label}
+                    {/* The HS names are opaque on their own — "Mineral Products"
+                        is where the world's crude oil is. The gloss is part of
+                        the label, not a tooltip nicety. */}
+                    <em>{entry.contains}</em>
+                  </span>
                 </li>
               ))}
-              <li>
+              <li title="No single cargo is a third or more of the flow">
                 <span className="trade__swatch is-mixed" />
-                No dominant cargo
+                <span className="trade__legendtext">
+                  No dominant cargo
+                  <em>a mixed service, too varied to colour honestly</em>
+                </span>
               </li>
             </ul>
           )}
@@ -317,6 +404,8 @@ export default function TradeLens({ countries }: { countries: WorldCountry[] }) 
         <RankingList
           data={data}
           layer={layer}
+          portMetric={portMetric}
+          chokeMetric={chokeMetric}
           selection={selection}
           onSelect={setSelection}
           countryName={countryName}
@@ -337,23 +426,36 @@ export default function TradeLens({ countries }: { countries: WorldCountry[] }) 
 function RankingList({
   data,
   layer,
+  portMetric,
+  chokeMetric,
   selection,
   onSelect,
   countryName,
 }: {
   data: TradeOverview;
   layer: Layer;
+  portMetric: PortMetric;
+  chokeMetric: ChokeMetric;
   selection: Selection;
   onSelect: (selection: Selection) => void;
   countryName: Record<string, string>;
 }) {
   if (layer === 'chokepoints') {
-    const widest = Math.max(...data.chokepoints.map((c) => c.capacity ?? 0), 1);
+    const byCapacity = chokeMetric === 'capacity';
+    const sized = [...data.chokepoints].sort(
+      (a, b) => (byCapacity ? (b.capacity ?? 0) - (a.capacity ?? 0) : (b.transits ?? 0) - (a.transits ?? 0)),
+    );
+    const widest = Math.max(
+      ...sized.map((c) => (byCapacity ? (c.capacity ?? 0) : (c.transits ?? 0))),
+      1,
+    );
     return (
       <aside className="trade__list">
-        <h4 className="cpanel__title">Chokepoints by deadweight · 90 days</h4>
+        <h4 className="cpanel__title">
+          Chokepoints by {byCapacity ? 'deadweight' : 'transits'} · 90 days
+        </h4>
         <ul className="trade__rows">
-          {data.chokepoints.map((c) => (
+          {sized.map((c) => (
             <li
               key={c.chokepointId}
               className={
@@ -367,12 +469,20 @@ function RankingList({
               <span className="trade__bar">
                 <span
                   className="trade__fill"
-                  style={{ width: `${((c.capacity ?? 0) / widest) * 100}%` }}
+                  style={{
+                    width: `${(((byCapacity ? c.capacity : c.transits) ?? 0) / widest) * 100}%`,
+                  }}
                 />
               </span>
-              <span className="trade__rowvalue">{dwt(c.capacity)}</span>
-              <span className={`trade__rowchange ${(c.capacityChangeYoY ?? 0) >= 0 ? 'up' : 'down'}`}>
-                {move(c.capacityChangeYoY)}
+              <span className="trade__rowvalue">
+                {byCapacity ? dwt(c.capacity) : count(c.transits)}
+              </span>
+              <span
+                className={`trade__rowchange ${
+                  ((byCapacity ? c.capacityChangeYoY : c.transitsChange) ?? 0) >= 0 ? 'up' : 'down'
+                }`}
+              >
+                {move(byCapacity ? c.capacityChangeYoY : c.transitsChange)}
               </span>
             </li>
           ))}
@@ -438,12 +548,21 @@ function RankingList({
     );
   }
 
-  const widest = Math.max(...data.ports.map((p) => p.tons ?? 0), 1);
+  // Ranked by whichever measure is selected. The two orders genuinely differ:
+  // by weight the list opens with bulk and crude terminals, by value with the
+  // container hubs.
+  const byValue = portMetric === 'value';
+  const size = (p: TradeOverview['ports'][number]) => (byValue ? p.valueDaily : p.tons) ?? 0;
+  const ranked = [...data.ports].sort((a, b) => size(b) - size(a));
+  const widest = Math.max(...ranked.map(size), 1);
+
   return (
     <aside className="trade__list">
-      <h4 className="cpanel__title">Busiest ports · 90 days</h4>
+      <h4 className="cpanel__title">
+        {byValue ? 'Most valuable ports' : 'Busiest ports'} · 90 days
+      </h4>
       <ul className="trade__rows">
-        {data.ports.slice(0, 40).map((p) => (
+        {ranked.slice(0, 40).map((p) => (
           <li
             key={p.portId}
             className={selection?.kind === 'port' && selection.id === p.portId ? 'is-pinned' : ''}
@@ -454,9 +573,11 @@ function RankingList({
               {p.name}
             </span>
             <span className="trade__bar">
-              <span className="trade__fill" style={{ width: `${((p.tons ?? 0) / widest) * 100}%` }} />
+              <span className="trade__fill" style={{ width: `${(size(p) / widest) * 100}%` }} />
             </span>
-            <span className="trade__rowvalue">{tons(p.tons)}</span>
+            <span className="trade__rowvalue">
+              {byValue ? usd(p.valueAnnual) : tons(p.tons)}
+            </span>
             <span className={`trade__rowchange ${(p.change ?? 0) >= 0 ? 'up' : 'down'}`}>
               {move(p.change)}
             </span>
@@ -464,8 +585,9 @@ function RankingList({
         ))}
       </ul>
       <p className="trade__note">
-        Tonnage is estimated from vessel draft, so it measures what the hulls carried rather than
-        what customs recorded.
+        {byValue
+          ? 'Value is summed from the trade links through each port, annualised. Tonnage and value rank ports differently — an oil terminal outweighs a container hub and is worth far less.'
+          : 'Tonnage is estimated from vessel draft, so it measures what the hulls carried rather than what customs recorded.'}
       </p>
     </aside>
   );
@@ -539,6 +661,43 @@ function PanelShell({
   );
 }
 
+/**
+ * The five vessel classes PortWatch splits tonnage by, and the colours they take.
+ *
+ * Reused from the cargo palette so a container series on a port's chart is the
+ * same blue as machinery on the globe, and dry bulk the same slate as minerals.
+ * These are hulls rather than commodities — a "container" is a box, not a
+ * cargo — but they are the only cargo breakdown with real history behind it, and
+ * they line up closely enough with the industries that one palette serves both.
+ */
+const VESSEL_CLASSES = [
+  {
+    key: 'Tanker — oil, fuels, gas',
+    field: 'tankerTons',
+    colour: 'var(--goods-mineral)',
+  },
+  {
+    key: 'Dry bulk — coal, ore, grain',
+    field: 'dryBulkTons',
+    colour: 'var(--goods-wood)',
+  },
+  {
+    key: 'Container — manufactured goods',
+    field: 'containerTons',
+    colour: 'var(--goods-machinery)',
+  },
+  {
+    key: 'General cargo — breakbulk, steel',
+    field: 'generalCargoTons',
+    colour: 'var(--goods-vegetable)',
+  },
+  { key: 'Ro-ro — vehicles', field: 'roroTons', colour: 'var(--goods-vehicles)' },
+] as const;
+
+/** How the composition chart reads: absolute tonnage, or share of the total. */
+const MIX_MODES = ['tonnage', 'share'] as const;
+type MixMode = (typeof MIX_MODES)[number];
+
 function PortPanel({
   portId,
   onClose,
@@ -551,7 +710,34 @@ function PortPanel({
   countryName: Record<string, string>;
 }) {
   const detail = useFetch<PortDetail>((signal) => fetchPort(portId, signal), [portId]);
+  const [mixMode, setMixMode] = useState<MixMode>('tonnage');
   const port = detail.data;
+
+  // Composition over time, from the vessel-class split. In `share` mode each
+  // week is normalised to 100%, which is what actually answers "did this port
+  // used to carry something else" — in absolute tonnage a shift in mix is
+  // swamped by the port simply growing.
+  const mix = useMemo(
+    () =>
+      (port?.history ?? []).map((week) => {
+        const row: TimePoint = { date: week.week };
+        const total = VESSEL_CLASSES.reduce(
+          (sum, c) => sum + ((week[c.field] as number | null) ?? 0),
+          0,
+        );
+        for (const c of VESSEL_CLASSES) {
+          const value = (week[c.field] as number | null) ?? null;
+          row[c.key] =
+            mixMode === 'share'
+              ? value === null || total <= 0
+                ? null
+                : (value / total) * 100
+              : value;
+        }
+        return row;
+      }),
+    [port, mixMode],
+  );
 
   if (detail.loading && !port) return <p className="world__loading">Opening the port…</p>;
   if (!port?.found) return <p className="world__loading">No record for this port.</p>;
@@ -578,7 +764,17 @@ function PortPanel({
       onClose={onClose}
     >
       <div className="trade__figures">
-        <Figure label="Tonnage · 90 days" value={tons(port.tons)} note={move(port.change)} tone={(port.change ?? 0) >= 0 ? 'up' : 'down'} />
+        <Figure
+          label="Tonnage · 90 days"
+          value={tons(port.tons)}
+          note={`${move(port.change)} · #${port.rank} by weight`}
+          tone={(port.change ?? 0) >= 0 ? 'up' : 'down'}
+        />
+        <Figure
+          label="Cargo value"
+          value={`${usd(port.valueAnnual)} / yr`}
+          note={`#${port.valueRank} by value`}
+        />
         <Figure label="Landed" value={tons(port.importTons)} />
         <Figure label="Loaded" value={tons(port.exportTons)} />
         <Figure label="Port calls" value={count(port.portCalls)} />
@@ -607,6 +803,48 @@ function PortPanel({
           height={200}
           caption="Weekly import plus export tonnage. The newest bar is a partial week — PortWatch publishes mid-week."
         />
+      )}
+
+      {mix.length > 1 && (
+        <section className="trade__mixchart">
+          <header className="trade__mixhead">
+            <h4 className="cpanel__title">What moves through here, over time</h4>
+            <div className="world__metrics" role="group" aria-label="Composition as">
+              {MIX_MODES.map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  className={mixMode === option ? 'is-on' : ''}
+                  onClick={() => setMixMode(option)}
+                >
+                  {option === 'tonnage' ? 'Tonnage' : 'Share'}
+                </button>
+              ))}
+            </div>
+          </header>
+
+          <TimeChart
+            points={mix}
+            lines={VESSEL_CLASSES.map((c) => ({ key: c.key, label: c.key }))}
+            format={(value) => (mixMode === 'share' ? `${value.toFixed(0)}%` : tons(value))}
+            height={240}
+            caption={
+              mixMode === 'share'
+                ? 'Each class as a share of the port’s weekly tonnage, so a change of mix shows even where the port itself grew or shrank.'
+                : 'Weekly tonnage by vessel class since 2019 — the cargo breakdown that has real history behind it.'
+            }
+          />
+
+          <p className="trade__note">
+            Split by hull type, which is what AIS can actually see — and it is the one place
+            <strong> energy separates cleanly</strong>: tankers are crude, refined fuels and gas,
+            apart from the coal and ore that ride in dry bulk. Worldwide that is 28% of seaborne
+            tonnage against dry bulk's 40%. The ribbons cannot make this split, because PortWatch
+            aggregates them to HS section and section 5 welds fuels, ores and stone into one
+            figure before publishing. The thirteen-industry view also has no past — this desk
+            began recording its own on {asOfLabel(port.asOf)} and will deepen from there.
+          </p>
+        </section>
       )}
 
       <div className="trade__cols">
@@ -664,6 +902,8 @@ function PortPanel({
           )}
         </div>
       </div>
+
+      {port.iso3 === 'USA' && <UsCustomsPanel portName={port.name} />}
 
       <button
         type="button"
@@ -731,22 +971,37 @@ function RibbonPanel({
         {flow.topIndustry && (
           <Figure
             label="Dominant cargo"
-            value={flow.topIndustry}
+            value={industryLabel(flow.topIndustry)}
             note={`${((flow.topIndustryShare ?? 0) * 100).toFixed(0)}% of the flow`}
           />
         )}
+        <Figure
+          label="Rank"
+          value={`#${flow.rank}`}
+          note={`worldwide · #${flow.rankInPort} through this port · #${flow.rankInCountry} for ${flow.portCountry}`}
+        />
       </div>
+
+      {flow.topIndustry && INDUSTRY[flow.topIndustry] && (
+        <p className="trade__industries">
+          <strong>{industryLabel(flow.topIndustry)}</strong> is {INDUSTRY[flow.topIndustry].chapters} —{' '}
+          {INDUSTRY[flow.topIndustry].contains}.
+        </p>
+      )}
 
       <h4 className="cpanel__title">What it carries</h4>
       <ul className="trade__mix">
         {flow.industries.map((industry) => (
           <li key={industry.name}>
-            <span className="trade__mixlabel">
+            <span className="trade__mixlabel" title={industryGloss(industry.name) ?? undefined}>
               <span
                 className="trade__swatch"
                 style={{ background: industryColour(industry.name) ?? 'var(--goods-other)' }}
               />
-              {industry.name}
+              <span className="trade__legendtext">
+                {industryLabel(industry.name)}
+                <em>{INDUSTRY[industry.name]?.contains}</em>
+              </span>
             </span>
             <span className="trade__bar">
               <span
@@ -776,12 +1031,21 @@ function RibbonPanel({
         )}
       </p>
 
+      <p className="trade__note">
+        <strong>This breakdown has no history yet.</strong> PortWatch values a link as a single
+        current figure and publishes no past versions, so there is nothing to backfill — the
+        composition above is as it stands today. The desk snapshots it on every weekly refresh, so
+        this panel will grow a real "what did this route used to carry" series from here. The
+        tonnage crossing {flow.portName} does have history back to 2019, and that is on the port's
+        own page.
+      </p>
+
       <button
         type="button"
         className="trade__link"
         onClick={() => onSelect({ kind: 'port', id: flow.portId })}
       >
-        Open {flow.portName} →
+        Open {flow.portName} for its tonnage since 2019 →
       </button>
     </PanelShell>
   );
@@ -970,5 +1234,104 @@ function Figure({
       <span className="trade__figvalue">{value}</span>
       {note && <span className={`trade__fignote ${tone ?? ''}`}>{note}</span>}
     </div>
+  );
+}
+
+
+/**
+ * US customs detail, and the only place on this desk where energy stands alone.
+ *
+ * Everything else groups cargo by HS section, which welds crude oil, gas and
+ * coal together with iron ore, cement and salt — one is the energy trade and the
+ * other is rocks, and PortWatch publishes them pre-summed so they cannot be
+ * separated. Census reports chapters, so here chapter 27 is its own line with a
+ * decade of monthly history behind it.
+ *
+ * US ports only, and only once `CENSUS_API_KEY` is set; the panel simply does
+ * not render otherwise.
+ */
+function UsCustomsPanel({ portName }: { portName: string }) {
+  // Census port codes are not PortWatch port ids, and the two are joined on
+  // name. Resolved server-side would be better; matching here keeps the extra
+  // round trip off every non-US port.
+  const [byValue, setByValue] = useState(true);
+  const detail = useFetch<UsPortCommodities>(
+    (signal) => fetchUsPort(portName, signal),
+    [portName],
+  );
+  const us = detail.data;
+
+  if (detail.loading && !us) return null;
+  if (!us?.found || us.months.length < 2) return null;
+
+  // Value and mass rank commodities very differently — coal is heavy and cheap,
+  // pharmaceuticals the reverse — so both are offered on real customs figures.
+  const lines = us.categories.map((c) => ({
+    key: byValue ? c.name : `${c.name}__kg`,
+    label: c.name,
+  }));
+
+  // TimeChart keys its x axis on `date`; the API speaks in months. Mapped here
+  // rather than renamed upstream, so the payload keeps saying what it means.
+  const points = us.months.map((row) => ({ ...row, date: String(row.month) }));
+
+  return (
+    <section className="trade__mixchart">
+      <header className="trade__mixhead">
+        <h4 className="cpanel__title">What customs actually recorded</h4>
+        <div className="world__metrics" role="group" aria-label="Measure US trade by">
+          <button type="button" className={byValue ? 'is-on' : ''} onClick={() => setByValue(true)}>
+            Value
+          </button>
+          <button type="button" className={!byValue ? 'is-on' : ''} onClick={() => setByValue(false)}>
+            Mass
+          </button>
+        </div>
+      </header>
+
+      <TimeChart
+        points={points as never}
+        lines={lines}
+        format={(value) => (byValue ? usd(value) : tons(value / 1000))}
+        height={240}
+        caption={
+          byValue
+            ? 'Monthly customs value by commodity group. Energy — crude, refined fuels, gas and coal — is its own line here, which the global ribbons cannot do.'
+            : 'The same trade by waterborne weight. Heavy-and-cheap swaps places with light-and-dear — coal against pharmaceuticals — so the two readings rank commodities quite differently.'
+        }
+      />
+
+      <div className="trade__cols">
+        <div>
+          <h4 className="cpanel__title">Largest commodities on record</h4>
+          <ul className="trade__rows is-compact">
+            {us.topChapters.slice(0, 10).map((c) => (
+              <li key={c.chapter}>
+                <span className="trade__rowname">
+                  <span
+                    className="trade__swatch"
+                    style={{ background: FINE_COLOUR[c.category ?? ''] ?? 'var(--goods-other)' }}
+                  />
+                  HS {c.chapter} · {c.name}
+                </span>
+                <span className="trade__rowvalue">{usd(c.valueUsd)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <p className="trade__note">
+        US Census Bureau, port of entry × partner × HS chapter, monthly since 2013. Public domain.
+        This is what was declared to customs rather than inferred from how deep the hulls sat, so
+        it is the one layer that can separate fuels from ores.
+        {us.matchedPorts && us.matchedPorts.length > 0 && (
+          <>
+            {' '}The two sources share no port identifier, so this counts the Census ports whose
+            names sit inside <strong>{portName}</strong>: {us.matchedPorts.join(' · ')}.
+          </>
+        )}
+      </p>
+    </section>
   );
 }

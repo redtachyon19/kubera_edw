@@ -18,6 +18,19 @@ per month and a response no dashboard can use. Chapters roll up cleanly into the
 already uses (see `dbt/seeds/seed_hs_industry.csv`), so the two layers colour
 from one scheme rather than two that nearly agree.
 
+**Requests are chunked by chapter, not by month, and this is not a free choice.**
+Ask for one month across all 97 chapters and Census answers HTTP 500 after about
+150 seconds — it cannot assemble that response, with or without the partner
+dimension. Ask for one chapter and it is fine. Multiple chapters cannot be
+bundled either: repeating `I_COMMODITY` 500s, and a comma-separated list is read
+as one literal code and returns 204.
+
+What it *will* do is serve a whole date range in a single call. One chapter
+across the full thirteen years comes back in about 100 seconds — 268,000 rows
+for chapter 27. So the backfill is **97 chapters × 2 directions = 194 requests**
+rather than the 32,000 that month-chunking would have needed. Storage is still
+per year, so a refresh re-fetches one cheap year rather than the whole history.
+
 **A key is now required.** The published documentation still says 500 queries
 per IP per day without one; that is out of date. As of August 2026 every data
 endpoint under `api.census.gov` 302-redirects to `missing_key.html` when no key
@@ -35,7 +48,6 @@ from __future__ import annotations
 
 import json
 import logging
-import os
 from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Any
@@ -43,6 +55,7 @@ from typing import Any
 import pandas as pd
 
 from .base_client import BaseClient, raw_root
+from .config_loader import api_key, bootstrap
 
 log = logging.getLogger(__name__)
 
@@ -103,28 +116,38 @@ class CensusTradeClient(BaseClient):
     source_name = "census_trade"
     base_url = BASE
     min_interval_s = 0.35
-    # A month of HS2 detail across every port and partner is a large response
-    # to assemble server-side; the 30s default times out on the busier months.
-    timeout_s = 120.0
+    # A full-history pull for one chapter is ~100s server-side and 18MB on the
+    # wire for the big ones, so the default 30s is nowhere near enough.
+    timeout_s = 300.0
 
     def __init__(self, *, base_url: str | None = None) -> None:
         super().__init__(base_url=base_url)
         import httpx
 
         self._client.timeout = httpx.Timeout(self.timeout_s)
-        self.api_key = os.environ.get("CENSUS_API_KEY", "").strip()
+        # Through `api_key` rather than straight off the environment, so the
+        # repo's placeholder markers (`your_`, `_here`, `xxx`) count as unset.
+        # A literal "your_census_key_here" left in `.env` would otherwise look
+        # like a real key, get sent, and come back as a redirect to an HTML page
+        # — which is a much more confusing failure than "no key".
+        self.api_key = api_key("CENSUS_API_KEY") or ""
 
     def available(self) -> bool:
         return bool(self.api_key)
 
-    def month(self, flow: str, when: str) -> pd.DataFrame:
-        """One month of one direction, as a frame. Empty if Census has nothing.
+    def chapter(self, flow: str, hs_chapter: str, window: str) -> pd.DataFrame:
+        """One HS chapter of one direction over `window`, as a frame.
+
+        `window` is Census's own `time` syntax — a year (`"2025"`), a range
+        (`"from 2013-01 to 2026-12"`), or a single month. One chapter at a time
+        because that is the only shape the endpoint reliably serves; see the
+        module docstring.
 
         The response is a JSON **array of arrays** — the first row is the header
         and every later row is positional. It is not a list of objects, and code
         written against the rest of this repo's sources will assume it is.
         """
-        path, fields, _ = FLOWS[flow]
+        path, fields, commodity = FLOWS[flow]
 
         response = self._get(
             f"/{path}/porths",
@@ -134,7 +157,8 @@ class CensusTradeClient(BaseClient):
             # Pacific Rim — which overlap each other and the individual
             # countries, so summing a column that mixes them double-counts.
             SUMMARY_LVL="DET",
-            time=when,
+            **{commodity: hs_chapter},
+            time=window,
             key=self.api_key,
         )
 
@@ -142,6 +166,11 @@ class CensusTradeClient(BaseClient):
         # so a bad key looks like success until the JSON parse fails.
         if "missing_key" in str(response.url) or "invalid_key" in str(response.url):
             raise RuntimeError("Census rejected the API key — check CENSUS_API_KEY in .env")
+
+        # 204 is Census for "that combination exists but holds nothing", which
+        # is normal for a chapter no port handled in the window.
+        if response.status_code == 204 or not response.content:
+            return pd.DataFrame()
 
         try:
             payload = response.json()
@@ -154,7 +183,14 @@ class CensusTradeClient(BaseClient):
             return pd.DataFrame()
 
         header, *rows = payload
-        return pd.DataFrame(rows, columns=header)
+        frame = pd.DataFrame(rows, columns=header)
+
+        # Census echoes the filter back as an extra column: asking for
+        # `I_COMMODITY` in `get` *and* filtering on `I_COMMODITY=27` returns two
+        # columns of that name. Left alone, `frame["hs_chapter"]` is a
+        # two-column DataFrame rather than a Series and every downstream string
+        # operation fails. The duplicates are identical, so the first wins.
+        return frame.loc[:, ~frame.columns.duplicated()]
 
 
 # ── Landing ──────────────────────────────────────────────────────────────────
@@ -176,8 +212,12 @@ def _dir(flow: str) -> Path:
     return path
 
 
-def _tidy(frame: pd.DataFrame, flow: str, when: str) -> pd.DataFrame:
-    """Normalise one month into the shape both directions share."""
+def _tidy(frame: pd.DataFrame, flow: str) -> pd.DataFrame:
+    """Normalise a response into the shape both directions share.
+
+    The month comes off each row's own `time` field rather than being stamped on
+    from the request, because a request now spans many months at once.
+    """
     if frame.empty:
         return frame
 
@@ -195,6 +235,7 @@ def _tidy(frame: pd.DataFrame, flow: str, when: str) -> pd.DataFrame:
             "PORT_NAME": "port_name",
             "CTY_CODE": "country_code",
             "CTY_NAME": "country_name",
+            "time": "month",
         }
     )
 
@@ -207,8 +248,16 @@ def _tidy(frame: pd.DataFrame, flow: str, when: str) -> pd.DataFrame:
     frame["hs_chapter"] = frame["hs_chapter"].astype(str).str.zfill(2)
 
     frame["flow"] = "import" if flow == "imports" else "export"
-    frame["month"] = when
     frame["_landed_at"] = datetime.now(UTC).isoformat()
+
+    # Drop Census's roll-up rows, on BOTH dimensions. Despite SUMMARY_LVL=DET the
+    # response carries a "TOTAL FOR ALL COUNTRIES" line per port (CTY_CODE='-')
+    # and a "TOTAL FOR ALL PORTS" line per country (PORT='-'), each exactly the
+    # sum of the detail beside it. New York 2013-01: 16 country rows and the
+    # total both come to $135,222,629. June 2025 chapter 27: the all-ports row
+    # alone is 50% of the sum. Left in, the annual totals came out at 1.92x the
+    # published FT-900 — wrong everywhere, and not obviously so.
+    frame = frame[(frame["country_code"] != "-") & (frame["port_code"] != "-")]
 
     keep = [
         "month",
@@ -228,13 +277,43 @@ def _tidy(frame: pd.DataFrame, flow: str, when: str) -> pd.DataFrame:
     return frame[[c for c in keep if c in frame.columns]]
 
 
-def _months(start: date, end: date) -> list[str]:
-    out = []
-    year, month = start.year, start.month
-    while (year, month) <= (end.year, end.month):
-        out.append(f"{year:04d}-{month:02d}")
-        year, month = (year + 1, 1) if month == 12 else (year, month + 1)
-    return out
+# HS chapters run 01–97. 77 is reserved and never returns anything; it is left in
+# the sweep rather than special-cased, because an empty answer costs one cheap
+# request and a hardcoded exception list rots the moment the HS is revised.
+CHAPTERS = [f"{n:02d}" for n in range(1, 98)]
+
+
+def _window(start: date, end: date) -> str:
+    """Census `time` syntax for a span. One call can cover the whole history."""
+    return f"from {start:%Y-%m} to {end:%Y-%m}"
+
+
+def fetch_chapter(
+    client: CensusTradeClient,
+    flow: str,
+    hs_chapter: str,
+    *,
+    start: date,
+    end: date,
+) -> int:
+    """Land one chapter over a span, split into one Parquet file per year.
+
+    Requesting and storing are deliberately different granularities. The request
+    is as wide as Census will serve — the whole history in one call, which is
+    what keeps the backfill to 194 requests instead of 32,000. Storage is per
+    year, so the monthly refresh re-fetches a single cheap year and overwrites
+    one file rather than rewriting thirteen years of history.
+    """
+    frame = _tidy(client.chapter(flow, hs_chapter, _window(start, end)), flow)
+    if frame.empty:
+        return 0
+
+    written = 0
+    for year, part in frame.groupby(frame["month"].str.slice(0, 4)):
+        path = _dir(flow) / f"hs{hs_chapter}_{year}.parquet"
+        part.to_parquet(path, index=False)
+        written += len(part)
+    return written
 
 
 def fetch_flow(
@@ -243,31 +322,56 @@ def fetch_flow(
     *,
     start: date = HISTORY_START,
     refresh_months: int = REFRESH_MONTHS,
+    chapters: list[str] | None = None,
 ) -> dict[str, int]:
-    """Land every month of one direction, skipping those already complete."""
+    """Land every chapter of one direction.
+
+    A chapter already on disk is refetched only for the years the refresh window
+    touches — Census revises recent months, and the April release rewrites the
+    previous year, so the trailing window has to be re-read rather than trusted.
+    A chapter with nothing on disk is pulled over its full history.
+    """
     today = datetime.now(UTC).date()
-    windows = _months(start, today)
-    stale = set(windows[-refresh_months:]) if refresh_months else set()
+
+    # Step back `refresh_months` whole months, then widen to that year's start —
+    # storage is per year, so the smallest thing worth re-fetching is a year.
+    total = today.year * 12 + (today.month - 1) - refresh_months
+    refresh_from = date(total // 12, 1, 1)
 
     landed: dict[str, int] = {}
-    for when in windows:
-        path = _dir(flow) / f"{when}.parquet"
-        if path.exists() and when not in stale:
-            continue
+    for hs_chapter in chapters or CHAPTERS:
+        landed_years = sorted(_dir(flow).glob(f"hs{hs_chapter}_*.parquet"))
 
-        frame = _tidy(client.month(flow, when), flow, when)
-        if frame.empty:
-            continue
+        # Never fetched: take the whole history in one call. Already held: only
+        # re-read the years the revision window can still move.
+        window_start = start if not landed_years else refresh_from
+        rows = fetch_chapter(client, flow, hs_chapter, start=window_start, end=today)
 
-        frame.to_parquet(path, index=False)
-        landed[when] = len(frame)
-        log.info("census %s %s: %d rows", flow, when, len(frame))
+        if rows:
+            landed[hs_chapter] = rows
+            log.info(
+                "census %s ch%s: %s rows from %s",
+                flow,
+                hs_chapter,
+                f"{rows:,}",
+                window_start.year,
+            )
 
     return landed
 
 
 def main() -> None:
-    logging.basicConfig(level=logging.INFO, format="%(message)s")
+    # Loads `.env` and configures logging, exactly as every other extractor's
+    # entry point does. Without it `python -m ingestion.census_trade_client`
+    # starts with an empty environment, finds no key, and skips the whole source
+    # while reporting success — which is a silent no-op, not a failure.
+    bootstrap()
+
+    # httpx logs every request line at INFO, and Census takes its key as a
+    # query parameter rather than a header — so the default logging writes the
+    # secret into stdout and into Dagster's captured run logs. Nothing here
+    # needs per-request logging; this client reports per chapter instead.
+    logging.getLogger("httpx").setLevel(logging.WARNING)
 
     with CensusTradeClient() as client:
         if not client.available():
@@ -281,6 +385,7 @@ def main() -> None:
 
         summary: dict[str, Any] = {}
         for flow in FLOWS:
+            log.info("census %s: sweeping %d HS chapters", flow, len(CHAPTERS))
             summary[flow] = sum(fetch_flow(client, flow).values())
 
     path = raw_root() / "census_trade" / "_manifest.json"

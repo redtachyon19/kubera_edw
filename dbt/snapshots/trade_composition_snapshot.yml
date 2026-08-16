@@ -1,0 +1,36 @@
+version: 2
+
+# The commodity split of every trade link, recorded as it stood on each refresh.
+#
+# **Why this exists.** `spillovers_trade` carries no time dimension at all — it is
+# one value per port × partner × industry, and PortWatch republishes it whole
+# rather than versioning it. There is no archive to fetch, so the history of what
+# a route *carried* cannot be backfilled: on 15 August 2026 the earliest
+# obtainable composition is today's.
+#
+# What can be done is start keeping it. This snapshot runs with the weekly trade
+# job and writes a new row whenever a link's value moves, with `dbt_valid_from` /
+# `dbt_valid_to` bracketing each version. From the first run the warehouse
+# accumulates real commodity history, so a year from now "did machinery used to
+# dominate this route" is answerable from our own records rather than from a
+# source that never published it.
+#
+# `strategy: check` rather than `timestamp`, because the source has no updated-at
+# column — the value itself is the only evidence that anything changed. Only
+# `value_usd_daily` is checked: names and coordinates are stable, and listing
+# them would write a new version every time PortWatch nudged a lat/lon.
+#
+# It is deliberately taken at the *industry* grain rather than the link total.
+# The total is recoverable by summing, but a composition shift — machinery giving
+# way to minerals on the same route at the same value — is invisible in a total
+# and is exactly the question this is for.
+
+snapshots:
+  - name: trade_composition_snapshot
+    relation: ref('fact_trade_ribbon_industry')
+    config:
+      schema: snapshots
+      unique_key: trade_ribbon_industry_key
+      strategy: check
+      check_cols:
+        - value_usd_daily

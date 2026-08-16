@@ -80,6 +80,7 @@ def _ports(limit: int) -> list[dict]:
                recent_tons, prior_tons, tons_change,
                recent_port_calls, recent_import_tons, recent_export_tons,
                recent_tons_container, recent_tons_dry_bulk, recent_tons_tanker,
+               trade_value_usd_daily, trade_value_usd_annual, value_rank,
                industry_top1, tonnage_rank, last_activity_date
         from marts.dim_port
         where recent_tons > 0
@@ -105,6 +106,12 @@ def _ports(limit: int) -> list[dict]:
             "containerTons": _num(row["recent_tons_container"]),
             "dryBulkTons": _num(row["recent_tons_dry_bulk"]),
             "tankerTons": _num(row["recent_tons_tanker"]),
+            # Weight and worth are different questions with different answers —
+            # a crude terminal outweighs a container hub and is worth far less —
+            # so both travel together and the desk switches between them.
+            "valueDaily": _num(row["trade_value_usd_daily"]),
+            "valueAnnual": _num(row["trade_value_usd_annual"]),
+            "valueRank": row["value_rank"],
             "topIndustry": row["industry_top1"],
             "rank": row["tonnage_rank"],
             "asOf": _date(row["last_activity_date"]),
@@ -263,6 +270,7 @@ def _port(port_id: str, weeks: int) -> dict:
                share_country_maritime_import, share_country_maritime_export,
                recent_tons, prior_tons, tons_change, recent_port_calls,
                recent_import_tons, recent_export_tons,
+               trade_value_usd_daily, trade_value_usd_annual, value_rank,
                tonnage_rank, tonnage_rank_in_country, last_activity_date, is_catalogued
         from marts.dim_port
         where port_id = {_marker(0)}
@@ -277,9 +285,11 @@ def _port(port_id: str, weeks: int) -> dict:
     history = _rows(
         f"""
         select week_start, total_tons, import_tons, export_tons, port_calls,
-               import_tons_container + export_tons_container as container_tons,
-               import_tons_dry_bulk  + export_tons_dry_bulk  as dry_bulk_tons,
-               import_tons_tanker    + export_tons_tanker    as tanker_tons,
+               import_tons_container     + export_tons_container     as container_tons,
+               import_tons_dry_bulk      + export_tons_dry_bulk      as dry_bulk_tons,
+               import_tons_tanker        + export_tons_tanker        as tanker_tons,
+               import_tons_general_cargo + export_tons_general_cargo as general_cargo_tons,
+               import_tons_roro          + export_tons_roro          as roro_tons,
                total_tons_13w_avg, total_tons_year_ago,
                share_of_country_tons, is_complete_week
         from marts.fact_port_activity_weekly
@@ -342,6 +352,9 @@ def _port(port_id: str, weeks: int) -> dict:
         "portCalls": _num(row["recent_port_calls"]),
         "importTons": _num(row["recent_import_tons"]),
         "exportTons": _num(row["recent_export_tons"]),
+        "valueDaily": _num(row["trade_value_usd_daily"]),
+        "valueAnnual": _num(row["trade_value_usd_annual"]),
+        "valueRank": row["value_rank"],
         "rank": row["tonnage_rank"],
         "rankInCountry": row["tonnage_rank_in_country"],
         "asOf": _date(row["last_activity_date"]),
@@ -353,9 +366,14 @@ def _port(port_id: str, weeks: int) -> dict:
                 "importTons": _num(h["import_tons"]),
                 "exportTons": _num(h["export_tons"]),
                 "portCalls": _num(h["port_calls"]),
+                # The five vessel classes are the one cargo breakdown that has
+                # real history — 2019 onward, weekly. Coarser than the thirteen
+                # industries, but those are a snapshot with no past.
                 "containerTons": _num(h["container_tons"]),
                 "dryBulkTons": _num(h["dry_bulk_tons"]),
                 "tankerTons": _num(h["tanker_tons"]),
+                "generalCargoTons": _num(h["general_cargo_tons"]),
+                "roroTons": _num(h["roro_tons"]),
                 "trend": _num(h["total_tons_13w_avg"]),
                 "yearAgo": _num(h["total_tons_year_ago"]),
                 "shareOfCountry": _num(h["share_of_country_tons"]),
@@ -398,6 +416,139 @@ def port(port_id: str, weeks: int = 260) -> dict:
     if not port_id:
         return {"portId": port_id, "found": False}
     return _cached(("maritime", "port", port_id, weeks), lambda: _port(port_id, weeks), ttl=_TTL)
+
+
+# ── US customs detail ────────────────────────────────────────────────────────
+
+
+def us_available() -> bool:
+    """True when the Census layer has been built."""
+    return bool(_rows("select 1 as ok from marts.fact_us_port_trade_monthly limit 1"))
+
+
+def _us_port_codes(port_name: str) -> list[dict]:
+    """Census port codes that make up one PortWatch port.
+
+    The two sources do not share port identifiers and cannot be joined cleanly.
+    PortWatch treats a harbour complex as one place — "Los Angeles-Long Beach",
+    "New York-New Jersey" — while Census assigns a numbered code per customs
+    district city: 2704 Los Angeles, 2709 Long Beach, 1001 New York, 1003 Newark.
+
+    So the match is by city name appearing inside the PortWatch name, which is
+    right for the complexes and honest about the rest. It is not perfect —
+    Portland ME and Portland OR are indistinguishable this way, and Newark does
+    not appear in "New York-New Jersey" so it is missed — which is exactly why
+    the matched ports are returned to the caller and named on screen. A reader
+    can see what was counted rather than trusting a silent join.
+    """
+    return _rows(
+        f"""
+        select distinct port_code, port_name
+        from marts.fact_us_port_trade_monthly
+        where position(upper(split_part(port_name, ',', 1)) in upper({_marker(0)})) > 0
+        order by port_name
+        """,
+        [port_name],
+    )
+
+
+def _us_commodities(port_name: str, months: int) -> dict:
+    """One US port's commodity mix, monthly, from customs records.
+
+    The reason this layer exists: Census reports HS *chapters*, so chapter 27 —
+    crude oil, refined fuels, gas and coal — stands on its own here. PortWatch
+    can only reach HS section, where those are welded to iron ore and cement and
+    cannot be separated. Everything below groups on `industry_fine_name`, which
+    is that split.
+    """
+    matched = _us_port_codes(port_name)
+    if not matched:
+        return {"portName": port_name, "found": False, "months": [], "categories": []}
+
+    codes = [row["port_code"] for row in matched]
+    # A variable-length IN list, parameterised rather than interpolated.
+    placeholders = ", ".join(_marker(i) for i in range(len(codes)))
+    window_marker = _marker(len(codes))
+
+    # The window is anchored to the newest month in the data, not to today —
+    # Census lands about five weeks behind, so counting back from now would clip
+    # the most recent months off every chart.
+    series = _rows(
+        f"""
+        select trade_month, industry_fine_name, industry_fine_order,
+               sum(value_usd)        as value_usd,
+               sum(vessel_weight_kg) as weight_kg
+        from marts.fact_us_port_trade_monthly
+        where port_code in ({placeholders})
+          and trade_month >= (
+              select max(trade_month) - cast({window_marker} as interval)
+              from marts.fact_us_port_trade_monthly
+          )
+        group by trade_month, industry_fine_name, industry_fine_order
+        order by trade_month, industry_fine_order
+        """,
+        [*codes, f"{int(months)} months"],
+    )
+    if not series:
+        return {"portName": port_name, "found": False, "months": [], "categories": []}
+
+    # Pivoted here rather than in the browser: the chart wants one row per month
+    # with a column per category, and the shape is fixed by the dimension.
+    by_month: dict[str, dict] = {}
+    categories: dict[str, int] = {}
+    for row in series:
+        month = _date(row["trade_month"])
+        name = row["industry_fine_name"]
+        categories[name] = row["industry_fine_order"]
+        bucket = by_month.setdefault(month, {"month": month})
+        bucket[name] = _num(row["value_usd"])
+        bucket[f"{name}__kg"] = _num(row["weight_kg"])
+
+    chapters = _rows(
+        f"""
+        select hs_chapter, max(hs_chapter_name) as hs_chapter_name,
+               max(industry_fine_name) as industry_fine_name,
+               sum(value_usd) as value_usd
+        from marts.fact_us_port_trade_monthly
+        where port_code in ({placeholders})
+        group by hs_chapter
+        order by sum(value_usd) desc
+        limit 12
+        """,
+        codes,
+    )
+
+    return {
+        "portName": port_name,
+        "found": True,
+        "matchedPorts": [row["port_name"] for row in matched],
+        "months": list(by_month.values()),
+        "categories": [
+            {"name": name, "order": order}
+            for name, order in sorted(categories.items(), key=lambda kv: kv[1])
+        ],
+        "topChapters": [
+            {
+                "chapter": c["hs_chapter"],
+                "name": c["hs_chapter_name"],
+                "category": c["industry_fine_name"],
+                "valueUsd": _num(c["value_usd"]),
+            }
+            for c in chapters
+        ],
+    }
+
+
+def us_commodities(port_name: str, months: int = 120) -> dict:
+    """Ten years of one US port's customs detail, energy broken out."""
+    port_name = (port_name or "").strip()
+    if not port_name:
+        return {"portName": port_name, "found": False, "months": [], "categories": []}
+    return _cached(
+        ("maritime", "us", port_name, months),
+        lambda: _us_commodities(port_name, months),
+        ttl=_TTL,
+    )
 
 
 # ── Detail: a ribbon ─────────────────────────────────────────────────────────

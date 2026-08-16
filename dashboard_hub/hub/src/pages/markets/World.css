@@ -950,3 +950,66 @@
     text-align: left;
   }
 }
+
+/* Said in the toolbar where a measure toggle would otherwise sit. A control that
+   silently does nothing is worse than a sentence explaining why there isn't one. */
+.trade__measure-note {
+  margin: 0;
+  align-self: center;
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  font-style: italic;
+  color: var(--ink-4);
+}
+
+/* Legend and cargo labels carry their contents on a second line. The HS category
+   names are opaque on their own — "Mineral Products" is where crude oil lives —
+   so the gloss is part of the label rather than a tooltip nobody hovers. */
+.trade__legendtext {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  min-width: 0;
+}
+
+.trade__legendtext em {
+  font-style: normal;
+  font-size: 0.68rem;
+  color: var(--ink-4);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trade__legend li {
+  align-items: flex-start;
+  gap: 0.4rem;
+  max-width: 15rem;
+}
+
+.trade__legend .trade__swatch {
+  margin-top: 0.32rem;
+}
+
+/* The composition-over-time block: its own heading row with the mode switch
+   beside it, so the chart and its control read as one thing. */
+.trade__mixchart {
+  margin-top: 1.75rem;
+}
+
+.trade__mixhead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.trade__mix .trade__mixlabel {
+  align-items: flex-start;
+}
+
+.trade__mix .trade__swatch {
+  margin-top: 0.3rem;
+}

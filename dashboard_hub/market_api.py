@@ -29,6 +29,7 @@ to Yahoo directly.
     GET /api/market/trade-ribbon?portId=port1&partner=CHN&direction=export
     GET /api/market/trade-chokepoint?id=chokepoint1
     GET /api/market/trade-country?iso3=JPN
+    GET /api/market/trade-us-port?portName=Houston  -> US customs detail, energy split out
     GET /api/market/weather
     GET /api/market/storms
     GET /api/market/fires
@@ -218,6 +219,17 @@ class Handler(BaseHTTPRequestHandler):
                     self._send({"error": "a portId is required"}, status=400)
                     return
                 self._send(maritime.port(port_id))
+                return
+
+            # US customs detail. Separate from trade-port because it exists for
+            # US ports only and is the one layer where fuels can be split from
+            # ores — Census reports HS chapters, PortWatch only sections.
+            if parsed.path == "/api/market/trade-us-port":
+                port_name = (params.get("portName") or [""])[0]
+                if not port_name:
+                    self._send({"error": "a portName is required"}, status=400)
+                    return
+                self._send(maritime.us_commodities(port_name))
                 return
 
             if parsed.path == "/api/market/trade-ribbon":

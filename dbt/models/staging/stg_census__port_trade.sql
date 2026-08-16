@@ -1,6 +1,6 @@
 {{
     config(
-        enabled = (env_var('CENSUS_API_KEY', '') != '')
+        enabled = (env_var('CENSUS_API_KEY', '') | trim | length) > 20
     )
 }}
 
@@ -72,3 +72,14 @@ select * from renamed
 -- nothing. Zero-value rows are ~70% of the table and carry no information a
 -- missing row would not.
 where value_usd > 0
+
+  -- **Census rolls up on BOTH dimensions and marks each with '-'.** There is a
+  -- "TOTAL FOR ALL COUNTRIES" row per port and a "TOTAL FOR ALL PORTS" row per
+  -- country, and each is exactly the sum of the detail beside it. Summing with
+  -- either left in doubles the answer; with both, quadruples it. Measured on
+  -- June 2025 chapter 27, the all-ports row alone was 50% of the total, and the
+  -- annual figures came out at 1.92x the published FT-900 until this was added.
+  -- Neither is filterable through the API — SUMMARY_LVL=DET does not remove
+  -- them — so it has to happen here.
+  and port_code <> '-'
+  and partner_country_code <> '-'

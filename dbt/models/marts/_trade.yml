@@ -255,3 +255,21 @@ models:
         tests:
           - dbt_utils.accepted_range:
               arguments: {min_value: 0}
+      - name: industry_fine_name
+        description: >
+          The finer grouping, and the reason this layer exists. PortWatch can only reach HS
+          section, so its "Mineral Products" welds crude oil, gas and coal together with iron
+          ore, cement and salt. Census reports chapters, so here chapter 27 stands alone as
+          "Energy — oil, gas & coal" and 25–26 become "Ores, Stone & Minerals". 14 categories
+          against the global layer's 13.
+        tests:
+          - not_null
+      - name: industry_fine_order
+        tests: [not_null]
+      - name: vessel_weight_kg
+        description: >
+          Waterborne weight, so this layer can answer value-or-mass on measured customs figures
+          rather than on a vessel-class proxy.
+        tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 0}

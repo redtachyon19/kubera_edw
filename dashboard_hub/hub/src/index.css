@@ -98,17 +98,38 @@
   --rule: #ddd9cf;
   --rule-strong: #b9b4a7;
 
-  /* Cargo colours for the trade desk's ribbons.
-     Three hues, not thirteen: ribbons cross freely on a sphere, so any two can
-     end up adjacent, and three is the most that clears colour-vision separation
-     under that condition in BOTH themes. Everything outside these three draws
-     neutral, and the legend and readout always name the cargo in words — the
-     colour is a shortcut, never the only way to tell two flows apart.
-     Validated as a set against the globe's face, not against the page. */
-  --goods-machinery: #2a78d6;
-  --goods-mineral: #eb6834;
-  --goods-vehicles: #1baf7a;
-  --goods-other: #8e8a7f;
+  /* Cargo colours for the trade desk — one per industry, chosen to mean
+     something: green for what grows, gold for metals, brown for timber, crimson
+     for livestock, slate for what is dug out of the ground.
+
+     Thirteen categories is more than colour alone can carry. Every one clears
+     the lightness band, the chroma floor and contrast against the globe's face,
+     but at this count some pairs are unavoidably close — gold against timber,
+     crimson against green under deuteranopia — because the categories they name
+     really are neighbours. That is why the colour is never the only signal: the
+     legend, the hover readout and every bar in the panels carry the cargo's name
+     in text. Validated against the globe's face, not the page.
+
+     Mineral Products is the exception and is deliberately NOT a hue: it is the
+     largest class of all — $11tn a year, more than machinery — and it is coal,
+     crude and ore, so it takes graphite. It first shipped as a slate blue, which
+     put the two biggest categories in the same colour family and made the
+     world's fuel trade impossible to pick out. Graphite reads as what it is and
+     collides with nothing. Miscellaneous is the other neutral, kept clearly
+     lighter so the two never trade places. */
+  --goods-animal: #a32f2e;
+  --goods-vegetable: #31983d;
+  --goods-foodstuffs: #dc9a37;
+  --goods-mineral: #443f38;
+  --goods-chemical: #9065d0;
+  --goods-plastics: #d96eb9;
+  --goods-wood: #b8632b;
+  --goods-textiles: #c94f7c;
+  --goods-stone: #08acc8;
+  --goods-metals: #8a6a12;
+  --goods-machinery: #3d7ede;
+  --goods-vehicles: #1ab29d;
+  --goods-other: #9c988d;
 
   /* Gold darkens on light stock so it reads as ink, not highlighter. */
   --gold: #8a6a12;
@@ -159,12 +180,21 @@
   --rule: #262523;
   --rule-strong: #3d3b36;
 
-  /* The same three hues re-stepped for the dark globe face — chosen for that
-     band and validated against it, not flipped or lightened automatically. */
-  --goods-machinery: #3987e5;
-  --goods-mineral: #d95926;
-  --goods-vehicles: #199e70;
-  --goods-other: #6f6c63;
+  /* The same thirteen meanings re-stepped for the dark globe face — chosen for
+     that band and validated against it, not flipped or lightened automatically. */
+  --goods-animal: #c2453f;
+  --goods-vegetable: #279035;
+  --goods-foodstuffs: #c07a22;
+  --goods-mineral: #a89684;
+  --goods-chemical: #895ec8;
+  --goods-plastics: #c45ba5;
+  --goods-wood: #c2702f;
+  --goods-textiles: #c04775;
+  --goods-stone: #0097b0;
+  --goods-metals: #a88a20;
+  --goods-machinery: #3577d5;
+  --goods-vehicles: #129c89;
+  --goods-other: #5f5c55;
 
   /* Inverted: gold brightens to hold contrast against black. */
   --gold: #e2b84f;

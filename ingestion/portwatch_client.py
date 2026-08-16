@@ -50,6 +50,7 @@ from typing import Any
 import pandas as pd
 
 from .base_client import BaseClient, raw_root
+from .config_loader import bootstrap
 
 log = logging.getLogger(__name__)
 
@@ -304,7 +305,12 @@ def _manifest(datasets: dict[str, Any]) -> Path:
 
 
 def main() -> None:
-    logging.basicConfig(level=logging.INFO, format="%(message)s")
+    # Same reason as the Census client: a module run straight from the shell has
+    # to load `.env` itself. PortWatch needs no key, but it does need RAW_DATA_DIR
+    # honoured so a direct run lands beside the pipeline's data rather than
+    # somewhere else.
+    bootstrap()
+    logging.getLogger("httpx").setLevel(logging.WARNING)
     summary: dict[str, Any] = {}
 
     with PortWatchClient() as client:

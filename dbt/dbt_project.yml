@@ -24,6 +24,14 @@ seeds:
         industry: varchar
         valid_from: date
 
+    # HS chapters are "01".."97" and must stay text. Left to the CSV sniffer they
+    # become integers, the leading zero is lost, and the join to Census — which
+    # sends "01" — silently matches nothing for the first nine chapters.
+    seed_hs_industry:
+      +column_types:
+        hs_chapter: varchar
+        hs_section: varchar
+
     ci_raw:
       +schema: raw
       +enabled: "{{ target.name == 'ci' }}"

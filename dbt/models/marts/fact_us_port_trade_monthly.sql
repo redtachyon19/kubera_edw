@@ -1,6 +1,6 @@
 {{
     config(
-        enabled = (env_var('CENSUS_API_KEY', '') != ''),
+        enabled = (env_var('CENSUS_API_KEY', '') | trim | length) > 20,
         indexes = [
             {'columns': ['port_code', 'trade_month']},
             {'columns': ['trade_month']},
@@ -36,6 +36,8 @@ mapping as (
         hs_chapter,
         industry,
         industry_order,
+        industry_fine,
+        industry_fine_order,
         hs_section
     from {{ ref('seed_hs_industry') }}
 
@@ -70,6 +72,17 @@ select
     t.hs_chapter_name,
     m.industry                                          as industry_name,
     m.industry_order,
+
+    -- The finer split, and the reason this layer is worth having. PortWatch can
+    -- only reach HS *section*, so its "Mineral Products" welds crude oil, coal
+    -- and gas together with iron ore, cement and salt — useless on a trade desk,
+    -- since one is the energy trade and the other is rocks. Census reports
+    -- *chapters*, so here chapter 27 stands alone as Energy and 25–26 become
+    -- Ores, Stone & Minerals. Everywhere the US layer is on screen this is the
+    -- grouping to show; `industry_name` stays only so the two layers can still
+    -- be compared like for like.
+    m.industry_fine                                     as industry_fine_name,
+    m.industry_fine_order,
     m.hs_section,
 
     t.value_usd,

@@ -127,6 +127,27 @@ windows as (
     cross join bounds b
     group by d.port_id
 
+),
+
+-- What the cargo crossing this quay is *worth*, as against how much it weighs.
+--
+-- The two are genuinely different questions and rank ports differently: a crude
+-- terminal moves enormous tonnage of low-value cargo, a container hub the
+-- reverse. Tonnage is measured from vessel draft; this is summed from the trade
+-- links, which is the only dollar figure PortWatch attaches to a port.
+--
+-- Only the `is_total` rows are summed. The thirteen industry rows beneath each
+-- link are a breakdown of that same total, so including them would count every
+-- dollar twice.
+trade_value as (
+
+    select
+        port_id,
+        sum(value_usd_daily) as trade_value_usd_daily
+    from {{ ref('stg_portwatch__trade_ribbons') }}
+    where is_total
+    group by port_id
+
 )
 
 select
@@ -158,6 +179,9 @@ select
     w.recent_tons_tanker,
     w.last_activity_date,
 
+    v.trade_value_usd_daily,
+    v.trade_value_usd_daily * 365                           as trade_value_usd_annual,
+
     -- Growth against the preceding quarter. Guarded rather than nullif'd on both
     -- sides so a port that went from nothing to something reads as null instead
     -- of infinity.
@@ -172,7 +196,14 @@ select
     row_number() over (
         partition by p.country_iso3
         order by coalesce(w.recent_tons, 0) desc
-    )                                                       as tonnage_rank_in_country
+    )                                                       as tonnage_rank_in_country,
+
+    -- Ranked by value as well as by weight, because the two orders disagree and
+    -- the desk lets a reader switch between them.
+    row_number() over (
+        order by coalesce(v.trade_value_usd_daily, 0) desc
+    )                                                       as value_rank
 
 from ports p
 left join windows w on w.port_id = p.port_id
+left join trade_value v on v.port_id = p.port_id

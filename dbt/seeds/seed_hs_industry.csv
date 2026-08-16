@@ -1,98 +1,98 @@
-hs_chapter,hs_section,industry,industry_order
-01,1,Animal & Animal Products,1
-02,1,Animal & Animal Products,1
-03,1,Animal & Animal Products,1
-04,1,Animal & Animal Products,1
-05,1,Animal & Animal Products,1
-06,2,Vegetable Products,2
-07,2,Vegetable Products,2
-08,2,Vegetable Products,2
-09,2,Vegetable Products,2
-10,2,Vegetable Products,2
-11,2,Vegetable Products,2
-12,2,Vegetable Products,2
-13,2,Vegetable Products,2
-14,2,Vegetable Products,2
-15,3+4,Prepared Foodstuffs & Beverages,3
-16,3+4,Prepared Foodstuffs & Beverages,3
-17,3+4,Prepared Foodstuffs & Beverages,3
-18,3+4,Prepared Foodstuffs & Beverages,3
-19,3+4,Prepared Foodstuffs & Beverages,3
-20,3+4,Prepared Foodstuffs & Beverages,3
-21,3+4,Prepared Foodstuffs & Beverages,3
-22,3+4,Prepared Foodstuffs & Beverages,3
-23,3+4,Prepared Foodstuffs & Beverages,3
-24,3+4,Prepared Foodstuffs & Beverages,3
-25,5,Mineral Products,4
-26,5,Mineral Products,4
-27,5,Mineral Products,4
-28,6,Chemical & Allied Industries,5
-29,6,Chemical & Allied Industries,5
-30,6,Chemical & Allied Industries,5
-31,6,Chemical & Allied Industries,5
-32,6,Chemical & Allied Industries,5
-33,6,Chemical & Allied Industries,5
-34,6,Chemical & Allied Industries,5
-35,6,Chemical & Allied Industries,5
-36,6,Chemical & Allied Industries,5
-37,6,Chemical & Allied Industries,5
-38,6,Chemical & Allied Industries,5
-39,7+8,"Plastics, Rubber, Leather",6
-40,7+8,"Plastics, Rubber, Leather",6
-41,7+8,"Plastics, Rubber, Leather",6
-42,7+8,"Plastics, Rubber, Leather",6
-43,7+8,"Plastics, Rubber, Leather",6
-44,9+10,Wood & Wood Products,7
-45,9+10,Wood & Wood Products,7
-46,9+10,Wood & Wood Products,7
-47,9+10,Wood & Wood Products,7
-48,9+10,Wood & Wood Products,7
-49,9+10,Wood & Wood Products,7
-50,11+12,Textiles & Footwear,8
-51,11+12,Textiles & Footwear,8
-52,11+12,Textiles & Footwear,8
-53,11+12,Textiles & Footwear,8
-54,11+12,Textiles & Footwear,8
-55,11+12,Textiles & Footwear,8
-56,11+12,Textiles & Footwear,8
-57,11+12,Textiles & Footwear,8
-58,11+12,Textiles & Footwear,8
-59,11+12,Textiles & Footwear,8
-60,11+12,Textiles & Footwear,8
-61,11+12,Textiles & Footwear,8
-62,11+12,Textiles & Footwear,8
-63,11+12,Textiles & Footwear,8
-64,11+12,Textiles & Footwear,8
-65,11+12,Textiles & Footwear,8
-66,11+12,Textiles & Footwear,8
-67,11+12,Textiles & Footwear,8
-68,13+14,Stone & Glass,9
-69,13+14,Stone & Glass,9
-70,13+14,Stone & Glass,9
-71,13+14,Stone & Glass,9
-72,15,Metals,10
-73,15,Metals,10
-74,15,Metals,10
-75,15,Metals,10
-76,15,Metals,10
-77,15,Metals,10
-78,15,Metals,10
-79,15,Metals,10
-80,15,Metals,10
-81,15,Metals,10
-82,15,Metals,10
-83,15,Metals,10
-84,16+18,Machinery & Electrical Equipment,11
-85,16+18,Machinery & Electrical Equipment,11
-86,17,Vehicles & Equipment,12
-87,17,Vehicles & Equipment,12
-88,17,Vehicles & Equipment,12
-89,17,Vehicles & Equipment,12
-90,16+18,Machinery & Electrical Equipment,11
-91,16+18,Machinery & Electrical Equipment,11
-92,16+18,Machinery & Electrical Equipment,11
-93,19+20+21,Miscellaneous,13
-94,19+20+21,Miscellaneous,13
-95,19+20+21,Miscellaneous,13
-96,19+20+21,Miscellaneous,13
-97,19+20+21,Miscellaneous,13
+hs_chapter,hs_section,industry,industry_order,industry_fine,industry_fine_order
+01,1,Animal & Animal Products,1,Animal & Animal Products,1
+02,1,Animal & Animal Products,1,Animal & Animal Products,1
+03,1,Animal & Animal Products,1,Animal & Animal Products,1
+04,1,Animal & Animal Products,1,Animal & Animal Products,1
+05,1,Animal & Animal Products,1,Animal & Animal Products,1
+06,2,Vegetable Products,2,Vegetable Products,2
+07,2,Vegetable Products,2,Vegetable Products,2
+08,2,Vegetable Products,2,Vegetable Products,2
+09,2,Vegetable Products,2,Vegetable Products,2
+10,2,Vegetable Products,2,Vegetable Products,2
+11,2,Vegetable Products,2,Vegetable Products,2
+12,2,Vegetable Products,2,Vegetable Products,2
+13,2,Vegetable Products,2,Vegetable Products,2
+14,2,Vegetable Products,2,Vegetable Products,2
+15,3+4,Prepared Foodstuffs & Beverages,3,Prepared Foodstuffs & Beverages,3
+16,3+4,Prepared Foodstuffs & Beverages,3,Prepared Foodstuffs & Beverages,3
+17,3+4,Prepared Foodstuffs & Beverages,3,Prepared Foodstuffs & Beverages,3
+18,3+4,Prepared Foodstuffs & Beverages,3,Prepared Foodstuffs & Beverages,3
+19,3+4,Prepared Foodstuffs & Beverages,3,Prepared Foodstuffs & Beverages,3
+20,3+4,Prepared Foodstuffs & Beverages,3,Prepared Foodstuffs & Beverages,3
+21,3+4,Prepared Foodstuffs & Beverages,3,Prepared Foodstuffs & Beverages,3
+22,3+4,Prepared Foodstuffs & Beverages,3,Prepared Foodstuffs & Beverages,3
+23,3+4,Prepared Foodstuffs & Beverages,3,Prepared Foodstuffs & Beverages,3
+24,3+4,Prepared Foodstuffs & Beverages,3,Prepared Foodstuffs & Beverages,3
+25,5,Mineral Products,4,"Ores, Stone & Minerals",5
+26,5,Mineral Products,4,"Ores, Stone & Minerals",5
+27,5,Mineral Products,4,"Energy — oil, gas & coal",4
+28,6,Chemical & Allied Industries,5,Chemical & Allied Industries,6
+29,6,Chemical & Allied Industries,5,Chemical & Allied Industries,6
+30,6,Chemical & Allied Industries,5,Chemical & Allied Industries,6
+31,6,Chemical & Allied Industries,5,Chemical & Allied Industries,6
+32,6,Chemical & Allied Industries,5,Chemical & Allied Industries,6
+33,6,Chemical & Allied Industries,5,Chemical & Allied Industries,6
+34,6,Chemical & Allied Industries,5,Chemical & Allied Industries,6
+35,6,Chemical & Allied Industries,5,Chemical & Allied Industries,6
+36,6,Chemical & Allied Industries,5,Chemical & Allied Industries,6
+37,6,Chemical & Allied Industries,5,Chemical & Allied Industries,6
+38,6,Chemical & Allied Industries,5,Chemical & Allied Industries,6
+39,7+8,"Plastics, Rubber, Leather",6,"Plastics, Rubber, Leather",7
+40,7+8,"Plastics, Rubber, Leather",6,"Plastics, Rubber, Leather",7
+41,7+8,"Plastics, Rubber, Leather",6,"Plastics, Rubber, Leather",7
+42,7+8,"Plastics, Rubber, Leather",6,"Plastics, Rubber, Leather",7
+43,7+8,"Plastics, Rubber, Leather",6,"Plastics, Rubber, Leather",7
+44,9+10,Wood & Wood Products,7,Wood & Wood Products,8
+45,9+10,Wood & Wood Products,7,Wood & Wood Products,8
+46,9+10,Wood & Wood Products,7,Wood & Wood Products,8
+47,9+10,Wood & Wood Products,7,Wood & Wood Products,8
+48,9+10,Wood & Wood Products,7,Wood & Wood Products,8
+49,9+10,Wood & Wood Products,7,Wood & Wood Products,8
+50,11+12,Textiles & Footwear,8,Textiles & Footwear,9
+51,11+12,Textiles & Footwear,8,Textiles & Footwear,9
+52,11+12,Textiles & Footwear,8,Textiles & Footwear,9
+53,11+12,Textiles & Footwear,8,Textiles & Footwear,9
+54,11+12,Textiles & Footwear,8,Textiles & Footwear,9
+55,11+12,Textiles & Footwear,8,Textiles & Footwear,9
+56,11+12,Textiles & Footwear,8,Textiles & Footwear,9
+57,11+12,Textiles & Footwear,8,Textiles & Footwear,9
+58,11+12,Textiles & Footwear,8,Textiles & Footwear,9
+59,11+12,Textiles & Footwear,8,Textiles & Footwear,9
+60,11+12,Textiles & Footwear,8,Textiles & Footwear,9
+61,11+12,Textiles & Footwear,8,Textiles & Footwear,9
+62,11+12,Textiles & Footwear,8,Textiles & Footwear,9
+63,11+12,Textiles & Footwear,8,Textiles & Footwear,9
+64,11+12,Textiles & Footwear,8,Textiles & Footwear,9
+65,11+12,Textiles & Footwear,8,Textiles & Footwear,9
+66,11+12,Textiles & Footwear,8,Textiles & Footwear,9
+67,11+12,Textiles & Footwear,8,Textiles & Footwear,9
+68,13+14,Stone & Glass,9,Stone & Glass,10
+69,13+14,Stone & Glass,9,Stone & Glass,10
+70,13+14,Stone & Glass,9,Stone & Glass,10
+71,13+14,Stone & Glass,9,Stone & Glass,10
+72,15,Metals,10,Metals,11
+73,15,Metals,10,Metals,11
+74,15,Metals,10,Metals,11
+75,15,Metals,10,Metals,11
+76,15,Metals,10,Metals,11
+77,15,Metals,10,Metals,11
+78,15,Metals,10,Metals,11
+79,15,Metals,10,Metals,11
+80,15,Metals,10,Metals,11
+81,15,Metals,10,Metals,11
+82,15,Metals,10,Metals,11
+83,15,Metals,10,Metals,11
+84,16+18,Machinery & Electrical Equipment,11,Machinery & Electrical Equipment,12
+85,16+18,Machinery & Electrical Equipment,11,Machinery & Electrical Equipment,12
+86,17,Vehicles & Equipment,12,Vehicles & Equipment,13
+87,17,Vehicles & Equipment,12,Vehicles & Equipment,13
+88,17,Vehicles & Equipment,12,Vehicles & Equipment,13
+89,17,Vehicles & Equipment,12,Vehicles & Equipment,13
+90,16+18,Machinery & Electrical Equipment,11,Machinery & Electrical Equipment,12
+91,16+18,Machinery & Electrical Equipment,11,Machinery & Electrical Equipment,12
+92,16+18,Machinery & Electrical Equipment,11,Machinery & Electrical Equipment,12
+93,19+20+21,Miscellaneous,13,Miscellaneous,14
+94,19+20+21,Miscellaneous,13,Miscellaneous,14
+95,19+20+21,Miscellaneous,13,Miscellaneous,14
+96,19+20+21,Miscellaneous,13,Miscellaneous,14
+97,19+20+21,Miscellaneous,13,Miscellaneous,14
